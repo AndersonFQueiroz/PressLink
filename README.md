@@ -112,8 +112,8 @@ Este projeto é desenvolvido como Trabalho de Conclusão de Curso (TCC) pelos se
 | Nome                        | Papel                        | GitHub                                                              |
 | --------------------------- | ---------------------------- | ------------------------------------------------------------------- |
 | Anderson Ferreira Queiroz   | Desenvolvedor/DevOps Lead | [@AndersonFQueiroz](https://github.com/AndersonFQueiroz)            |
-| Pedro Muginski              | Desenvolvedor                | [perfil do GitHub]                                                  |
-| Luiz Carvalho               | Desenvolvedor                | [perfil do GitHub]                                                  |
+| Pedro Muginski              | Desenvolvedor                | [Muginski](https://github.com/Muginski)                                                  |
+| Luiz Carvalho               | Desenvolvedor                | [@Lexuxx](https://github.com/Lexuxx)                                                  |
 
 **Orientador(a):** A definir
 
