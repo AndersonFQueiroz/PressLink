@@ -1,6 +1,7 @@
 # 🎧 PressLink
 
 **Plataforma SaaS para criação de portfólios digitais profissionais para DJs freelancers.**
+[![CI](https://github.com/AndersonFQueiroz/PressLink/actions/workflows/ci.yml/badge.svg)](https://github.com/AndersonFQueiroz/PressLink/actions/workflows/ci.yml)
 
 [![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)]()
 [![Next.js](https://img.shields.io/badge/Next.js-15-black)]()
