@@ -75,8 +75,8 @@ O PressLink opera com um modelo **freemium por assinatura**:
 
 ```bash
 # 1. Clone o repositório
-git clone https://github.com/AndersonFQueiroz/TCC-Portf-lio-DJ-Sem-nome-por-enquanto-.git
-cd TCC-Portf-lio-DJ-Sem-nome-por-enquanto-
+git clone https://github.com/AndersonFQueiroz/PressLink
+cd PressLink
 
 # 2. Instale as dependências
 npm install
