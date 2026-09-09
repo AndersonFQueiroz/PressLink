@@ -54,21 +54,24 @@ export default function RecuperarSenhaPage() {
   };
 
   return (
-    <div className="w-full rounded-2xl bg-zinc-900/80 border border-zinc-800/80 p-8 shadow-2xl backdrop-blur-md">
+    <div className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
       <div className="text-center mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold font-display tracking-tight text-white mb-2">
-          Recuperar senha
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
+          Recuperação de Acesso
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+          Esqueceu sua senha?<br />
+          <span className="text-fuchsia-400">Nós te ajudamos.</span>
         </h1>
-        <p className="text-sm text-zinc-400">
-          Informe seu e-mail cadastrado e enviaremos um link para você redefinir
-          sua senha.
+        <p className="mt-3 text-sm text-white/65 leading-relaxed">
+          Informe seu e-mail e enviaremos as instruções para você recuperar o controle do seu portfólio.
         </p>
       </div>
 
       {successMessage && (
         <div
           role="status"
-          className="mb-6 flex items-start gap-3 rounded-lg border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300"
+          className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300"
         >
           <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" />
           <div>
@@ -81,7 +84,7 @@ export default function RecuperarSenhaPage() {
       {errorMessage && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-3 rounded-lg border border-rose-500/40 bg-rose-500/10 p-3.5 text-sm text-rose-300"
+          className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
         >
           <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-400" />
           <span>{errorMessage}</span>
@@ -93,12 +96,12 @@ export default function RecuperarSenhaPage() {
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2"
+              className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-2"
             >
               E-mail cadastrado
             </label>
             <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-zinc-400">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-white/40">
                 <Mail className="w-4 h-4" />
               </div>
               <input
@@ -108,10 +111,10 @@ export default function RecuperarSenhaPage() {
                 disabled={isPending}
                 placeholder="dj@exemplo.com"
                 {...register("email")}
-                className={`w-full rounded-lg bg-zinc-950/70 border pl-10 pr-4 py-2.5 text-sm text-white placeholder-zinc-500 transition-colors focus:outline-none focus:ring-2 focus:ring-purple-500/40 ${
+                className={`w-full rounded-2xl bg-white/[0.04] border pl-11 pr-4 py-3 text-sm text-white placeholder-white/25 transition focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 ${
                   errors.email
-                    ? "border-rose-500 focus:border-rose-500"
-                    : "border-zinc-800 hover:border-zinc-700 focus:border-purple-500"
+                    ? "border-rose-500/70 focus:border-rose-500"
+                    : "border-white/10 hover:border-white/20 focus:border-fuchsia-400"
                 }`}
               />
             </div>
@@ -125,7 +128,7 @@ export default function RecuperarSenhaPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full group relative flex items-center justify-center gap-2 rounded-lg bg-purple-600 hover:bg-purple-500 py-2.5 px-4 text-sm font-semibold text-white shadow-lg shadow-purple-600/25 transition-all duration-150 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-zinc-900"
+            className="w-full group relative flex items-center justify-center gap-2 rounded-full bg-fuchsia-500 py-3.5 px-6 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-400 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-ink"
           >
             {isPending ? (
               <>
@@ -144,7 +147,7 @@ export default function RecuperarSenhaPage() {
         <div className="space-y-4">
           <Link
             href="/login"
-            className="w-full flex items-center justify-center gap-2 rounded-lg bg-zinc-800 hover:bg-zinc-700 py-2.5 px-4 text-sm font-medium text-white transition-colors"
+            className="w-full flex items-center justify-center gap-2 rounded-full border border-white/20 py-3.5 px-6 text-sm font-semibold text-white transition hover:border-white/50"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Voltar para o login</span>
@@ -152,13 +155,13 @@ export default function RecuperarSenhaPage() {
         </div>
       )}
 
-      <div className="mt-8 pt-6 border-t border-zinc-800 text-center text-sm text-zinc-400">
+      <div className="mt-8 pt-6 border-t border-white/10 text-center">
         <Link
           href="/login"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-purple-400 hover:text-purple-300 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-medium text-fuchsia-400 hover:text-fuchsia-300 transition"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Voltar para o login</span>
+          <span>Lembrou da senha? Entrar</span>
         </Link>
       </div>
     </div>

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Headphones } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Autenticação | PressLink",
-  description: "Acesse sua conta ou recupere seu acesso no PressLink.",
+  title: "Entrar | presslink",
+  description: "Acesse sua conta para gerenciar seu portfólio digital no presslink.",
 };
 
 export default function AuthLayout({
@@ -13,29 +13,31 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen flex flex-col justify-between bg-ink text-white overflow-hidden selection:bg-plum selection:text-white">
-      {/* Background glow accents */}
+    <div className="relative min-h-screen flex flex-col justify-between bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
+      {/* Background radial glow accents matching landing page */}
       <div
-        className="pointer-events-none absolute -top-40 left-1/2 -translate-x-1/2 w-[600px] h-[600px] rounded-full bg-plum/20 blur-[130px]"
+        className="pointer-events-none absolute -right-36 top-1/4 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-fuchsia-600/20 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -bottom-40 right-1/4 w-[450px] h-[450px] rounded-full bg-plum/10 blur-[120px]"
+        className="pointer-events-none absolute -left-36 bottom-10 h-[30rem] w-[30rem] rounded-full bg-fuchsia-700/15 blur-3xl"
         aria-hidden="true"
       />
 
       {/* Top Navbar */}
-      <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 flex items-center justify-between">
+      <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:px-10 lg:px-16 flex items-center justify-between">
         <Link
           href="/"
-          className="group flex items-center gap-2.5 text-white no-underline transition-opacity hover:opacity-90"
+          className="font-display text-2xl font-bold tracking-tight transition hover:opacity-90"
         >
-          <div className="w-9 h-9 rounded-lg bg-plum/25 border border-plum/50 flex items-center justify-center text-plum transition-transform group-hover:scale-105">
-            <Headphones className="w-5 h-5 text-purple-400" />
-          </div>
-          <span className="text-xl font-bold tracking-tight font-display bg-gradient-to-r from-white via-slate-100 to-purple-300 bg-clip-text text-transparent">
-            PressLink
-          </span>
+          press<span className="text-fuchsia-400">link</span>
+        </Link>
+        <Link
+          href="/"
+          className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2 text-sm font-medium text-white/90 transition hover:border-white/50 hover:text-white"
+        >
+          <ArrowLeft className="w-3.5 h-3.5" />
+          <span>Voltar ao início</span>
         </Link>
       </header>
 
@@ -45,8 +47,8 @@ export default function AuthLayout({
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-6 text-center text-xs text-zinc-500">
-        <p>© {new Date().getFullYear()} PressLink — Plataforma de Portfólios para DJs Freelancers.</p>
+      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:px-10 lg:px-16 text-center text-xs text-white/40">
+        <p>© {new Date().getFullYear()} presslink — A pista é sua. O palco também.</p>
       </footer>
     </div>
   );
