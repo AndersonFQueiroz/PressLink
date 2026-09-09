@@ -1,12 +1,70 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
 import { LogoutButton } from "@/components/features/auth/LogoutButton";
-import { Headphones, User, ShieldCheck, ArrowLeft } from "lucide-react";
+import {
+  User,
+  Music,
+  Calendar,
+  Image as ImageIcon,
+  Palette,
+  BarChart3,
+  ExternalLink,
+  Sparkles,
+  ArrowRight,
+  Eye,
+  MousePointerClick,
+  Globe,
+} from "lucide-react";
 
 export const metadata = {
-  title: "Painel do DJ | PressLink",
-  description: "Gerencie seu portfólio profissional de DJ.",
+  title: "Painel | presslink",
+  description: "Gerencie seu portfólio profissional de DJ no presslink.",
 };
+
+const modules = [
+  {
+    title: "Perfil do DJ",
+    desc: "Nome artístico, bio multi-idioma, foto de destaque e redes sociais.",
+    icon: User,
+    href: "/painel/perfil",
+    badge: "Essencial",
+  },
+  {
+    title: "Música & Vídeos",
+    desc: "Embeds integrados do Spotify, faixas do SoundCloud e vídeos do YouTube.",
+    icon: Music,
+    href: "/painel/musica",
+    badge: "Mídia",
+  },
+  {
+    title: "Agenda de Shows",
+    desc: "Cadastre suas próximas datas, festivais, cidades e eventos confirmados.",
+    icon: Calendar,
+    href: "/painel/agenda",
+    badge: "Datas",
+  },
+  {
+    title: "Galeria de Fotos",
+    desc: "Carregue fotos de apresentações em alta resolução com organização por ordem.",
+    icon: ImageIcon,
+    href: "/painel/galeria",
+    badge: "Visual",
+  },
+  {
+    title: "Template & Identidade",
+    desc: "Escolha entre estilos visuais (Dark Electronic, Vibrant, Clean Editorial).",
+    icon: Palette,
+    href: "/painel/template",
+    badge: "Design",
+  },
+  {
+    title: "Estatísticas de Acesso",
+    desc: "Acompanhe visualizações do portfólio e cliques em WhatsApp e contratação.",
+    icon: BarChart3,
+    href: "/painel/estatisticas",
+    badge: "Métricas",
+  },
+];
 
 export default async function PainelPage() {
   let userEmail: string | null = null;
@@ -18,80 +76,185 @@ export default async function PainelPage() {
     } = await supabase.auth.getUser();
     userEmail = user?.email ?? null;
   } catch {
-    // Supabase pode não estar com chaves válidas no ambiente local
+    // Supabase pode não estar com credenciais no ambiente local de desenvolvimento
   }
 
   return (
-    <div className="min-h-screen bg-ink text-white">
+    <div className="relative min-h-screen bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
+      {/* Ambient background glow matching landing page */}
+      <div
+        className="pointer-events-none absolute -right-48 top-10 h-[38rem] w-[38rem] rounded-full bg-fuchsia-600/15 blur-3xl"
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute -left-48 bottom-10 h-[32rem] w-[32rem] rounded-full bg-fuchsia-700/10 blur-3xl"
+        aria-hidden="true"
+      />
+
       {/* Header */}
-      <header className="border-b border-zinc-800 bg-zinc-900/50 backdrop-blur-md sticky top-0 z-30">
-        <div className="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+      <header className="sticky top-0 z-30 border-b border-white/10 bg-ink/75 backdrop-blur-xl">
+        <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-16">
           <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-plum/20 border border-plum/40 flex items-center justify-center text-purple-400">
-              <Headphones className="w-5 h-5" />
-            </div>
-            <span className="font-bold font-display tracking-tight text-lg text-white">
-              PressLink <span className="text-xs font-normal text-purple-400 bg-purple-950/60 border border-purple-800/60 px-2 py-0.5 rounded-full ml-1.5">Painel</span>
+            <Link
+              href="/"
+              className="font-display text-2xl font-bold tracking-tight transition hover:opacity-90"
+            >
+              press<span className="text-fuchsia-400">link</span>
+            </Link>
+            <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-0.5 text-xs font-semibold text-fuchsia-300">
+              painel
             </span>
           </div>
 
-          <div className="flex items-center gap-4">
-            {userEmail && (
-              <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400 bg-zinc-800/60 px-3 py-1.5 rounded-full border border-zinc-700/50">
-                <User className="w-3.5 h-3.5 text-zinc-300" />
-                <span className="text-zinc-200">{userEmail}</span>
+          <div className="flex items-center gap-3 sm:gap-4">
+            {userEmail ? (
+              <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-medium text-white/80 backdrop-blur-sm">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="truncate max-w-[180px]">{userEmail}</span>
+              </div>
+            ) : (
+              <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-medium text-white/70">
+                <Sparkles className="h-3.5 w-3.5 text-fuchsia-400" />
+                <span>Modo de Demonstração</span>
               </div>
             )}
-            <LogoutButton variant="danger" />
+            <LogoutButton variant="pill" />
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-6 py-10">
-        <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 p-8 shadow-xl">
-          <div className="flex items-start justify-between flex-wrap gap-4">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-medium text-purple-400 bg-purple-950/50 border border-purple-800/50 px-3 py-1 rounded-full mb-3">
-                <ShieldCheck className="w-3.5 h-3.5" />
-                <span>Autenticação ativa</span>
-              </div>
-              <h1 className="text-3xl font-bold font-display tracking-tight text-white mb-2">
-                Painel Administrativo
-              </h1>
-              <p className="text-sm text-zinc-400 max-w-xl">
-                {userEmail
-                  ? `Sessão autenticada com sucesso como ${userEmail}.`
-                  : "Sua área de gerenciamento do portfólio de DJ."}
-              </p>
-            </div>
+      <main className="relative z-10 mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 lg:px-16">
+        {/* Hero Banner Section */}
+        <section className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-12 shadow-2xl backdrop-blur-xl overflow-hidden mb-12">
+          <div
+            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-fuchsia-500/10 blur-2xl"
+            aria-hidden="true"
+          />
 
-            <div className="flex items-center gap-3">
+          <div className="relative max-w-3xl">
+            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
+              Área do Artista
+            </p>
+            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05]">
+              A pista é sua.<br />
+              <span className="text-fuchsia-400">Gerencie seu portfólio.</span>
+            </h1>
+            <p className="mt-4 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl">
+              Mantenha suas faixas, fotos e próximas apresentações sempre atualizadas para produtores e contratantes de eventos.
+            </p>
+
+            {/* Quick Actions */}
+            <div className="mt-8 flex flex-wrap items-center gap-3">
+              <Link
+                href="/painel/perfil"
+                className="rounded-full bg-fuchsia-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-400 flex items-center gap-2"
+              >
+                <span>Editar meu perfil</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
               <Link
                 href="/"
-                className="inline-flex items-center gap-2 text-xs text-zinc-400 hover:text-white bg-zinc-800/70 hover:bg-zinc-800 px-3.5 py-2 rounded-lg border border-zinc-700/50 transition-colors"
+                className="rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/50 flex items-center gap-2"
               >
-                <ArrowLeft className="w-3.5 h-3.5" />
-                <span>Voltar à Landing Page</span>
+                <Globe className="w-4 h-4 text-fuchsia-300" />
+                <span>Ver página pública</span>
+                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
               </Link>
             </div>
           </div>
 
-          <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-5">
-              <h3 className="text-sm font-semibold text-zinc-200 mb-1">Perfil do DJ</h3>
-              <p className="text-xs text-zinc-400">Edição de bio, redes sociais e foto artística.</p>
+          {/* Quick Metrics */}
+          <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-6">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400">
+                <Eye className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-white/45">Visualizações</p>
+                <p className="text-xl font-bold font-display text-white">0 <span className="text-xs font-normal text-white/40">este mês</span></p>
+              </div>
             </div>
-            <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-5">
-              <h3 className="text-sm font-semibold text-zinc-200 mb-1">Galeria & Mídia</h3>
-              <p className="text-xs text-zinc-400">Upload de fotos, links de Spotify, SoundCloud e YouTube.</p>
+
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400">
+                <MousePointerClick className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-white/45">Cliques em Contato</p>
+                <p className="text-xl font-bold font-display text-white">0 <span className="text-xs font-normal text-white/40">conversões</span></p>
+              </div>
             </div>
-            <div className="rounded-xl border border-zinc-800 bg-zinc-950/40 p-5">
-              <h3 className="text-sm font-semibold text-zinc-200 mb-1">Agenda de Shows</h3>
-              <p className="text-xs text-zinc-400">Gerenciamento de datas futuras de eventos e apresentações.</p>
+
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400">
+                <Sparkles className="w-5 h-5" />
+              </div>
+              <div>
+                <p className="text-xs uppercase tracking-wider text-white/45">Status da Página</p>
+                <p className="text-sm font-semibold text-fuchsia-300 flex items-center gap-1.5 mt-0.5">
+                  <span className="h-2 w-2 rounded-full bg-fuchsia-400" />
+                  Rascunho
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+        </section>
+
+        {/* Management Modules Grid */}
+        <section>
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display text-xl sm:text-2xl font-bold tracking-tight text-white">
+              Recursos do Portfólio
+            </h2>
+            <span className="text-xs text-white/50">6 módulos disponíveis</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {modules.map((mod) => {
+              const Icon = mod.icon;
+              return (
+                <Link
+                  key={mod.title}
+                  href={mod.href}
+                  className="group relative rounded-3xl border border-white/10 bg-white/[0.02] p-7 transition-all duration-200 hover:border-white/25 hover:bg-white/[0.05] hover:shadow-xl hover:shadow-fuchsia-950/20 flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400 transition-colors group-hover:border-fuchsia-400/40 group-hover:bg-fuchsia-500/10">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-[11px] font-semibold text-white/60 group-hover:text-white/80">
+                        {mod.badge}
+                      </span>
+                    </div>
+
+                    <h3 className="font-display text-lg font-bold text-white group-hover:text-fuchsia-300 transition-colors">
+                      {mod.title}
+                    </h3>
+                    <p className="mt-2 text-sm text-white/60 leading-relaxed">
+                      {mod.desc}
+                    </p>
+                  </div>
+
+                  <div className="mt-6 flex items-center text-xs font-semibold text-fuchsia-400 group-hover:text-fuchsia-300 transition-colors">
+                    <span>Acessar</span>
+                    <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform group-hover:translate-x-1" />
+                  </div>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Footer Highlights */}
+        <section className="mt-16 pt-8 border-t border-white/10 text-center">
+          <ul className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 text-sm text-white/50">
+            <li>✦ Portfólio em minutos</li>
+            <li>✦ Links e agenda em um só lugar</li>
+            <li>✦ Sua identidade em destaque</li>
+          </ul>
+        </section>
       </main>
     </div>
   );

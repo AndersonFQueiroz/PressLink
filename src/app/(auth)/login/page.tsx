@@ -203,12 +203,12 @@ function LoginForm() {
 
       {/* Footer link to register */}
       <div className="mt-8 pt-6 border-t border-white/10 text-center">
-        <p className="text-sm text-white/60 mb-3">Ainda não tem um portfólio?</p>
+        <p className="text-sm text-white/60 mb-3">Ainda não tem uma conta?</p>
         <Link
           href="/cadastro"
           className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-white/50"
         >
-          Criar meu PressLink
+          Criar Conta
         </Link>
       </div>
 
