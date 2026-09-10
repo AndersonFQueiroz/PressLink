@@ -158,6 +158,11 @@ export default function DesignSystemPage() {
                   placeholder="contato@dj.com"
                   leftIcon={<Mail className="h-4 w-4" />}
                 />
+                <Input
+                  label="Nome Artístico (Flutuante)"
+                  floatingLabel
+                  helperText="Variante com label flutuante exigida no critério"
+                />
               </CardContent>
             </Card>
 
@@ -177,6 +182,12 @@ export default function DesignSystemPage() {
                   }}
                   error={inputError}
                   helperText="Sua URL pública será: presslink.app/seu-nome"
+                />
+                <Input
+                  label="E-mail com Label Flutuante"
+                  floatingLabel
+                  leftIcon={<Mail className="h-4 w-4" />}
+                  error={inputError}
                 />
                 <Input
                   label="Campo Desabilitado"
