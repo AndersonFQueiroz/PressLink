@@ -1,7 +1,6 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { headers } from "next/headers";
 import { createClient } from "@/lib/supabase/server";
 import {
   loginSchema,
@@ -96,11 +95,13 @@ export async function recuperarSenhaAction(
 
   try {
     const supabase = await createClient();
-    const headersList = await headers();
-    const origin = headersList.get("origin") || process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
+    // Usa a URL canônica do app (env) em vez do header "origin" da requisição,
+    // que pode ser controlado pelo cliente. Garante que o link de recuperação
+    // sempre aponte para o domínio oficial.
+    const appUrl = (process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000").replace(/\/$/, "");
 
     const { error } = await supabase.auth.resetPasswordForEmail(parseResult.data.email, {
-      redirectTo: `${origin}/auth/callback?next=/redefinir-senha`,
+      redirectTo: `${appUrl}/auth/callback?next=/redefinir-senha`,
     });
 
     if (error) {

@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { cadastroSchema, type CadastroFormData } from "@/lib/validators/cadastro";
 import { Input } from "@/components/ui/Input";
@@ -14,6 +15,7 @@ export function CadastroForm() {
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const [successMsg, setSuccessMsg] = useState<string | null>(null);
+  const [showSenha, setShowSenha] = useState(false);
 
   const {
     register,
@@ -109,10 +111,21 @@ export function CadastroForm() {
       />
       <Input
         label="Senha"
-        type="password"
+        type={showSenha ? "text" : "password"}
         placeholder="Mínimo 8 caracteres"
         autoComplete="new-password"
         error={errors.senha?.message}
+        rightIcon={
+          <button
+            type="button"
+            onClick={() => setShowSenha((v) => !v)}
+            aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={showSenha}
+            className="flex items-center text-white/40 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 rounded"
+          >
+            {showSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        }
         {...register("senha")}
       />
 
