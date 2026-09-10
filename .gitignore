@@ -147,3 +147,6 @@ vite.config.ts.timestamp-*
 FOTOS-DRY/
 Fotos-dry/
 
+# Memória persistente do agente (local only, não versionar)
+00-System/
+
