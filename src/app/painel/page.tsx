@@ -1,6 +1,4 @@
 import Link from "next/link";
-import { createClient } from "@/lib/supabase/server";
-import { LogoutButton } from "@/components/features/auth/LogoutButton";
 import {
   User,
   Music,
@@ -66,19 +64,7 @@ const modules = [
   },
 ];
 
-export default async function PainelPage() {
-  let userEmail: string | null = null;
-
-  try {
-    const supabase = await createClient();
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    userEmail = user?.email ?? null;
-  } catch {
-    // Supabase pode não estar com credenciais no ambiente local de desenvolvimento
-  }
-
+export default function PainelPage() {
   return (
     <div className="relative min-h-screen bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
       {/* Ambient background glow matching landing page */}
@@ -90,38 +76,6 @@ export default async function PainelPage() {
         className="pointer-events-none absolute -left-48 bottom-10 h-[32rem] w-[32rem] rounded-full bg-fuchsia-700/10 blur-3xl"
         aria-hidden="true"
       />
-
-      {/* Header */}
-      <header className="sticky top-0 z-30 border-b border-white/10 bg-ink/75 backdrop-blur-xl">
-        <div className="mx-auto flex h-20 w-full max-w-7xl items-center justify-between px-6 sm:px-10 lg:px-16">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="font-display text-2xl font-bold tracking-tight transition hover:opacity-90"
-            >
-              press<span className="text-fuchsia-400">link</span>
-            </Link>
-            <span className="rounded-full border border-fuchsia-400/30 bg-fuchsia-500/10 px-3 py-0.5 text-xs font-semibold text-fuchsia-300">
-              painel
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3 sm:gap-4">
-            {userEmail ? (
-              <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-medium text-white/80 backdrop-blur-sm">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="truncate max-w-[180px]">{userEmail}</span>
-              </div>
-            ) : (
-              <div className="hidden sm:flex items-center gap-2 rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-xs font-medium text-white/70">
-                <Sparkles className="h-3.5 w-3.5 text-fuchsia-400" />
-                <span>Modo de Demonstração</span>
-              </div>
-            )}
-            <LogoutButton variant="pill" />
-          </div>
-        </div>
-      </header>
 
       {/* Main Content */}
       <main className="relative z-10 mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 lg:px-16">
