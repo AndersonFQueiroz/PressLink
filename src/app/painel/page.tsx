@@ -69,11 +69,11 @@ export default function PainelPage() {
     <div className="relative min-h-screen bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
       {/* Ambient background glow matching landing page */}
       <div
-        className="pointer-events-none absolute -right-48 top-10 h-[38rem] w-[38rem] rounded-full bg-fuchsia-600/15 blur-3xl"
+        className="pointer-events-none fixed -right-48 top-10 h-[38rem] w-[38rem] rounded-full bg-fuchsia-600/15 blur-3xl"
         aria-hidden="true"
       />
       <div
-        className="pointer-events-none absolute -left-48 bottom-10 h-[32rem] w-[32rem] rounded-full bg-fuchsia-700/10 blur-3xl"
+        className="pointer-events-none fixed -left-48 bottom-10 h-[32rem] w-[32rem] rounded-full bg-fuchsia-700/10 blur-3xl"
         aria-hidden="true"
       />
 
