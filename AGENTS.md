@@ -124,6 +124,8 @@ src/
 5. Usar TypeScript estrito — evitar `any`
 6. Validar formulários com Zod + React Hook Form
 7. Tratar erros adequadamente (cliente e API)
+8. Cobrir 100% dos critérios da issue antes de commit/push
+9. Se a issue for visualmente testável, exigir validação do dono em `npm run dev` antes de commit/push; se não-visual, validar via `lint` + evidência funcional
 
 ### ❌ O que o agente NUNCA deve fazer
 1. Nunca commitar direto na `main` — sempre branch separada
@@ -132,10 +134,11 @@ src/
 4. Nunca remover/alterar testes sem motivo documentado
 5. Nunca ignorar erros de lint/TypeScript
 6. Nunca criar arquivos fora da estrutura definida sem autorização explícita
+7. Nunca dar commit/push com critério da issue pendente ou sem teste visual quando aplicável
 
 ## 10. Fluxo de Trabalho Esperado
 
-1. Receba a tarefa 2. Leia `requirements.md` e `specs.md` 3. Crie branch descritiva 4. Implemente seguindo convenções 5. Rode `npm run lint` e corrija 6. Commit(s) Conventional Commits 7. Push da branch e PR se solicitado
+1. Receba a tarefa 2. Leia `requirements.md` e `specs.md` 3. Crie branch descritiva 4. Implemente seguindo convenções 5. Checklist 100% da issue + validação do dono em `npm run dev` se visualmente testável + `npm run lint` 6. Commit(s) Conventional Commits 7. Push da branch e PR se solicitado
 
 ## 11. Modo Econômico de Tokens
 
