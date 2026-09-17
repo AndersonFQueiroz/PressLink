@@ -39,7 +39,10 @@ function mapAuthError(error: Error | { message: string; status?: number }): stri
   return error.message || "Ocorreu um erro inesperado. Tente novamente.";
 }
 
-export async function loginAction(data: LoginFormData): Promise<AuthActionResult> {
+export async function loginAction(
+  data: LoginFormData,
+  redirectTo?: string,
+): Promise<AuthActionResult> {
   const parseResult = loginSchema.safeParse(data);
   if (!parseResult.success) {
     return {
@@ -68,7 +71,12 @@ export async function loginAction(data: LoginFormData): Promise<AuthActionResult
     };
   }
 
-  redirect("/painel");
+  const destination =
+    redirectTo && redirectTo.startsWith("/") && !redirectTo.startsWith("//")
+      ? redirectTo
+      : "/painel";
+
+  redirect(destination);
 }
 
 export async function logoutAction(): Promise<void> {

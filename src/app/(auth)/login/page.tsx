@@ -23,6 +23,7 @@ function LoginForm() {
   const resetSuccess = searchParams.get("reset") === "success";
   const registeredSuccess = searchParams.get("registered") === "true";
   const urlError = searchParams.get("error");
+  const redirectTo = searchParams.get("redirectTo") || undefined;
 
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string | null>(
@@ -47,7 +48,7 @@ function LoginForm() {
   const onSubmit = (data: LoginFormData) => {
     setErrorMessage(null);
     startTransition(async () => {
-      const result = await loginAction(data);
+      const result = await loginAction(data, redirectTo);
       if (result && !result.success) {
         setErrorMessage(result.error || "Ocorreu um erro ao realizar login.");
       }
