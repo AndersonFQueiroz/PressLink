@@ -51,6 +51,7 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/login";
     redirectUrl.searchParams.set("redirectTo", pathname);
+    redirectUrl.searchParams.set("redirectedFrom", pathname);
     return NextResponse.redirect(redirectUrl);
   }
 
@@ -58,7 +59,8 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   const isPublicApi =
     pathname.startsWith("/api/health") ||
     pathname === "/api/contato" ||
-    pathname === "/api/estatisticas/registrar";
+    pathname === "/api/estatisticas/registrar" ||
+    pathname === "/api/perfil/check-username";
 
   if (!user && pathname.startsWith("/api") && !isPublicApi) {
     return NextResponse.json(
@@ -73,6 +75,7 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     const redirectUrl = request.nextUrl.clone();
     redirectUrl.pathname = "/painel";
     redirectUrl.searchParams.delete("redirectTo");
+    redirectUrl.searchParams.delete("redirectedFrom");
     return NextResponse.redirect(redirectUrl);
   }
 
