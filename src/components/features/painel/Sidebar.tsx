@@ -19,6 +19,7 @@ import {
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { LogoutButton } from "@/components/features/auth/LogoutButton";
+import { AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
 
 export type SidebarProps = {
   open: boolean;
@@ -40,7 +41,8 @@ const navItems = [
 export function Sidebar({ open, onClose }: SidebarProps) {
   const pathname = usePathname();
   const [displayName, setDisplayName] = useState("Visitante");
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [subtitle, setSubtitle] = useState<string | null>(null);
+  const [fotoUrl, setFotoUrl] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -57,17 +59,31 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           (typeof meta?.display_name === "string" && meta.display_name) ||
           "";
         const fallback = user.email?.split("@")[0] ?? "Visitante";
-        const name = metaName.trim() !== "" ? metaName.trim() : fallback;
-        setDisplayName(name);
-        setUserEmail(user.email ?? null);
+        setDisplayName(metaName.trim() !== "" ? metaName.trim() : fallback);
+        setSubtitle(user.email ?? null);
+        const res = await fetch("/api/perfil");
+        if (res.ok) {
+          const json = await res.json();
+          if (active && json.perfil) {
+            if (json.perfil.foto_url) setFotoUrl(json.perfil.foto_url);
+            if (json.perfil.nome_artistico) setDisplayName(json.perfil.nome_artistico);
+            if (json.perfil.username) setSubtitle(`@${json.perfil.username}`);
+          }
+        }
       } catch {
         // Sem Supabase configurado ou deslogado: mantém "Visitante"
       }
     })();
+    const onAvatar = (e: Event) => {
+      const detail = (e as CustomEvent<{ foto_url: string }>).detail;
+      if (active) setFotoUrl(detail?.foto_url || null);
+    };
+    window.addEventListener(AVATAR_UPDATED_EVENT, onAvatar);
     return () => {
       active = false;
+      window.removeEventListener(AVATAR_UPDATED_EVENT, onAvatar);
     };
-  }, []);
+  }, [pathname]);
 
   const initials = displayName.slice(0, 2).toUpperCase();
 
@@ -144,12 +160,17 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           </Link>
 
           <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-fuchsia-600 text-xs font-bold text-white">
-              {initials}
+            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-fuchsia-600 text-xs font-bold text-white">
+              {fotoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img src={fotoUrl} alt="Foto de perfil" className="h-full w-full object-cover" />
+              ) : (
+                initials
+              )}
             </div>
             <div className="min-w-0 flex-1">
               <p className="truncate text-sm font-medium text-white">{displayName}</p>
-              <p className="truncate text-xs text-white/50">{userEmail ?? "Acesso demonstração"}</p>
+              <p className="truncate text-xs text-white/50">{subtitle ?? "Acesso demonstração"}</p>
             </div>
             <LogoutButton variant="ghost" showText={false} className="h-8 w-8 shrink-0 rounded-lg px-0" />
           </div>

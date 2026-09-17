@@ -1,11 +1,13 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { perfilSchema, type PerfilFormData } from "@/lib/validators/perfil";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { AvatarUpload, AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
 import { cn } from "@/lib/utils";
 
 type PerfilFormProps = {
@@ -13,9 +15,11 @@ type PerfilFormProps = {
 };
 
 export function PerfilForm({ defaultValues }: PerfilFormProps) {
+  const router = useRouter();
   const [bioTab, setBioTab] = useState<"pt" | "en">("pt");
   const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
   const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
+  const [fotoUrl, setFotoUrl] = useState<string>(defaultValues?.foto_url ?? "");
 
   const {
     register,
@@ -34,6 +38,7 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
       tiktok: "",
       twitter_x: "",
       facebook: "",
+      foto_url: "",
       ...defaultValues,
     },
   });
@@ -64,18 +69,21 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
     const res = await fetch("/api/perfil", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
+      body: JSON.stringify({ ...data, foto_url: fotoUrl }),
     });
     const json = await res.json();
     if (!res.ok) {
       setToast({ type: "error", msg: json.error || "Erro ao salvar perfil" });
       return;
     }
-    setToast({ type: "success", msg: "Perfil salvo com sucesso!" });
+    setToast({ type: "success", msg: "Perfil salvo com sucesso! Redirecionando..." });
+    window.dispatchEvent(new CustomEvent(AVATAR_UPDATED_EVENT, { detail: { foto_url: fotoUrl } }));
+    window.setTimeout(() => router.push("/painel"), 1200);
   };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
+      <AvatarUpload initialUrl={fotoUrl} onUploaded={setFotoUrl} />
       <div className="grid gap-4 sm:grid-cols-2">
         <Input label="Nome artístico" placeholder="DJ Example" error={errors.nome_artistico?.message} {...register("nome_artistico")} />
         <div>

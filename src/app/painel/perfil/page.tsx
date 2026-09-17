@@ -20,6 +20,7 @@ export default async function PerfilPage() {
         tiktok: data.tiktok ?? "",
         twitter_x: data.twitter_x ?? "",
         facebook: data.facebook ?? "",
+        foto_url: data.foto_url ?? "",
       };
     }
   }

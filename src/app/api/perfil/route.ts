@@ -44,6 +44,7 @@ export async function PUT(req: Request) {
     tiktok: parsed.data.tiktok || null,
     twitter_x: parsed.data.twitter_x || null,
     facebook: parsed.data.facebook || null,
+    ...(parsed.data.foto_url ? { foto_url: parsed.data.foto_url } : {}),
   };
 
   const { data, error } = await supabase
