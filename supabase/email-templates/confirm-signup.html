@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirme seu e-mail — PressLink</title>
+  </head>
+  <!--
+    Template de e-mail de confirmação de cadastro (Supabase Auth).
+    Como aplicar: Supabase Dashboard → Authentication → Email Templates →
+    "Confirm signup" → cole este HTML no campo Message body e salve.
+    Variáveis disponíveis: {{ .ConfirmationURL }} {{ .Email }} {{ .SiteURL }}
+  -->
+  <body style="margin: 0; padding: 0; background-color: #0a0a0f; font-family: Arial, Helvetica, sans-serif;">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background-color: #0a0a0f; padding: 32px 16px;">
+      <tr>
+        <td align="center">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width: 520px; background-color: #14141b; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px; overflow: hidden;">
+            <tr>
+              <td align="center" style="padding: 32px 32px 8px 32px;">
+                <p style="margin: 0; font-size: 28px; font-weight: bold; letter-spacing: -0.5px;">
+                  <span style="color: #ffffff;">Press</span><span style="color: #e879f9;">Link</span>
+                </p>
+                <p style="margin: 8px 0 0 0; font-size: 13px; color: rgba(255, 255, 255, 0.5);">Seu portfólio de DJ em um link</p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 24px 32px 8px 32px;">
+                <h1 style="margin: 0; font-size: 20px; color: #ffffff;">Confirme seu e-mail</h1>
+                <p style="margin: 12px 0 0 0; font-size: 14px; line-height: 1.6; color: rgba(255, 255, 255, 0.7);">
+                  Olá! Você criou uma conta no <strong style="color: #ffffff;">PressLink</strong> com o e-mail
+                  <strong style="color: #ffffff;">{{ .Email }}</strong>. Clique no botão abaixo para confirmar
+                  seu cadastro e começar a montar seu portfólio:
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td align="center" style="padding: 24px 32px;">
+                <a href="{{ .ConfirmationURL }}" style="display: inline-block; padding: 14px 40px; background-color: #c026d3; color: #ffffff; font-size: 15px; font-weight: bold; text-decoration: none; border-radius: 12px;">Confirmar minha conta</a>
+                <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 1.6; color: rgba(255, 255, 255, 0.4);">
+                  Se o botão não funcionar, copie e cole este link no navegador:<br />
+                  <span style="color: rgba(255, 255, 255, 0.6); word-break: break-all;">{{ .ConfirmationURL }}</span>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 32px 32px 32px; border-top: 1px solid rgba(255, 255, 255, 0.08);">
+                <p style="margin: 16px 0 0 0; font-size: 12px; line-height: 1.6; color: rgba(255, 255, 255, 0.4);">
+                  Se você não criou esta conta, ignore este e-mail.<br />
+                  © PressLink — feito para DJs.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
