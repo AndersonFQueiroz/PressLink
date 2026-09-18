@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { CheckCircle2, Loader2, XCircle } from "lucide-react";
@@ -11,8 +11,11 @@ type ConfirmState = "loading" | "success" | "error";
 function ConfirmContent() {
   const searchParams = useSearchParams();
   const [state, setState] = useState<ConfirmState>("loading");
+  const ranRef = useRef(false);
 
   useEffect(() => {
+    if (ranRef.current) return;
+    ranRef.current = true;
     let active = true;
     (async () => {
       const code = searchParams.get("code");
@@ -23,7 +26,15 @@ function ConfirmContent() {
       try {
         const supabase = createClient();
         const { error } = await supabase.auth.exchangeCodeForSession(code);
-        if (active) setState(error ? "error" : "success");
+        if (!error) {
+          if (active) setState("success");
+          return;
+        }
+        // Código de uso único pode ter sido consumido antes (pré-visualização
+        // do app de e-mail confirma no Supabase mas gasta o código): se já
+        // existe sessão, trata como sucesso.
+        const { data } = await supabase.auth.getSession();
+        if (active) setState(data.session ? "success" : "error");
       } catch {
         if (active) setState("error");
       }
