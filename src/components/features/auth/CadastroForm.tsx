@@ -98,6 +98,7 @@ export function CadastroForm() {
       router.refresh();
     } else {
       setSuccessMsg("Conta criada! Verifique seu e-mail para confirmar o cadastro.");
+      window.setTimeout(() => router.push("/login?confirm=pending"), 2500);
     }
   };
 
