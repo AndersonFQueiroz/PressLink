@@ -35,6 +35,18 @@ export function CadastroForm() {
   const onSubmit = async (data: CadastroFormData) => {
     setFormError(null);
     setSuccessMsg(null);
+
+    try {
+      const checkRes = await fetch(`/api/perfil/check-username?username=${encodeURIComponent(data.username.toLowerCase().trim())}`);
+      const checkData = await checkRes.json();
+      if (!checkData.available) {
+        setFormError("Username já está em uso. Escolha outro.");
+        return;
+      }
+    } catch {
+      // Se a verificação falhar, segue o fluxo e o servidor valida novamente.
+    }
+
     const supabase = createClient();
 
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
@@ -42,6 +54,9 @@ export function CadastroForm() {
       password: data.senha,
       options: {
         data: { nome: data.nome },
+        // Leva o link do e-mail para a tela de confirmação no domínio atual
+        // (localhost ou Vercel), em vez da Site URL fixa do Supabase.
+        emailRedirectTo: `${window.location.origin}/auth/confirm`,
       },
     });
 
@@ -61,22 +76,24 @@ export function CadastroForm() {
       return;
     }
 
-    const { error: perfilError } = await supabase.from("perfil").insert({
-      usuario_id: userId,
-      username: data.username,
-      nome_artistico: data.nome,
-    });
-
-    if (perfilError) {
-      if (perfilError.code === "23505" || perfilError.message.includes("duplicate")) {
-        setFormError("Username já está em uso. Escolha outro.");
-      } else {
-        setFormError(`Conta criada, mas erro ao criar perfil: ${perfilError.message}`);
-      }
-      return;
-    }
-
+    // Sem sessão (confirmação de e-mail ativada), o RLS impede o insert:
+    // o perfil será criado no primeiro salvamento logado (upsert em /api/perfil).
     if (signUpData.session) {
+      const { error: perfilError } = await supabase.from("perfil").insert({
+        usuario_id: userId,
+        username: data.username,
+        nome_artistico: data.nome,
+      });
+
+      if (perfilError) {
+        if (perfilError.code === "23505" || perfilError.message.includes("duplicate")) {
+          setFormError("Username já está em uso. Escolha outro.");
+        } else {
+          setFormError(`Conta criada, mas erro ao criar perfil: ${perfilError.message}`);
+        }
+        return;
+      }
+
       router.push("/painel");
       router.refresh();
     } else {
