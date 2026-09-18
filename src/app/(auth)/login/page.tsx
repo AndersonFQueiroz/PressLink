@@ -22,6 +22,7 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const resetSuccess = searchParams.get("reset") === "success";
   const registeredSuccess = searchParams.get("registered") === "true";
+  const confirmPending = searchParams.get("confirm") === "pending";
   const urlError = searchParams.get("error");
   const redirectTo = searchParams.get("redirectTo") || undefined;
 
@@ -81,6 +82,13 @@ function LoginForm() {
         <div className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
           <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" />
           <span>Conta criada com sucesso! Faça login para começar a montar seu portfólio.</span>
+        </div>
+      )}
+
+      {confirmPending && (
+        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-fuchsia-500/30 bg-fuchsia-500/10 p-4 text-sm text-fuchsia-200">
+          <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-fuchsia-300" />
+          <span>Conta criada! Verifique seu e-mail para confirmar o cadastro e depois faça login.</span>
         </div>
       )}
 
