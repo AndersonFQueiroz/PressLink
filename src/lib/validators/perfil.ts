@@ -30,6 +30,7 @@ export const perfilSchema = z.object({
   tiktok: urlOptional,
   twitter_x: urlOptional,
   facebook: urlOptional,
+  foto_url: z.string().max(1000, "URL muito longa").optional().or(z.literal("")),
 });
 
 export type PerfilFormData = z.infer<typeof perfilSchema>;

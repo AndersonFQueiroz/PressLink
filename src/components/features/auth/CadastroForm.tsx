@@ -5,19 +5,19 @@ import { useForm } from "react-hook-form"; // hook de formulário — controla i
 import { zodResolver } from "@hookform/resolvers/zod"; // integra Zod ao react-hook-form (validação declarativa)
 import Link from "next/link"; // navegação client-side Next (sem reload)
 import { useRouter } from "next/navigation"; // router App Router — push/refresh após signup com sessão
+import { Eye, EyeOff } from "lucide-react"; // ícones olho mágico senha (Luiz)
 import { createClient } from "@/lib/supabase/client"; // client browser Supabase — createBrowserClient (anon key)
 import { cadastroSchema, type CadastroFormData } from "@/lib/validators/cadastro"; // schema Zod + tipo TS (nome/username/email/senha/aceiteLgpd)
 import { Input } from "@/components/ui/Input"; // componente UI Input — label/error/helperText
 import { Button } from "@/components/ui/Button"; // componente UI Button — isLoading/size
 
-// CadastroForm — formulário de cadastro com verificação por email (Resend Hook)
-// RF: Task7 do plano resend-verificacao — successMsg com banner "verifique seu email" + botão reenviar cooldown 60s
-// Por que existe: UX pós-cadastro sem sessão (Supabase envia magic link 1h) precisa instruir e permitir reenvio
-// Orquestra: dry/skank/ice — LGPD já cobre aceiteLgpd, agora adiciona reenvio idempotente
+// CadastroForm — formulário de cadastro com verificação por email (Resend Hook) + merge Luiz
+// RF: Task7 resend-verificacao — banner + reenvio cooldown 60s + check-username + Eye toggle
 export function CadastroForm() {
   const router = useRouter(); // navega para /painel se já logado (session presente) ou /login
   const [formError, setFormError] = useState<string | null>(null); // erro geral do submit (ex: email duplicado)
   const [successMsg, setSuccessMsg] = useState<string | null>(null); // msg sucesso pós-cadastro sem sessão
+  const [showSenha, setShowSenha] = useState(false); // toggle olho mágico (Luiz)
   const [emailEnviado, setEmailEnviado] = useState<string | null>(null); // email que recebeu link — para reenvio e link verificar-email
   const [resendCooldown, setResendCooldown] = useState(0); // cooldown local 60s — evita flood clique (espelha server)
   const [resendStatus, setResendStatus] = useState<string | null>(null); // toast inline do reenvio (sucesso/erro)
@@ -80,15 +80,29 @@ export function CadastroForm() {
     setSuccessMsg(null); // limpa sucesso anterior
     setEmailEnviado(null); // limpa email anterior (nova tentativa)
     setResendStatus(null); // limpa toast reenvio
+
+    // 0. Check username prévio (Luiz) — evita tentativa signUp com username duplicado
+    try {
+      const checkRes = await fetch(`/api/perfil/check-username?username=${encodeURIComponent(data.username.toLowerCase().trim())}`);
+      const checkData = await checkRes.json();
+      if (!checkData.available) {
+        setFormError("Username já está em uso. Escolha outro.");
+        return;
+      }
+    } catch {
+      // Se a verificação falhar, segue o fluxo e o servidor valida novamente.
+    }
+
     const supabase = createClient(); // client browser — precisa NEXT_PUBLIC_ env setado
 
-    // 1. Cria usuário via Supabase Auth — envia email se email confirmação habilitado
+    // 1. Cria usuário via Supabase Auth — envia email se confirmação habilitada (merge: window.origin + /verificar-email)
     const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email: data.email, // email destino — Supabase gera token_hash 1h
       password: data.senha, // senha — Supabase hashea com bcrypt
       options: {
         data: { nome: data.nome }, // user_metadata — usado no template VerificationEmail
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/verificar-email`, // redirect que hook usa para montar verificationUrl
+        // Leva o link para /verificar-email no domínio atual (merge Luiz window.origin + Muginski path)
+        emailRedirectTo: `${window.location.origin}/verificar-email`,
       },
     });
 
@@ -108,31 +122,31 @@ export function CadastroForm() {
       return;
     }
 
-    // 2. Cria perfil vinculado — username único
-    const { error: perfilError } = await supabase.from("perfil").insert({
-      usuario_id: userId, // FK para auth.users.id
-      username: data.username, // slug único — 23505 se duplicado
-      nome_artistico: data.nome, // nome exibido no EPK
-    });
-
-    if (perfilError) {
-      if (perfilError.code === "23505" || perfilError.message.includes("duplicate")) {
-        setFormError("Username já está em uso. Escolha outro."); // erro de unicidade
-      } else {
-        setFormError(`Conta criada, mas erro ao criar perfil: ${perfilError.message}`); // outro erro perfil (não bloqueia auth, mas informa)
-      }
-      return;
-    }
-
-    // 3. Pós-cadastro — se Supabase retornou session (email confirmação desabilitado) vai para painel
+    // 2/3. Pós-cadastro — se tem session (email confirmação desabilitado) cria perfil e vai para painel
+    // Sem sessão o RLS impede insert: perfil será criado no primeiro salvamento logado (mas mantemos banner resend)
     if (signUpData.session) {
-      router.push("/painel"); // logado direto — middleware libera (email_confirmed_at pode ser null mas session existe)
+      const { error: perfilError } = await supabase.from("perfil").insert({
+        usuario_id: userId, // FK para auth.users.id
+        username: data.username, // slug único — 23505 se duplicado
+        nome_artistico: data.nome, // nome exibido no EPK
+      });
+
+      if (perfilError) {
+        if (perfilError.code === "23505" || perfilError.message.includes("duplicate")) {
+          setFormError("Username já está em uso. Escolha outro."); // erro de unicidade
+        } else {
+          setFormError(`Conta criada, mas erro ao criar perfil: ${perfilError.message}`);
+        }
+        return;
+      }
+
+      router.push("/painel"); // logado direto
       router.refresh(); // força revalidação cookies
     } else {
       // Sem session — email de verificação enviado (hook Resend ou SMTP fallback), mostra banner + reenvio
-      setSuccessMsg(`Conta criada! Enviamos email para ${data.email} — verifique sua caixa e spam. Link expira em 1 hora.`); // banner verde — Task7
+      setSuccessMsg(`Conta criada! Enviamos email para ${data.email} — verifique sua caixa e spam. Link expira em 1 hora.`);
       setEmailEnviado(data.email); // guarda para botão reenviar e link verificar-email
-      setResendCooldown(0); // sem cooldown inicial — permite 1º reenvio após 60s do envio original (server já controla)
+      setResendCooldown(0); // sem cooldown inicial
     }
   };
 
@@ -163,10 +177,21 @@ export function CadastroForm() {
       />
       <Input
         label="Senha"
-        type="password"
+        type={showSenha ? "text" : "password"}
         placeholder="Mínimo 8 caracteres"
         autoComplete="new-password"
         error={errors.senha?.message}
+        rightIcon={
+          <button
+            type="button"
+            onClick={() => setShowSenha((v) => !v)}
+            aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
+            aria-pressed={showSenha}
+            className="flex items-center text-white/40 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 rounded"
+          >
+            {showSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+          </button>
+        }
         {...register("senha")}
       />
 
@@ -203,7 +228,6 @@ export function CadastroForm() {
       {/* Banner reenvio — só após sucesso sem sessão (Task7) */}
       {emailEnviado && (
         <div className="flex flex-col gap-2">
-          {/* Botão reenviar — cooldown 60s, chama POST /api/auth/resend */}
           <button
             type="button"
             onClick={handleReenviar}
@@ -212,13 +236,11 @@ export function CadastroForm() {
           >
             {isResending ? "Enviando..." : resendCooldown > 0 ? `Aguarde ${resendCooldown}s` : "Reenviar email"}
           </button>
-          {/* Toast inline reenvio — aria-live para acessibilidade */}
           {resendStatus && (
             <p role="status" aria-live="polite" className="text-xs text-white/60 text-center">
               {resendStatus}
             </p>
           )}
-          {/* Link para página de verificação — usuário pode colar token ou ver status */}
           <Link
             href={`/verificar-email?email=${encodeURIComponent(emailEnviado)}`}
             className="text-sm text-white/60 hover:text-white/80 text-center underline underline-offset-2"
