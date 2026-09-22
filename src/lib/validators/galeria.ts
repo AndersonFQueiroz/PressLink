@@ -22,5 +22,10 @@ export const galeriaDeleteSchema = z.object({
   id: z.string().uuid("ID inválido"),
 });
 
+export const galeriaReordenarSchema = z.object({
+  ids: z.array(z.string().uuid("ID inválido")).min(1, "Lista vazia").max(100, "Máximo 100 fotos"),
+});
+
 export type GaleriaUploadData = z.infer<typeof galeriaUploadSchema>;
 export type GaleriaDeleteData = z.infer<typeof galeriaDeleteSchema>;
+export type GaleriaReordenarData = z.infer<typeof galeriaReordenarSchema>;
