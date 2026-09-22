@@ -150,3 +150,7 @@ Fotos-dry/
 # Memória persistente do agente (local only, não versionar)
 00-System/
 
+# Launcher local PressLink (opencode auto-run, não versionar)
+.vscode/
+a.txt
+
