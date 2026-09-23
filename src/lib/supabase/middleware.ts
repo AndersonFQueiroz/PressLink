@@ -79,5 +79,15 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
     return NextResponse.redirect(redirectUrl);
   }
 
+  // 4. Bloqueio Resend — email não verificado não acessa /painel (merge Muginski: Alternativa A)
+  // Mantém proteção Luiz + adiciona verificação email_confirmed_at -> /verificar-email
+  if (user && !user.email_confirmed_at && pathname.startsWith("/painel")) {
+    const redirectUrl = request.nextUrl.clone();
+    redirectUrl.pathname = "/verificar-email";
+    redirectUrl.searchParams.set("reason", "unverified");
+    if (user.email) redirectUrl.searchParams.set("email", user.email);
+    return NextResponse.redirect(redirectUrl);
+  }
+
   return supabaseResponse;
 }
