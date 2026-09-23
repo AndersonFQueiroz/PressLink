@@ -5,9 +5,14 @@ import { galeriaReordenarSchema } from "@/lib/validators/galeria";
 // PUT /api/galeria/reordenar — atualiza ordem das fotos { ids: string[] }
 export async function PUT(req: Request) {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: import("@supabase/supabase-js").User | null = null;
+  try {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+    user = data.user;
+  } catch {
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
   if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
 
   const { data: perfil } = await supabase.from("perfil").select("id").eq("usuario_id", user.id).single();

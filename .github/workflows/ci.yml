@@ -28,6 +28,9 @@ jobs:
         run: npm run typecheck
 
       - name: Build (test-compile)
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: http://127.0.0.1:54321
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: fake-anon-key-for-ci
         run: npm run build
 
       - name: Unit tests
@@ -37,6 +40,11 @@ jobs:
         run: npm run test:api
 
       - name: E2E tests (SUT webServer)
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL || 'http://127.0.0.1:54321' }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY || 'fake-anon-key-for-ci' }}
+          PLAYWRIGHT_TEST_EMAIL: ${{ secrets.PLAYWRIGHT_TEST_EMAIL }}
+          PLAYWRIGHT_TEST_PASSWORD: ${{ secrets.PLAYWRIGHT_TEST_PASSWORD }}
         run: npx playwright install --with-deps chromium && npm run test:e2e
 
       - name: Upload Playwright report

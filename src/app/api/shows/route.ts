@@ -3,9 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import { showCreateSchema, showUpdateSchema, showDeleteSchema } from "@/lib/validators/shows";
 
 async function getPerfilOrError(supabase: Awaited<ReturnType<typeof createClient>>) {
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: import("@supabase/supabase-js").User | null = null;
+  try {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) return { error: NextResponse.json({ error: "Não autenticado" }, { status: 401 }) as unknown as null, user: null, perfil: null };
+    user = data.user;
+  } catch {
+    return { error: NextResponse.json({ error: "Não autenticado" }, { status: 401 }) as unknown as null, user: null, perfil: null };
+  }
   if (!user) return { error: NextResponse.json({ error: "Não autenticado" }, { status: 401 }) as unknown as null, user: null, perfil: null };
   const { data: perfil } = await supabase.from("perfil").select("id").eq("usuario_id", user.id).single();
   if (!perfil) return { error: NextResponse.json({ error: "Perfil não encontrado" }, { status: 404 }) as unknown as null, user: null, perfil: null };
@@ -15,9 +20,14 @@ async function getPerfilOrError(supabase: Awaited<ReturnType<typeof createClient
 // GET /api/shows — lista cronológica (data asc, horario asc, created_at)
 export async function GET() {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  let user: import("@supabase/supabase-js").User | null = null;
+  try {
+    const { data, error } = await supabase.auth.getUser();
+    if (error) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+    user = data.user;
+  } catch {
+    return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+  }
   if (!user) return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
   const { data: perfil } = await supabase.from("perfil").select("id").eq("usuario_id", user.id).single();
   if (!perfil) return NextResponse.json({ error: "Perfil não encontrado" }, { status: 404 });
