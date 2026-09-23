@@ -104,6 +104,24 @@ npm run dev
 
 Acesse [http://localhost:3000](http://localhost:3000) no navegador.
 
+### Testes & SUT
+
+Pirâmide: `unit` (Zod) → `api` (Route Handlers mock) → `e2e` (Playwright webServer).
+SUT = Next `localhost:3000` via `playwright.config.ts:21` + `config/test.ts:1` `baseUrl`.
+Offline: `npm run test:unit && npm run test:api` não exige Supabase real (mocks em `src/lib/test-utils/supabase-mock.ts:1`).
+E2E completo: defina `PLAYWRIGHT_TEST_EMAIL/PASSWORD` e rode `npm run test:e2e`. Sem creds, E2E valida redirects 401 (sempre verde).
+
+```bash
+npm run test:unit      # 27 tests validators
+npm run test:api       # 19 tests Route Handlers mockados
+npm run test:ci        # unit + api
+npm run test:e2e       # 12 tests Playwright (10 passam sem creds, 2 skip)
+PLAYWRIGHT_BASE_URL=https://presslink.vercel.app npm run test:e2e  # SUT contra produção
+npm run typecheck && npm run build  # test-compile
+```
+
+Veja `.env.test.example` para SUT local sem Supabase real.
+
 ---
 
 ## Equipe
