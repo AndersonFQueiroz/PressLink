@@ -84,7 +84,7 @@ export async function PATCH(req: Request) {
 
     const { data: existing, error: findError } = await supabase
       .from("perfil")
-      .select("id")
+      .select("id, username")
       .eq("usuario_id", user.id)
       .maybeSingle();
 
@@ -99,6 +99,7 @@ export async function PATCH(req: Request) {
 
     const payload = {
       usuario_id: user.id,
+      username: existing.username,
       whatsapp: parsed.data.whatsapp || null,
       email_booking: parsed.data.email_booking || null,
       updated_at: new Date().toISOString(),
