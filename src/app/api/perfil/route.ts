@@ -82,6 +82,21 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: "Dados inválidos", issues: parsed.error.flatten() }, { status: 400 });
     }
 
+    const { data: existing, error: findError } = await supabase
+      .from("perfil")
+      .select("id")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+
+    if (findError) return NextResponse.json({ error: findError.message }, { status: 500 });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: "Salve a página Perfil antes de configurar o contato." },
+        { status: 409 },
+      );
+    }
+
     const payload = {
       usuario_id: user.id,
       whatsapp: parsed.data.whatsapp || null,
