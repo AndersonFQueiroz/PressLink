@@ -52,9 +52,9 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 
 | ID     | Requisito                                                                                     | Prioridade |
 | ------ | --------------------------------------------------------------------------------------------- | ---------- |
-| RF-18  | O sistema deve permitir que o DJ cadastre um número de WhatsApp para contato.                 | Alta       |
-| RF-19  | O sistema deve permitir que o DJ cadastre um e-mail para booking.                             | Alta       |
-| RF-20  | O sistema deve disponibilizar um formulário de contato na página pública que envie os dados por e-mail ao DJ. | Média |
+| RF-18  | O sistema deve permitir que o DJ cadastre um número de WhatsApp para contato direto.          | Alta       |
+| RF-19  | O sistema deve permitir que o DJ cadastre um e-mail para booking direto.                      | Alta       |
+| RF-20  | O sistema deve disponibilizar botões/links de contato direto (WhatsApp e E-mail de Booking) na página pública. | Alta |
 
 ### Seleção de Template
 
@@ -78,7 +78,7 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 | ID     | Requisito                                                                                     | Prioridade |
 | ------ | --------------------------------------------------------------------------------------------- | ---------- |
 | RF-28  | O sistema deve contabilizar o número de visualizações da página pública de cada DJ.           | Média      |
-| RF-29  | O sistema deve contabilizar o número de cliques nos botões de contato (WhatsApp, e-mail, formulário). | Média |
+| RF-29  | O sistema deve contabilizar o número de cliques nos botões de contato direto (WhatsApp e e-mail). | Média |
 | RF-30  | O sistema deve exibir as estatísticas de forma resumida no painel do DJ.                      | Média      |
 
 ---
@@ -108,7 +108,7 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 | RNF-07  | A autenticação deve utilizar tokens seguros (JWT) com expiração configurável, gerenciados pelo Supabase Auth. |
 | RNF-08  | As senhas devem ser armazenadas com hash seguro (bcrypt ou equivalente, gerenciado pelo Supabase). |
 | RNF-09  | As rotas do painel administrativo e da API devem ser protegidas, acessíveis apenas por usuários autenticados. |
-| RNF-10  | O formulário de contato público deve contar com proteção contra spam (rate limiting ou captcha). |
+| RNF-10  | As rotas públicas e de API devem possuir mecanismos de rate limiting para proteção contra abuso e requisições maliciosas. |
 
 ### Proteção de Dados (LGPD)
 
@@ -134,6 +134,7 @@ As funcionalidades abaixo **não fazem parte do MVP** e estão planejadas como t
 
 | Funcionalidade                       | Descrição                                                                                   |
 | ------------------------------------ | ------------------------------------------------------------------------------------------- |
+| Formulário de contato na plataforma  | Envio de mensagens/propostas via formulário interno (no MVP, o contato é via links diretos).|
 | Domínio próprio customizado          | Permitir que DJs de planos pagos conectem seu próprio domínio (ex.: `www.djfulano.com.br`). |
 | Subdomínio personalizado             | Oferecer URLs no formato `nomedodj.presslink.app` como alternativa ao path-based.             |
 | Marketplace de templates premium     | Loja de templates criados por designers terceiros, disponíveis mediante assinatura paga.     |
