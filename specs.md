@@ -111,9 +111,8 @@ O PressLink é uma aplicação web full-stack construída com **Next.js** (App R
 │ thumbnail_url    │ │   - page_view            │
 │ slug             │ │   - click_whatsapp       │
 │ ativo            │ │   - click_email          │
-│ created_at       │ │   - click_formulario     │
-└──────────────────┘ │ ip_hash (anonimizado)    │
-                     │ user_agent               │
+│ created_at       │ │ ip_hash (anonimizado)    │
+└──────────────────┘ │ user_agent               │
                      │ created_at               │
                      └──────────────────────────┘
 ```
@@ -139,7 +138,7 @@ Armazena as referências (URLs) das fotos da galeria do DJ. As imagens propriame
 Catálogo de templates visuais disponíveis para a página pública. No MVP, haverá de 2 a 3 opções pré-configuradas. Cada template possui um `slug` identificador e uma `thumbnail_url` para pré-visualização.
 
 #### `VisualizacaoDePagina`
-Registra eventos de interação na página pública: visualizações de página e cliques em botões de contato (WhatsApp, e-mail, formulário). O IP é armazenado de forma anonimizada (hash) para conformidade com a LGPD. Esses dados alimentam as estatísticas simples exibidas no painel do DJ.
+Registra eventos de interação na página pública: visualizações de página e cliques em botões de contato direto (WhatsApp, e-mail de booking). O IP é armazenado de forma anonimizada (hash) para conformidade com a LGPD. Esses dados alimentam as estatísticas simples exibidas no painel do DJ.
 
 ---
 
@@ -182,7 +181,6 @@ Registra eventos de interação na página pública: visualizações de página 
 | `/api/despublicar`               | POST      | Despublicar a página pública.                      |
 | `/api/estatisticas`              | GET       | Buscar estatísticas de visualizações e cliques.    |
 | `/api/estatisticas/registrar`    | POST      | Registrar um evento (visualização ou clique).      |
-| `/api/contato`                   | POST      | Enviar mensagem pelo formulário de contato público.|
 
 ---
 
