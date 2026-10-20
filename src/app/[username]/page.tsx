@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { DarkMinimalTemplate } from "@/components/templates/DarkMinimalTemplate";
 import { VibrantFestivalTemplate } from "@/components/templates/VibrantFestivalTemplate";
+import { CleanEditorialTemplate } from "@/components/templates/CleanEditorialTemplate";
 import { TemplatePublicData } from "@/types/template";
 import { createClient } from "@/lib/supabase/server";
 
@@ -204,6 +205,102 @@ const DEMO_VIBRANT_FESTIVAL_DATA: TemplatePublicData = {
   ],
 };
 
+const DEMO_CLEAN_EDITORIAL_DATA: TemplatePublicData = {
+  perfil: {
+    id: "demo-clean-editorial",
+    nome_artistico: "S O P H I A",
+    username: "sophia",
+    foto_url:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=1200&auto=format&fit=crop",
+    biografia_pt:
+      "Especialista em ambientações sonoras refinadas para destination weddings, lounges e celebrações corporativas de alto padrão. SOPHIA une a sofisticação do Deep House e Nu-Disco à elegância da Bossa Nova contemporânea e clássicos atemporais.\n\nCom apresentações em resorts de luxo e eventos privados internacionais, desenvolve curadorias musicais exclusivas desenhadas sob medida para cada ocasião.",
+    biografia_en:
+      "Curating refined soundscapes for destination weddings, luxury lounges, and high-end private galas. SOPHIA seamlessly blends soulful deep house, nu-disco, and timeless melodic classics tailored to discerning audiences.\n\nPerforming across boutique private venues and prestigious international events with tailor-made musical curation.",
+    instagram: "https://instagram.com",
+    twitter_x: "https://x.com",
+    tiktok: "https://tiktok.com",
+    facebook: "https://facebook.com",
+    whatsapp: "+55 11 97777-6666",
+    email_booking: "concierge@sophia-music.com",
+    template_slug: "clean-editorial",
+  },
+  fotos: [
+    {
+      id: "ce-1",
+      url: "https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=900&auto=format&fit=crop",
+      alt_text: "Destination Wedding Sunset Lounge",
+      ordem: 1,
+    },
+    {
+      id: "ce-2",
+      url: "https://images.unsplash.com/photo-1469371670807-013ccf25f16a?q=80&w=900&auto=format&fit=crop",
+      alt_text: "Private Gala Reception & Atmosphere",
+      ordem: 2,
+    },
+    {
+      id: "ce-3",
+      url: "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?q=80&w=900&auto=format&fit=crop",
+      alt_text: "Boutique Sound Setup & Modern Booth",
+      ordem: 3,
+    },
+    {
+      id: "ce-4",
+      url: "https://images.unsplash.com/photo-1519671482749-fd09be7ccebf?q=80&w=900&auto=format&fit=crop",
+      alt_text: "Editorial Press Lookbook",
+      ordem: 4,
+    },
+  ],
+  midias: [
+    {
+      id: "cem-1",
+      tipo: "soundcloud",
+      url: "https://soundcloud.com/charlottedewittemusic/charlotte-de-witte-apollo-ep-preview",
+      titulo: "Sunset Nu-Disco & Soulful Session",
+      ordem: 1,
+    },
+    {
+      id: "cem-2",
+      tipo: "spotify",
+      url: "https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT",
+      titulo: "Lounge Selection // Chapter IV",
+      ordem: 2,
+    },
+    {
+      id: "cem-3",
+      tipo: "youtube",
+      url: "https://www.youtube.com/watch?v=kYv9rE8lQ_U",
+      titulo: "Destination Wedding Live Performance",
+      ordem: 3,
+    },
+  ],
+  shows: [
+    {
+      id: "ces-1",
+      nome_evento: "Villa Bellagio Gala // Private Wedding",
+      data: "2026-11-28",
+      horario: "17:00",
+      local: "Lake Como Villa",
+      cidade: "Como / IT",
+    },
+    {
+      id: "ces-2",
+      nome_evento: "Rooftop Sunset Lounge Session",
+      data: "2026-12-18",
+      horario: "18:30",
+      local: "Fasano Rooftop",
+      cidade: "São Paulo / SP",
+    },
+    {
+      id: "ces-3",
+      nome_evento: "Boutique Wine & Sound Experience",
+      data: "2027-01-15",
+      horario: "19:00",
+      local: "Reserva Cavas",
+      cidade: "Mendoza / AR",
+    },
+  ],
+};
+
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { username } = await params;
   return {
@@ -293,9 +390,16 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
     // Ambiente sem Supabase ou erro de conexão
   }
 
-  // Se não encontrou no banco, permite visualização do demo se for "demo", "kronos", "aurora", "demo-festival" ou se banco estiver indisponível
+  // Se não encontrou no banco, permite visualização do demo se for "demo", "kronos", "aurora", "sophia", etc., ou se banco estiver indisponível
   if (!profileData) {
     if (
+      cleanUsername === "demo-editorial" ||
+      cleanUsername === "sophia" ||
+      cleanUsername === "editorial" ||
+      requestedTemplate === "clean-editorial"
+    ) {
+      profileData = DEMO_CLEAN_EDITORIAL_DATA;
+    } else if (
       cleanUsername === "demo-festival" ||
       cleanUsername === "aurora" ||
       cleanUsername === "festival" ||
@@ -307,7 +411,9 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
     } else {
       // Se estiver em ambiente sem credenciais configuradas, renderiza demo com o username fornecido
       const baseDemo =
-        requestedTemplate === "vibrant-festival"
+        requestedTemplate === "clean-editorial"
+          ? DEMO_CLEAN_EDITORIAL_DATA
+          : requestedTemplate === "vibrant-festival"
           ? DEMO_VIBRANT_FESTIVAL_DATA
           : DEMO_DARK_MINIMAL_DATA;
 
@@ -322,13 +428,17 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
     }
   }
 
-  // Permite sobrescrever o template para preview via query ?template=vibrant-festival
+  // Permite sobrescrever o template para preview via query ?template=...
   if (profileData && requestedTemplate) {
     profileData.perfil.template_slug = requestedTemplate;
   }
 
   if (!profileData) {
     notFound();
+  }
+
+  if (profileData.perfil.template_slug === "clean-editorial") {
+    return <CleanEditorialTemplate data={profileData} />;
   }
 
   if (profileData.perfil.template_slug === "vibrant-festival") {
