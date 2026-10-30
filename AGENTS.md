@@ -74,6 +74,14 @@ Antes de implementar qualquer funcionalidade nova, **consulte obrigatoriamente**
 - **`requirements.md`** — Requisitos funcionais/não funcionais do MVP.
 - **`specs.md`** — Arquitetura, modelo de dados, rotas e fluxos.
 
+### Cérebro (vault Obsidian)
+
+- Contexto de todos os projetos fica no repo privado `cerebro`; no Codespace, clone em `/workspaces/cerebro`.
+- **Antes de qualquer leitura/edição**: `bash "/workspaces/cerebro/90 Sistema/sync-cerebro.sh" pull`.
+- **Depois de editar**: `bash "/workspaces/cerebro/90 Sistema/sync-cerebro.sh" push "tipo(escopo): msg"`.
+- Regras do vault: `90 Sistema/Regras-do-Agente.md` e `90 Sistema/Guia-Vault-para-LLMs.md`.
+- Conflito de pull: abortar e avisar o dono; nunca `push --force`.
+
 ## 8. Convenções de Código
 
 ### Estrutura de pastas (Next.js App Router)
