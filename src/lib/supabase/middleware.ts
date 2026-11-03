@@ -1,6 +1,21 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 
+// API que precisa responder sem sessão.
+// /api/auth/* é chamado sem cookies: o hook do Supabase é server-to-server e o reenvio
+// de verificação é usado justamente por quem ainda não confirmou o email (logo, sem sessão).
+// A autenticação dessas rotas é feita dentro delas (assinatura do hook + rate limit), não aqui.
+export function isPublicApiPath(pathname: string): boolean {
+  return (
+    pathname.startsWith("/api/auth/") ||
+    pathname.startsWith("/api/health") ||
+    pathname === "/api/contato" ||
+    pathname === "/api/estatisticas/registrar" ||
+    pathname === "/api/perfil/check-username"
+  );
+}
+
+
 export async function updateSession(request: NextRequest): Promise<NextResponse> {
   let supabaseResponse = NextResponse.next({
     request,
@@ -56,13 +71,7 @@ export async function updateSession(request: NextRequest): Promise<NextResponse>
   }
 
   // 2. Proteger rotas privadas de API contra acessos não autenticados
-  const isPublicApi =
-    pathname.startsWith("/api/health") ||
-    pathname === "/api/contato" ||
-    pathname === "/api/estatisticas/registrar" ||
-    pathname === "/api/perfil/check-username";
-
-  if (!user && pathname.startsWith("/api") && !isPublicApi) {
+  if (!user && pathname.startsWith("/api") && !isPublicApiPath(pathname)) {
     return NextResponse.json(
       { error: "Não autorizado. Faça login para acessar este recurso." },
       { status: 401 },

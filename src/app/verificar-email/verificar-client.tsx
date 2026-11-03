@@ -6,10 +6,11 @@
 // Pirâmide: topo E2E — estados idle/verifying/success/error + expirado/ja_verificado + reenvio 60s
 // Orquestra: dry/haxixe/skank/ice — LGPD mask não necessário aqui, mas não loga token
 
-import { useEffect, useState } from "react"; // estados + efeito colateral verifyOtp
+import { useEffect, useRef, useState } from "react"; // estados + efeito colateral verifyOtp
 import Link from "next/link"; // navegação client-side Next
 import { useRouter, useSearchParams } from "next/navigation"; // router para redirect + searchParams para token_hash/type/next/email
 import { createClient } from "@/lib/supabase/client"; // client browser — createBrowserClient com anon key
+import { safeNext } from "@/lib/safe-next"; // sanitiza ?next= (bloqueia //evil.com)
 
 // Estados da verificação — idle (sem token), verifying (chamando verifyOtp), success, error, expirado, ja_verificado
 type State = "idle" | "verifying" | "success" | "error" | "expired" | "already_verified";
@@ -19,16 +20,25 @@ export function VerificarEmailClient() {
   const router = useRouter(); // para redirect após sucesso (ex: /login?verified=1 ou ?next=)
   const searchParams = useSearchParams(); // lê ?token_hash&type&email&next&reason
   const tokenHash = searchParams.get("token_hash"); // hash gerado por Supabase hook (email_data.token_hash)
+  const code = searchParams.get("code"); // PKCE — link do email NATIVO do Supabase (fallback sem RESEND_API_KEY)
   const type = searchParams.get("type"); // tipo Supabase — esperado "signup" (confirm cadastro)
   const next = searchParams.get("next"); // destino opcional pós-verificação (ex: /painel) — sanitizado
   const email = searchParams.get("email"); // email do usuário — para reenvio e exibição
   const reason = searchParams.get("reason"); // motivo vindo do middleware (unverified)
+  const ranRef = useRef(false); // guard: StrictMode roda efeito 2x e o token é single-use
 
   const [state, setState] = useState<State>("idle"); // estado atual da verificação
   const [msg, setMsg] = useState(""); // mensagem detalhada para erro/expirado
 
-  // Efeito — verifica OTP assim que token_hash disponível
+  // Efeito — verifica OTP assim que token_hash (ou code do fluxo nativo) disponível
   useEffect(() => {
+    // StrictMode/dev roda o efeito duas vezes; a segunda encontraria o token já consumido
+    if (ranRef.current) return;
+    ranRef.current = true;
+
+    let active = true; // evita setState depois do unmount
+    let timer: ReturnType<typeof setTimeout> | undefined; // precisa limpar no cleanup
+
     // Se veio do middleware por não verificado → mostra idle com instrução de reenvio (não tenta verify)
     if (reason === "unverified") {
       setState("idle"); // idle com msg de bloqueado
@@ -40,8 +50,12 @@ export function VerificarEmailClient() {
       return;
     }
 
-    // Sem token_hash ou type !== signup → sem verificação automática, mostra instrução + reenvio
-    if (!tokenHash || type !== "signup") {
+    // Fluxo PKCE do email nativo do Supabase (sem RESEND_API_KEY): link vem com ?code=
+    // Sem tratar isso o usuário confirmava no Supabase mas ficava travado fora de /painel.
+    const viaCode = Boolean(code && !tokenHash);
+
+    // Sem token_hash/code → sem verificação automática, mostra instrução + reenvio
+    if (!viaCode && (!tokenHash || type !== "signup")) {
       setState("idle"); // idle — usuário abriu /verificar-email direto ou link inválido
       setMsg(
         email
@@ -54,30 +68,37 @@ export function VerificarEmailClient() {
     // Tem token → inicia verificação
     setState("verifying"); // feedback visual "Verificando..."
     const supabase = createClient(); // cria client browser (precisa NEXT_PUBLIC_ env)
-    // verifyOtp — Supabase valida token_hash single-use + expira 1h (3600s)
-    supabase.auth
-      .verifyOtp({ token_hash: tokenHash, type: "signup" as const })
-      .then(({ error }) => {
-        if (!error) {
-          setState("success"); // sucesso — email_confirmed_at preenchido
-          // Redirect automático após 1.5s para login com flag verified=1 (ou next se fornecido)
-          const dest = next && next.startsWith("/") ? next : "/login?verified=1";
-          setTimeout(() => router.push(dest), 1500);
-          return;
-        }
-        // Trata erro — mapeia mensagens Supabase para estados UX
-        const m = error.message.toLowerCase(); // normaliza para match case-insensitive
-        if (m.includes("expired") || m.includes("invalid") || m.includes("token")) {
-          setState("expired"); // link expirou (1h) ou token inválido (já usado)
-          setMsg(error.message); // exibe msg original para debug
-        } else if (m.includes("already") || m.includes("confirmed") || m.includes("verified")) {
-          setState("already_verified"); // já verificado — idempotente, permite login
-        } else {
-          setState("error"); // erro genérico (ex: network)
-          setMsg(error.message);
-        }
-      });
-  }, [tokenHash, type, email, next, reason, router]); // deps — reexecuta se query mudar
+    const verification = viaCode
+      ? supabase.auth.exchangeCodeForSession(code as string) // PKCE: troca code por sessão
+      : supabase.auth.verifyOtp({ token_hash: tokenHash as string, type: "signup" as const }); // token_hash single-use + 1h
+
+    verification.then(({ error }) => {
+      if (!active) return; // já desmontou — não mexe em estado obsoleto
+      if (!error) {
+        setState("success"); // sucesso — email_confirmed_at preenchido
+        // Redirect automático após 1.5s (next sanitizado, senão login com verified=1)
+        timer = setTimeout(() => router.push(safeNext(next)), 1500);
+        return;
+      }
+      // Trata erro — mapeia mensagens Supabase para estados UX
+      const m = error.message.toLowerCase(); // normaliza para match case-insensitive
+      if (m.includes("expired") || m.includes("invalid") || m.includes("token")) {
+        setState("expired"); // link expirou (1h) ou token inválido (já usado)
+        setMsg("O link expirou ou já foi usado. Solicite um novo abaixo.");
+      } else if (m.includes("already") || m.includes("confirmed") || m.includes("verified")) {
+        setState("already_verified"); // já verificado — idempotente, permite login
+      } else {
+        setState("error"); // erro genérico (ex: network) — sem expor mensagem técnica
+        setMsg("Não foi possível verificar. Tente novamente ou solicite um novo link.");
+      }
+    });
+
+    return () => {
+      active = false;
+      if (timer) clearTimeout(timer); // sem timer órfão no unmount
+    };
+  }, [tokenHash, code, type, email, next, reason, router]); // deps — reexecuta se query mudar
+
 
   // Estado verifying — spinner/texto simples (evita layout shift)
   if (state === "verifying")
