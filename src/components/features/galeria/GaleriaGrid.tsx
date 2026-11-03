@@ -45,17 +45,18 @@ function SortableFoto({ foto, onDelete }: { foto: Foto; onDelete: (f: Foto) => v
       <Button
         variant="danger"
         size="sm"
-        className="absolute right-2 top-2 opacity-0 group-hover:opacity-100 transition-opacity"
+        className="absolute right-2 top-2 opacity-100 transition-opacity md:opacity-0 md:group-hover:opacity-100"
         onClick={() => onDelete(foto)}
         aria-label="Excluir foto"
       >
         <Trash2 className="h-4 w-4" />
       </Button>
-      {/* handle de arraste — funciona em desktop e touch */}
+      {/* handle de arraste — sempre visível no touch, com press-and-hold */}
       <button
         type="button"
         aria-label="Arrastar para reordenar"
-        className="absolute left-2 top-2 rounded-full bg-black/60 p-1.5 text-white/80 opacity-0 transition-opacity group-hover:opacity-100 hover:bg-black/80"
+        className="absolute left-2 top-2 rounded-full bg-black/60 p-1.5 text-white/80 opacity-100 transition-opacity hover:bg-black/80 md:opacity-0 md:group-hover:opacity-100"
+        style={{ touchAction: "none" }}
         {...attributes}
         {...listeners}
       >
@@ -66,7 +67,10 @@ function SortableFoto({ foto, onDelete }: { foto: Foto; onDelete: (f: Foto) => v
 }
 
 export function GaleriaGrid({ fotos, onDelete, onReorder }: Props) {
-  const sensors = useSensors(useSensor(PointerSensor, { activationConstraint: { distance: 8 } }), useSensor(TouchSensor));
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
+  );
 
   const ids = useMemo(() => fotos.map((f) => f.id), [fotos]);
 

@@ -31,6 +31,8 @@ export const perfilSchema = z.object({
   twitter_x: urlOptional,
   facebook: urlOptional,
   foto_url: z.string().max(1000, "URL muito longa").optional().or(z.literal("")),
+  whatsapp: z.string().max(30, "Número muito longo").optional().or(z.literal("")),
+  email_booking: z.string().max(255, "E-mail muito longo").optional().or(z.literal("")),
 });
 
 export type PerfilFormData = z.infer<typeof perfilSchema>;
