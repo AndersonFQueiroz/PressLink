@@ -315,79 +315,91 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
   const requestedTemplate = resolvedSearchParams.template;
   const cleanUsername = username.toLowerCase().trim();
 
-  let profileData: TemplatePublicData | null = null;
+  // Rotas de demonstração são resolvidas antes do banco: garantem que
+  // /demo, /demo-festival e /demo-editorial sempre abram o template certo,
+  // mesmo com Supabase lento/indisponível ou com perfil homônimo cadastrado.
+  const demoProfiles: Record<string, TemplatePublicData> = {
+    demo: DEMO_DARK_MINIMAL_DATA,
+    "demo-dark": DEMO_DARK_MINIMAL_DATA,
+    "demo-festival": DEMO_VIBRANT_FESTIVAL_DATA,
+    "demo-editorial": DEMO_CLEAN_EDITORIAL_DATA,
+  };
 
-  try {
-    const supabase = await createClient();
+  let profileData: TemplatePublicData | null = demoProfiles[cleanUsername] ?? null;
 
-    // Busca o perfil público pelo username
-    const { data: perfil, error: perfilError } = await supabase
-      .from("perfil")
-      .select("*")
-      .eq("username", cleanUsername)
-      .maybeSingle();
+  if (!profileData) {
+    try {
+      const supabase = await createClient();
 
-    if (!perfilError && perfil) {
-      // Busca fotos, links e shows vinculados
-      const [fotosRes, midiasRes, showsRes] = await Promise.all([
-        supabase
-          .from("fotogaleria")
-          .select("*")
-          .eq("perfil_id", perfil.id)
-          .order("ordem", { ascending: true }),
-        supabase
-          .from("linkdemidia")
-          .select("*")
-          .eq("perfil_id", perfil.id)
-          .order("ordem", { ascending: true }),
-        supabase
-          .from("datadeshow")
-          .select("*")
-          .eq("perfil_id", perfil.id)
-          .order("data", { ascending: true }),
-      ]);
+      // Busca o perfil público pelo username
+      const { data: perfil, error: perfilError } = await supabase
+        .from("perfil")
+        .select("*")
+        .eq("username", cleanUsername)
+        .maybeSingle();
 
-      profileData = {
-        perfil: {
-          id: perfil.id,
-          nome_artistico: perfil.nome_artistico,
-          username: perfil.username,
-          foto_url: perfil.foto_url,
-          biografia_pt: perfil.biografia_pt,
-          biografia_en: perfil.biografia_en,
-          instagram: perfil.instagram,
-          facebook: perfil.facebook,
-          tiktok: perfil.tiktok,
-          twitter_x: perfil.twitter_x,
-          whatsapp: perfil.whatsapp,
-          email_booking: perfil.email_booking,
-          template_slug: perfil.template_slug || "dark-minimal",
-        },
-        fotos: (fotosRes.data || []).map((f) => ({
-          id: f.id,
-          url: f.url,
-          alt_text: f.alt_text,
-          ordem: f.ordem,
-        })),
-        midias: (midiasRes.data || []).map((m) => ({
-          id: m.id,
-          tipo: m.tipo,
-          url: m.url,
-          titulo: m.titulo,
-          ordem: m.ordem,
-        })),
-        shows: (showsRes.data || []).map((s) => ({
-          id: s.id,
-          nome_evento: s.nome_evento,
-          data: s.data,
-          horario: s.horario,
-          local: s.local,
-          cidade: s.cidade,
-        })),
-      };
+      if (!perfilError && perfil) {
+        // Busca fotos, links e shows vinculados
+        const [fotosRes, midiasRes, showsRes] = await Promise.all([
+          supabase
+            .from("fotogaleria")
+            .select("*")
+            .eq("perfil_id", perfil.id)
+            .order("ordem", { ascending: true }),
+          supabase
+            .from("linkdemidia")
+            .select("*")
+            .eq("perfil_id", perfil.id)
+            .order("ordem", { ascending: true }),
+          supabase
+            .from("datadeshow")
+            .select("*")
+            .eq("perfil_id", perfil.id)
+            .order("data", { ascending: true }),
+        ]);
+
+        profileData = {
+          perfil: {
+            id: perfil.id,
+            nome_artistico: perfil.nome_artistico,
+            username: perfil.username,
+            foto_url: perfil.foto_url,
+            biografia_pt: perfil.biografia_pt,
+            biografia_en: perfil.biografia_en,
+            instagram: perfil.instagram,
+            facebook: perfil.facebook,
+            tiktok: perfil.tiktok,
+            twitter_x: perfil.twitter_x,
+            whatsapp: perfil.whatsapp,
+            email_booking: perfil.email_booking,
+            template_slug: perfil.template_slug || "dark-minimal",
+          },
+          fotos: (fotosRes.data || []).map((f) => ({
+            id: f.id,
+            url: f.url,
+            alt_text: f.alt_text,
+            ordem: f.ordem,
+          })),
+          midias: (midiasRes.data || []).map((m) => ({
+            id: m.id,
+            tipo: m.tipo,
+            url: m.url,
+            titulo: m.titulo,
+            ordem: m.ordem,
+          })),
+          shows: (showsRes.data || []).map((s) => ({
+            id: s.id,
+            nome_evento: s.nome_evento,
+            data: s.data,
+            horario: s.horario,
+            local: s.local,
+            cidade: s.cidade,
+          })),
+        };
+      }
+    } catch {
+      // Ambiente sem Supabase ou erro de conexão
     }
-  } catch {
-    // Ambiente sem Supabase ou erro de conexão
   }
 
   // Se não encontrou no banco, permite visualização do demo se for "demo", "kronos", "aurora", "sophia", etc., ou se banco estiver indisponível
