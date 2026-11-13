@@ -420,23 +420,6 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
       profileData = DEMO_VIBRANT_FESTIVAL_DATA;
     } else if (cleanUsername === "demo" || cleanUsername === "kronos" || cleanUsername === "nomedodj") {
       profileData = DEMO_DARK_MINIMAL_DATA;
-    } else {
-      // Se estiver em ambiente sem credenciais configuradas, renderiza demo com o username fornecido
-      const baseDemo =
-        requestedTemplate === "clean-editorial"
-          ? DEMO_CLEAN_EDITORIAL_DATA
-          : requestedTemplate === "vibrant-festival"
-          ? DEMO_VIBRANT_FESTIVAL_DATA
-          : DEMO_DARK_MINIMAL_DATA;
-
-      profileData = {
-        ...baseDemo,
-        perfil: {
-          ...baseDemo.perfil,
-          nome_artistico: cleanUsername.toUpperCase(),
-          username: cleanUsername,
-        },
-      };
     }
   }
 
