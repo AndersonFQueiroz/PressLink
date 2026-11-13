@@ -3,15 +3,133 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: dark;
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   margin: 0;
   background: #17131f;
   color: #fff;
+  -webkit-tap-highlight-color: transparent;
+}
+
+::selection {
+  background: #d8ff4a;
+  color: #101010;
+}
+
+/* ————— Scroll reveal —————
+   O estado inicial só existe quando o elemento tem [data-reveal].
+   O componente Reveal remove a máscara ao entrar na viewport. */
+[data-reveal] {
+  opacity: 0;
+  transition-property: opacity, transform, filter, clip-path;
+  transition-timing-function: var(--ease-out-expo);
+  transition-duration: 900ms;
+}
+
+[data-reveal="up"] {
+  transform: translate3d(0, 2.75rem, 0);
+}
+
+[data-reveal="down"] {
+  transform: translate3d(0, -2.75rem, 0);
+}
+
+[data-reveal="left"] {
+  transform: translate3d(-3rem, 0, 0);
+}
+
+[data-reveal="right"] {
+  transform: translate3d(3rem, 0, 0);
+}
+
+[data-reveal="fade"] {
+  transform: none;
+}
+
+[data-reveal="scale"] {
+  transform: scale(0.94);
+}
+
+[data-reveal="blur"] {
+  transform: translate3d(0, 1.5rem, 0);
+  filter: blur(14px);
+}
+
+[data-reveal="clip"] {
+  clip-path: inset(0 0 100% 0);
+  transform: scale(1.015);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+  filter: none;
+  clip-path: inset(0 0 0 0);
+}
+
+/* ————— Utilitários ————— */
+@keyframes marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.grain::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.18;
+  mix-blend-mode: soft-light;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.text-stroke {
+  -webkit-text-stroke: 1px currentColor;
+  color: transparent;
+}
+
+/* ————— Movimento reduzido ————— */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    clip-path: none !important;
+    transition: none !important;
+  }
+
+  .animate-marquee,
+  .animate-word-up,
+  .animate-float,
+  .animate-spin-slow,
+  .animate-pulse-soft {
+    animation: none !important;
+  }
 }
