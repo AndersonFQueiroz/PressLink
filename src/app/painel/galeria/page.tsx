@@ -1,3 +1,4 @@
+import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { GaleriaClient } from "./galeria-client";
 
@@ -8,7 +9,7 @@ export default async function GaleriaPage() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return <div className="p-6 text-white">Faça login para acessar a galeria.</div>;
+    redirect("/login");
   }
 
   const { data: perfil } = await supabase.from("perfil").select("id").eq("usuario_id", user.id).single();
