@@ -133,3 +133,40 @@ body {
     animation: none !important;
   }
 }
+
+/* ————— Templates do portfólio (issue #21) —————
+   Tokens por template para os previews do seletor (/painel/template).
+   Valores espelham os tokens de design de src/lib/templates.ts. */
+.pl-tpl--dark-minimal {
+  --pl-tpl-bg: #070708;
+  --pl-tpl-fg: #e9e7df;
+  --pl-tpl-accent: #ffffff;
+  --pl-tpl-accent-2: #d8d5cb;
+  --pl-tpl-surface: #0a0a0b;
+  color-scheme: dark;
+}
+
+.pl-tpl--vibrant-festival {
+  --pl-tpl-bg: #0b0614;
+  --pl-tpl-fg: #fff6e9;
+  --pl-tpl-accent: #d8ff4a;
+  --pl-tpl-accent-2: #ff3d8b;
+  --pl-tpl-surface: #1a0f2e;
+  color-scheme: dark;
+}
+
+.pl-tpl--clean-editorial {
+  --pl-tpl-bg: #f4efe6;
+  --pl-tpl-fg: #1a1712;
+  --pl-tpl-accent: #b8472b;
+  --pl-tpl-accent-2: #ddd5c7;
+  --pl-tpl-surface: #ece5d8;
+  color-scheme: light;
+}
+
+/* Contêiner dos previews: translateZ(0) cria bloco de coordenação próprio
+   para position:fixed dentro do preview não escapar para fora do card. */
+.pl-tpl-preview-frame {
+  transform: translateZ(0);
+  contain: layout style;
+}

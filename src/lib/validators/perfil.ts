@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { TEMPLATE_IDS } from "@/lib/templates";
 
 const usernameRegex = /^[a-z0-9](?:[a-z0-9-]{0,28}[a-z0-9])?$/;
 
@@ -33,6 +34,8 @@ export const perfilSchema = z.object({
   foto_url: z.string().max(1000, "URL muito longa").optional().or(z.literal("")),
   whatsapp: z.string().max(30, "Número muito longo").optional().or(z.literal("")),
   email_booking: z.string().max(255, "E-mail muito longo").optional().or(z.literal("")),
+  // issue #21 — slug do template ativo do portfólio (opcional; ausente = padrão dark-minimal)
+  template_slug: z.enum(TEMPLATE_IDS as unknown as [string, ...string[]]).optional(),
 });
 
 export type PerfilFormData = z.infer<typeof perfilSchema>;

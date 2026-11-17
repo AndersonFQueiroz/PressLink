@@ -48,6 +48,9 @@ export async function PUT(req: Request) {
     ...(parsed.data.foto_url ? { foto_url: parsed.data.foto_url } : {}),
     ...(parsed.data.whatsapp !== undefined ? { whatsapp: parsed.data.whatsapp || null } : {}),
     ...(parsed.data.email_booking !== undefined ? { email_booking: parsed.data.email_booking || null } : {}),
+    // issue #21 — presente apenas quando o payload enviar template_slug
+    // (seletor de temas do portfólio); ausente = coluna intacta
+    ...(parsed.data.template_slug ? { template_slug: parsed.data.template_slug } : {}),
   };
 
   const { data, error } = await supabase
