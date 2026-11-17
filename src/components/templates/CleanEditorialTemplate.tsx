@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import type { TemplateComponentProps } from "@/types/template";
-import { MediaEmbed } from "@/components/features/painel/MediaEmbed";
+import { LazyMediaEmbed } from "@/components/features/painel/LazyMediaEmbed";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitText } from "@/components/motion/SplitText";
 import { Parallax } from "@/components/motion/Parallax";
@@ -461,7 +461,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                       {isOpen && (
                         <div className="pb-8 sm:pl-[4.5rem]">
                           <div className="max-w-3xl border border-[#1a1712]/15 bg-[#f4efe6] p-2">
-                            <MediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
+                            <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
                           </div>
                         </div>
                       )}
