@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Music } from "lucide-react";
+import { Music, Play } from "lucide-react";
 import {
   MediaEmbed,
   getMediaEmbedDimensions,
@@ -12,6 +12,17 @@ import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 /** Antecipa o load 200px antes do elemento entrar na viewport (issue #49) */
 const LAZY_ROOT_MARGIN = "200px 0px";
+
+/**
+ * Extrai o ID do vídeo do YouTube a partir de qualquer variação de URL
+ * (watch?v=, youtu.be/, /embed/, /shorts/). Retorna null se não reconhecer.
+ */
+function youTubeVideoId(url: string): string | null {
+  const m = url.match(
+    /(?:youtube\.com\/(?:watch\?(?:.*&)?v=|embed\/|shorts\/)|youtu\.be\/)([\w-]{11})/,
+  );
+  return m ? m[1] : null;
+}
 
 interface LazyMediaEmbedProps {
   tipo: TipoMidia;
@@ -29,6 +40,10 @@ interface LazyMediaEmbedProps {
  * placeholder com as MESMAS dimensões finais do player (getMediaEmbedDimensions)
  * — zero layout shift na seção de mídia.
  *
+ * issue #23: no caso do YouTube o placeholder exibe também a THUMBNAIL real do
+ * vídeo (i.ytimg.com/vi/<id>/hqdefault.jpg) com um glifo de play — a prévia
+ * já mostra a imagem do vídeo antes do clique/scroll.
+ *
  * Reusa o enum `tipo` (TipoMidia) e a lógica de providers do MediaEmbed,
  * que continua sendo quem monta os iframes de Spotify/SoundCloud/YouTube.
  *
@@ -44,6 +59,8 @@ export function LazyMediaEmbed({
 }: LazyMediaEmbedProps) {
   const embedUrl = getEmbedUrl(tipo, url);
   const dims = getMediaEmbedDimensions(tipo, url, compact);
+  // issue #23: ID do vídeo para a thumbnail do placeholder (só YouTube)
+  const ytId = tipo === "youtube" ? youTubeVideoId(url) : null;
 
   // Só observa se de fato há um iframe para adiar
   const { ref, inView } = useIntersectionObserver<HTMLDivElement>({
@@ -75,7 +92,7 @@ export function LazyMediaEmbed({
         <div
           aria-hidden="true"
           className={cn(
-            "flex w-full items-center justify-center overflow-hidden rounded-xl bg-black/40",
+            "relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-black/40",
             dims.aspectVideo && "aspect-video",
             // YouTube compact ganha max-w-md no player final — espelhado aqui
             // para o placeholder ocupar exatamente o mesmo espaço
@@ -83,8 +100,30 @@ export function LazyMediaEmbed({
           )}
           style={dims.height ? { height: `${dims.height}px` } : undefined}
         >
-          <span className="flex animate-pulse flex-col items-center gap-2 text-white/30">
-            <Music className="h-6 w-6" />
+          {/* issue #23: thumbnail real do vídeo atrás do glifo de play */}
+          {ytId && (
+            /* eslint-disable-next-line @next/next/no-img-element -- thumbnail externa i.ytimg, sem loader proprio */
+            <img
+              src={`https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`}
+              alt=""
+              loading="lazy"
+              className="absolute inset-0 h-full w-full object-cover opacity-60"
+            />
+          )}
+          <span
+            className={cn(
+              "flex animate-pulse flex-col items-center gap-2",
+              ytId ? "text-white/90" : "text-white/30"
+            )}
+          >
+            {ytId ? (
+              // Glifo de play sobre a thumbnail (YouTube)
+              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/50 backdrop-blur-sm">
+                <Play className="ml-0.5 h-5 w-5 fill-current" />
+              </span>
+            ) : (
+              <Music className="h-6 w-6" />
+            )}
             <span className="text-[10px] uppercase tracking-[0.2em]">
               Prévia de mídia
             </span>
