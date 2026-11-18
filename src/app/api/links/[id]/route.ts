@@ -4,6 +4,7 @@ import {
   detectTipoMidia,
   linkMidiaUpdateSchema,
 } from "@/lib/validators/links";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 interface RouteParams {
   params: Promise<{ id: string }>;
@@ -81,6 +82,7 @@ export async function PUT(req: Request, { params }: RouteParams) {
     return NextResponse.json({ error: "Link não encontrado" }, { status: 404 });
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ link: updatedLink });
 }
 
@@ -115,5 +117,6 @@ export async function DELETE(_req: Request, { params }: RouteParams) {
     return NextResponse.json({ error: deleteError.message }, { status: 500 });
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ success: true, message: "Link excluído com sucesso" });
 }

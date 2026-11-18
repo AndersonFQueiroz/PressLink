@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { galeriaReordenarSchema } from "@/lib/validators/galeria";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 // PUT /api/galeria/reordenar — atualiza ordem das fotos { ids: string[] }
 export async function PUT(req: Request) {
@@ -50,5 +51,6 @@ export async function PUT(req: Request) {
     if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ ok: true });
 }

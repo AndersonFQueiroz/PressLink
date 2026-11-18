@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { showCreateSchema, showUpdateSchema, showDeleteSchema } from "@/lib/validators/shows";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 async function getPerfilOrError(supabase: Awaited<ReturnType<typeof createClient>>) {
   let user: import("@supabase/supabase-js").User | null = null;
@@ -68,6 +69,7 @@ export async function POST(req: Request) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidatePublicPages();
   return NextResponse.json({ show: data }, { status: 201 });
 }
 
@@ -110,6 +112,7 @@ export async function PUT(req: Request) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  revalidatePublicPages();
   return NextResponse.json({ show: data });
 }
 
@@ -133,5 +136,6 @@ export async function DELETE(req: Request) {
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   // verifica se deletou (opcional: checa count)
+  revalidatePublicPages();
   return NextResponse.json({ ok: true });
 }

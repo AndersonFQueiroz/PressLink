@@ -4,6 +4,7 @@ import {
   detectTipoMidia,
   linkMidiaSchema,
 } from "@/lib/validators/links";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 export async function GET() {
   const supabase = await createClient();
@@ -132,5 +133,6 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: insertError.message }, { status: 500 });
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ link: novoLink }, { status: 201 });
 }
