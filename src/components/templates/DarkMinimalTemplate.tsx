@@ -17,7 +17,7 @@ import {
   X,
 } from "lucide-react";
 import type { TemplateComponentProps } from "@/types/template";
-import { MediaEmbed } from "@/components/features/painel/MediaEmbed";
+import { LazyMediaEmbed } from "@/components/features/painel/LazyMediaEmbed";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitText } from "@/components/motion/SplitText";
 import { Parallax } from "@/components/motion/Parallax";
@@ -502,7 +502,7 @@ export function DarkMinimalTemplate({ data }: TemplateComponentProps) {
                       {isOpen && (
                         <div className="pb-8 pl-0 sm:pl-[5.25rem]">
                           <div className="max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-black/40 p-2">
-                            <MediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
+                            <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
                           </div>
                         </div>
                       )}

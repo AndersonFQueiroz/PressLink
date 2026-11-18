@@ -13,6 +13,43 @@ interface MediaEmbedProps {
   compact?: boolean;
 }
 
+/**
+ * Dimensões reservadas do player por provedor.
+ * Fonte única das alturas usadas nos iframes abaixo — o lazy loading
+ * (LazyMediaEmbed) consome isso para reservar espaço idêntico e evitar
+ * layout shift na troca placeholder → player.
+ */
+export interface MediaEmbedDimensions {
+  /** Altura fixa em px — usada por Spotify/SoundCloud */
+  height?: number;
+  /** true quando o player usa aspect-ratio 16:9 em vez de altura fixa (YouTube) */
+  aspectVideo?: boolean;
+}
+
+export function getMediaEmbedDimensions(
+  tipo: TipoMidia,
+  url: string,
+  compact = false
+): MediaEmbedDimensions {
+  if (tipo === "youtube") {
+    return { aspectVideo: true };
+  }
+
+  if (tipo === "spotify") {
+    const isPlaylistOrAlbum =
+      url.includes("/playlist/") || url.includes("/album/");
+    return { height: compact ? 80 : isPlaylistOrAlbum ? 352 : 152 };
+  }
+
+  if (tipo === "soundcloud") {
+    const isSet = url.includes("/sets/");
+    return { height: compact ? 120 : isSet ? 300 : 166 };
+  }
+
+  // Tipo sem embed conhecido: o MediaEmbed renderiza um link leve, sem iframe
+  return {};
+}
+
 export function ProviderBadge({ tipo }: { tipo: TipoMidia }) {
   if (tipo === "spotify") {
     return (
@@ -49,6 +86,8 @@ export function MediaEmbed({
 }: MediaEmbedProps) {
   const [hasError, setHasError] = useState(false);
   const embedUrl = getEmbedUrl(tipo, url);
+  // Alturas centralizadas em getMediaEmbedDimensions (reusado pelo lazy loading)
+  const dims = getMediaEmbedDimensions(tipo, url, compact);
 
   if (!embedUrl || hasError) {
     return (
@@ -75,15 +114,12 @@ export function MediaEmbed({
   }
 
   if (tipo === "spotify") {
-    const isPlaylistOrAlbum = url.includes("/playlist/") || url.includes("/album/");
-    const height = compact ? 80 : isPlaylistOrAlbum ? 352 : 152;
-
     return (
       <div className={cn("w-full overflow-hidden rounded-xl bg-black/40", className)}>
         <iframe
           src={embedUrl}
           width="100%"
-          height={height}
+          height={dims.height ?? 152}
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"
           title={titulo || "Spotify Embed Player"}
@@ -119,15 +155,12 @@ export function MediaEmbed({
   }
 
   if (tipo === "soundcloud") {
-    const isSet = url.includes("/sets/");
-    const height = compact ? 120 : isSet ? 300 : 166;
-
     return (
       <div className={cn("w-full overflow-hidden rounded-xl bg-black/40", className)}>
         <iframe
           src={embedUrl}
           width="100%"
-          height={height}
+          height={dims.height ?? 166}
           scrolling="no"
           allow="autoplay"
           loading="lazy"

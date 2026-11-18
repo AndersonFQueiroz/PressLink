@@ -18,7 +18,7 @@ import {
   X,
 } from "lucide-react";
 import type { TemplateComponentProps } from "@/types/template";
-import { MediaEmbed } from "@/components/features/painel/MediaEmbed";
+import { LazyMediaEmbed } from "@/components/features/painel/LazyMediaEmbed";
 import { Reveal } from "@/components/motion/Reveal";
 import { SplitText } from "@/components/motion/SplitText";
 import { Parallax } from "@/components/motion/Parallax";
@@ -490,7 +490,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                         </button>
                         {isOpen && (
                           <div className="border-t-2 border-[#0b0614] bg-[#0b0614] p-3">
-                            <MediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
+                            <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
                           </div>
                         )}
                       </div>
