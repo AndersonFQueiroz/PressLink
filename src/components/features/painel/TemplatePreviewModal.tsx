@@ -49,7 +49,7 @@ export function TemplatePreviewModal({ template, data, onClose, onConfirm, confi
               position:fixed dos templates (nav/menu), mantendo tudo no modal. */}
           <div className="pl-tpl-preview-frame">
             <div className={template.classeRaiz}>
-              <TemplateRenderer slug={template.id} data={data} />
+              <TemplateRenderer slug={template.id} data={data} isPreview />
             </div>
           </div>
         </div>

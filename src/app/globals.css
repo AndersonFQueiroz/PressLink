@@ -165,8 +165,16 @@ body {
 }
 
 /* Contêiner dos previews: translateZ(0) cria bloco de coordenação próprio
-   para position:fixed dentro do preview não escapar para fora do card. */
+   para position:fixed dentro do preview não escapar para fora do card.
+   No desktop o modal (~846px) é mais estreito que o viewport real; o zoom
+   reduz a página como um "device preview" para o hero (tamanhos em vw) caber. */
 .pl-tpl-preview-frame {
   transform: translateZ(0);
   contain: layout style;
+}
+
+@media (min-width: 768px) {
+  .pl-tpl-preview-frame {
+    zoom: 0.62;
+  }
 }

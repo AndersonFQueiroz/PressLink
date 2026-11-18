@@ -15,19 +15,22 @@ import { resolveTemplateId } from "@/lib/templates";
 export function TemplateRenderer({
   slug,
   data,
+  isPreview = false,
 }: {
   slug?: string | null;
   data: TemplatePublicData;
+  /** true no modal de pré-visualização do painel (hero menor que a viewport). */
+  isPreview?: boolean;
 }) {
   const templateId = resolveTemplateId(slug);
 
   if (templateId === "vibrant-festival") {
-    return <VibrantFestivalTemplate data={data} />;
+    return <VibrantFestivalTemplate data={data} isPreview={isPreview} />;
   }
 
   if (templateId === "clean-editorial") {
-    return <CleanEditorialTemplate data={data} />;
+    return <CleanEditorialTemplate data={data} isPreview={isPreview} />;
   }
 
-  return <DarkMinimalTemplate data={data} />;
+  return <DarkMinimalTemplate data={data} isPreview={isPreview} />;
 }
