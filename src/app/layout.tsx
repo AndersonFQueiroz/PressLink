@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Anton, Instrument_Serif, Inter, Space_Grotesk } from "next/font/google";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -13,6 +14,9 @@ const instrumentSerif = Instrument_Serif({
 });
 
 export const metadata: Metadata = {
+  // Base absoluta para Open Graph/Twitter (issue #22): sem metadataBase o Next
+  // não consegue montar og:image absoluto e o preview do WhatsApp quebra.
+  metadataBase: new URL(siteUrl()),
   title: "PressLink | Seu som, sua presença",
   description: "Crie um portfólio profissional para sua carreira como DJ.",
 };

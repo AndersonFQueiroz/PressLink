@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { galeriaDeleteSchema, MAX_FILE_SIZE, ALLOWED_TYPES, MAX_FILES } from "@/lib/validators/galeria";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 // GET /api/galeria — lista fotos do usuário logado ordenadas por ordem
 export async function GET() {
@@ -87,6 +88,7 @@ export async function POST(req: Request) {
     inserted.push(data);
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ fotos: inserted }, { status: 201 });
 }
 
@@ -130,5 +132,6 @@ export async function DELETE(req: Request) {
     await supabase.storage.from("galeria").remove([storageKey]);
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ ok: true });
 }

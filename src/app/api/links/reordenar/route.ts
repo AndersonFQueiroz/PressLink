@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { reordenarLinksSchema } from "@/lib/validators/links";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 export async function PUT(req: Request) {
   const supabase = await createClient();
@@ -69,5 +70,6 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: fetchError.message }, { status: 500 });
   }
 
+  revalidatePublicPages();
   return NextResponse.json({ links: linksAtualizados });
 }

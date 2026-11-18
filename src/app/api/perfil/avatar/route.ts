@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { avatarUrlSchema } from "@/lib/validators/avatar";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 export async function POST(req: Request) {
   const supabase = await createClient();
@@ -24,5 +25,6 @@ export async function POST(req: Request) {
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
+  revalidatePublicPages();
   return NextResponse.json({ foto_url: parsed.data.foto_url });
 }

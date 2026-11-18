@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { perfilSchema } from "@/lib/validators/perfil";
 import { contatoSchema } from "@/lib/validators/contato";
+import { revalidatePublicPages } from "@/lib/revalidate-public";
 
 export async function GET() {
   const supabase = await createClient();
@@ -66,6 +67,8 @@ export async function PUT(req: Request) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  // issue #22 — página pública com ISR: a alteração aparece na hora
+  revalidatePublicPages(parsed.data.username);
   return NextResponse.json({ perfil: data });
 }
 
@@ -118,6 +121,7 @@ export async function PATCH(req: Request) {
       return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
+    revalidatePublicPages(existing.username);
     return NextResponse.json({ perfil: data });
   }
 
