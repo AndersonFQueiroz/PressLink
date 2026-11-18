@@ -49,7 +49,10 @@ export default async function PainelTemplatePage() {
             id: String(perfil.id),
             username: perfil.username ?? "",
             nome_artistico: perfil.nome_artistico ?? "",
-            foto_url: perfil.foto_url || fotosRes.data?.[0]?.url || null,
+            // Sem substituir pela 1ª foto da galeria: o preview tem que mostrar
+            // exatamente o que a página pública mostra — e a troca de template
+            // não pode gravar outra imagem no perfil (RF-23).
+            foto_url: perfil.foto_url ?? null,
             biografia_pt: perfil.biografia_pt ?? null,
             biografia_en: perfil.biografia_en ?? null,
             instagram: perfil.instagram ?? null,

@@ -19,6 +19,7 @@ import {
   TEMPLATES,
   buildTemplateSwitchPayload,
 } from "@/lib/templates";
+import { explainPerfilSaveError } from "@/lib/perfil-errors";
 import type { TemplateDef } from "@/lib/templates";
 import type { TemplatePublicData } from "@/types/template";
 import { cn } from "@/lib/utils";
@@ -59,7 +60,7 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
         });
         if (!res.ok) {
           const corpo = await res.json().catch(() => null);
-          throw new Error(corpo?.error || `Falha ao salvar (HTTP ${res.status})`);
+          throw new Error(explainPerfilSaveError(res.status, corpo?.error));
         }
         setAppliedSlug(tpl.id);
         setFeedback({

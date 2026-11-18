@@ -12,7 +12,6 @@ import {
   Disc3,
   Mail,
   Menu,
-  Play,
   Plus,
   X,
 } from "lucide-react";
@@ -57,7 +56,6 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const [openMedia, setOpenMedia] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "spotify" | "soundcloud" | "youtube">("all");
   const stripRef = useRef<HTMLDivElement>(null);
 
@@ -473,49 +471,26 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
 
             <div className="mt-12">
               {filteredMedia.length > 0 ? (
-                filteredMedia.map((media, index) => {
-                  const isOpen = openMedia === media.id;
-                  return (
-                    <div key={media.id} className="border-t border-white/10 last:border-b">
-                      <button
-                        type="button"
-                        onClick={() => setOpenMedia(isOpen ? null : media.id)}
-                        aria-expanded={isOpen}
-                        className="group grid w-full grid-cols-[2.2rem_1fr_auto] items-center gap-3 py-5 text-left sm:grid-cols-[3.5rem_1fr_10rem_auto] sm:gap-5 sm:py-6"
-                      >
-                        <span className="font-mono text-[11px] text-white/25">{trackNumber(index)}</span>
-                        <span
-                          className={cn(
-                            "font-display text-lg font-medium leading-tight tracking-tight transition sm:text-2xl lg:text-3xl",
-                            isOpen ? "text-acid" : "text-[#e9e7df] group-hover:text-acid",
-                          )}
-                        >
-                          {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
-                        </span>
-                        <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/35 sm:block">
-                          {providerLabel(media.tipo)}
-                        </span>
-                        <span
-                          className={cn(
-                            "flex h-9 w-9 items-center justify-center rounded-full border transition sm:h-11 sm:w-11",
-                            isOpen
-                              ? "border-acid bg-acid text-black"
-                              : "border-white/15 text-white/60 group-hover:border-acid group-hover:text-acid",
-                          )}
-                        >
-                          {isOpen ? <X className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
-                        </span>
-                      </button>
-                      {isOpen && (
-                        <div className="pb-8 pl-0 sm:pl-[5.25rem]">
-                          <div className="max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-black/40 p-2">
-                            <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
-                          </div>
-                        </div>
-                      )}
+                filteredMedia.map((media, index) => (
+                  <div key={media.id} className="border-t border-white/10 py-6 last:border-b sm:py-7">
+                    <div className="grid grid-cols-[2.2rem_1fr] items-center gap-3 sm:grid-cols-[3.5rem_1fr_10rem] sm:gap-5">
+                      <span className="font-mono text-[11px] text-white/25">{trackNumber(index)}</span>
+                      <span className="font-display text-lg font-medium leading-tight tracking-tight text-[#e9e7df] sm:text-2xl lg:text-3xl">
+                        {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
+                      </span>
+                      <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/35 sm:block">
+                        {providerLabel(media.tipo)}
+                      </span>
                     </div>
-                  );
-                })
+                    {/* Player sempre visível: o iframe só monta quando a faixa
+                        chega perto da viewport (LazyMediaEmbed). */}
+                    <div className="mt-4 sm:pl-[5.25rem]">
+                      <div className="max-w-3xl overflow-hidden rounded-xl border border-white/10 bg-black/40 p-2">
+                        <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
+                      </div>
+                    </div>
+                  </div>
+                ))
               ) : (
                 <div className="flex flex-col items-center gap-3 border-y border-white/10 py-16 text-center">
                   <Disc3 className="h-8 w-8 text-white/25" />

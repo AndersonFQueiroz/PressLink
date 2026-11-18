@@ -13,6 +13,7 @@ import {
   MousePointerClick,
   Globe,
 } from "lucide-react";
+import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
 
 export const metadata = {
   title: "Painel | presslink",
@@ -107,14 +108,11 @@ export default function PainelPage() {
                 <span>Editar meu perfil</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
-              <Link
-                href="/"
-                className="rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/50 flex items-center gap-2"
-              >
+              <PublicPageLink className="rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/50 flex items-center gap-2">
                 <Globe className="w-4 h-4 text-fuchsia-300" />
                 <span>Ver página pública</span>
                 <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-              </Link>
+              </PublicPageLink>
             </div>
           </div>
 
