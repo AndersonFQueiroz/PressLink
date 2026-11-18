@@ -1,9 +1,7 @@
 import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { DarkMinimalTemplate } from "@/components/templates/DarkMinimalTemplate";
-import { VibrantFestivalTemplate } from "@/components/templates/VibrantFestivalTemplate";
-import { CleanEditorialTemplate } from "@/components/templates/CleanEditorialTemplate";
+import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { TemplatePublicData } from "@/types/template";
 import { createClient } from "@/lib/supabase/server";
 
@@ -432,13 +430,7 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
     notFound();
   }
 
-  if (profileData.perfil.template_slug === "clean-editorial") {
-    return <CleanEditorialTemplate data={profileData} />;
-  }
-
-  if (profileData.perfil.template_slug === "vibrant-festival") {
-    return <VibrantFestivalTemplate data={profileData} />;
-  }
-
-  return <DarkMinimalTemplate data={profileData} />;
+  // issue #21: TemplateRenderer é a fonte única de slug→componente
+  // (a mesma tabela usada pelo preview do seletor de templates)
+  return <TemplateRenderer slug={profileData.perfil.template_slug} data={profileData} />;
 }
