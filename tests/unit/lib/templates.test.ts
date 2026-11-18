@@ -118,4 +118,18 @@ describe("buildTemplateSwitchPayload (RF-23)", () => {
     const payload = buildTemplateSwitchPayload(DADOS_EXEMPLO, "neon-x");
     expect(payload.template_slug).toBe("neon-x");
   });
+
+  it("não envia foto_url quando o perfil não tem capa (não sobrescreve imagem)", () => {
+    // Regressão 18/11/2026: a tela usava a 1ª foto da galeria como capa do
+    // preview e o payload gravava essa URL no perfil ao trocar de tema.
+    const semCapa: TemplatePublicData = {
+      ...DADOS_EXEMPLO,
+      perfil: { ...DADOS_EXEMPLO.perfil, foto_url: null },
+    };
+
+    const payload = buildTemplateSwitchPayload(semCapa, "vibrant-festival");
+
+    expect("foto_url" in payload).toBe(false);
+    expect(payload.template_slug).toBe("vibrant-festival");
+  });
 });

@@ -379,9 +379,9 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                     <Reveal key={paragraph.slice(0, 24)} variant="up" delay={index * 100}>
                       <p
                         className={cn(
-                          "max-w-3xl leading-snug",
+                          "max-w-3xl",
                           index === 0
-                            ? "text-[clamp(1.5rem,3vw,2.6rem)] font-medium"
+                            ? "text-[clamp(1.5rem,3vw,2.6rem)] font-medium leading-snug"
                             : "mt-6 text-base leading-relaxed text-white/70 sm:text-lg",
                         )}
                       >

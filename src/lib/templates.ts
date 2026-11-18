@@ -132,9 +132,12 @@ export function buildTemplateSwitchPayload(
     tiktok: p.tiktok ?? "",
     twitter_x: p.twitter_x ?? "",
     facebook: p.facebook ?? "",
-    foto_url: p.foto_url ?? "",
     template_slug: templateSlug,
   };
+  // Só envia a capa quando ela existe de fato: perfil sem foto não deve ganhar
+  // uma URL qualquer (nem sobrescrever o banco) só porque o DJ trocou de tema
+  // (RF-23 — troca de tema não altera nenhum dado do perfil).
+  if (p.foto_url) payload.foto_url = p.foto_url;
   if (p.whatsapp !== undefined) payload.whatsapp = p.whatsapp;
   if (p.email_booking !== undefined) payload.email_booking = p.email_booking;
   return payload;
