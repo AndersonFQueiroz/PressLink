@@ -20,6 +20,7 @@ import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
 import { LogoutButton } from "@/components/features/auth/LogoutButton";
 import { AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
+import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
 
 export type SidebarProps = {
   open: boolean;
@@ -43,6 +44,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
   const [displayName, setDisplayName] = useState("Visitante");
   const [subtitle, setSubtitle] = useState<string | null>(null);
   const [fotoUrl, setFotoUrl] = useState<string | null>(null);
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     let active = true;
@@ -67,7 +69,10 @@ export function Sidebar({ open, onClose }: SidebarProps) {
           if (active && json.perfil) {
             if (json.perfil.foto_url) setFotoUrl(json.perfil.foto_url);
             if (json.perfil.nome_artistico) setDisplayName(json.perfil.nome_artistico);
-            if (json.perfil.username) setSubtitle(`@${json.perfil.username}`);
+            if (json.perfil.username) {
+              setUsername(json.perfil.username);
+              setSubtitle(`@${json.perfil.username}`);
+            }
           }
         }
       } catch {
@@ -149,15 +154,14 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         </nav>
 
         <div className="border-t border-white/10 p-4 flex flex-col gap-3">
-          <Link
-            href="/preview"
-            target="_blank"
+          <PublicPageLink
+            username={username}
             onClick={onClose}
             className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white"
           >
             <Eye className="h-4 w-4 text-fuchsia-300" />
             Ver página
-          </Link>
+          </PublicPageLink>
 
           <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5">
             <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-fuchsia-600 text-xs font-bold text-white">

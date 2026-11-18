@@ -1,10 +1,10 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Eye, LogOut, Menu, ChevronDown } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
 
 export type HeaderProps = {
   onMenuClick: () => void;
@@ -40,14 +40,10 @@ export function Header({ onMenuClick }: HeaderProps) {
       </div>
 
       <div className="flex items-center gap-2 sm:gap-3">
-        <Link
-          href="/preview"
-          target="_blank"
-          className="inline-flex h-8 items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 text-xs font-medium text-white hover:bg-white/15"
-        >
+        <PublicPageLink className="inline-flex h-8 items-center gap-2 rounded-lg border border-white/10 bg-white/10 px-3 text-xs font-medium text-white hover:bg-white/15">
           <Eye className="h-4 w-4" />
           <span className="hidden sm:inline">Ver página</span>
-        </Link>
+        </PublicPageLink>
 
         <div className="relative">
           <button

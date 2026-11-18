@@ -12,7 +12,6 @@ import {
   Mail,
   MapPin,
   Menu,
-  Play,
   Plus,
   X,
 } from "lucide-react";
@@ -56,7 +55,6 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
   const [lang, setLang] = useState<TemplateLang>(perfil.biografia_pt ? "pt" : "en");
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const [openMedia, setOpenMedia] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "spotify" | "soundcloud" | "youtube">("all");
 
   const bio = bioFor(perfil, lang);
@@ -432,42 +430,26 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
 
             <div className="mt-8">
               {filteredMedia.length > 0 ? (
-                filteredMedia.map((media, index) => {
-                  const isOpen = openMedia === media.id;
-                  return (
-                    <div key={media.id} className="border-t border-[#1a1712]/20 last:border-b">
-                      <button
-                        type="button"
-                        onClick={() => setOpenMedia(isOpen ? null : media.id)}
-                        aria-expanded={isOpen}
-                        className="group grid w-full grid-cols-[2rem_1fr_auto] items-baseline gap-3 py-5 text-left sm:grid-cols-[3rem_1fr_12rem_auto] sm:items-center sm:gap-5 sm:py-6"
-                      >
-                        <span className="font-mono text-[10px] text-[#1a1712]/35">{trackNumber(index)}</span>
-                        <span
-                          className={cn(
-                            "font-serif text-2xl leading-none tracking-tight transition sm:text-4xl",
-                            isOpen ? "italic text-[#b8472b]" : "group-hover:italic group-hover:text-[#b8472b]",
-                          )}
-                        >
-                          {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
-                        </span>
-                        <span className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/40 sm:block">
-                          {providerLabel(media.tipo)}
-                        </span>
-                        <span className="flex h-9 w-9 items-center justify-center rounded-full border border-[#1a1712]/25 text-[#1a1712]/60 transition group-hover:border-[#b8472b] group-hover:text-[#b8472b]">
-                          {isOpen ? <X className="h-4 w-4" /> : <Play className="ml-0.5 h-3.5 w-3.5" />}
-                        </span>
-                      </button>
-                      {isOpen && (
-                        <div className="pb-8 sm:pl-[4.5rem]">
-                          <div className="max-w-3xl border border-[#1a1712]/15 bg-[#f4efe6] p-2">
-                            <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
-                          </div>
-                        </div>
-                      )}
+                filteredMedia.map((media, index) => (
+                  <div key={media.id} className="border-t border-[#1a1712]/20 py-6 last:border-b sm:py-7">
+                    <div className="grid grid-cols-[2rem_1fr] items-baseline gap-3 sm:grid-cols-[3rem_1fr_12rem] sm:items-center sm:gap-5">
+                      <span className="font-mono text-[10px] text-[#1a1712]/35">{trackNumber(index)}</span>
+                      <span className="font-serif text-2xl leading-none tracking-tight sm:text-4xl">
+                        {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
+                      </span>
+                      <span className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/40 sm:block">
+                        {providerLabel(media.tipo)}
+                      </span>
                     </div>
-                  );
-                })
+                    {/* Player sempre visível: o iframe só monta quando a faixa
+                        chega perto da viewport (LazyMediaEmbed). */}
+                    <div className="mt-4 sm:pl-[4.5rem]">
+                      <div className="max-w-3xl border border-[#1a1712]/15 bg-[#f4efe6] p-2">
+                        <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
+                      </div>
+                    </div>
+                  </div>
+                ))
               ) : (
                 <div className="border-y border-[#1a1712]/20 py-14 text-center">
                   <Disc3 className="mx-auto h-8 w-8 text-[#1a1712]/25" />

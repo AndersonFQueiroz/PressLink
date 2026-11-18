@@ -67,14 +67,14 @@ const DEMO_DARK_MINIMAL_DATA: TemplatePublicData = {
     {
       id: "m-2",
       tipo: "soundcloud",
-      url: "https://soundcloud.com/charlottedewittemusic/charlotte-de-witte-apollo-ep-preview",
+      url: "https://soundcloud.com/forss/flickermood",
       titulo: "Live Modular Mix // Basement Series",
       ordem: 2,
     },
     {
       id: "m-3",
       tipo: "youtube",
-      url: "https://www.youtube.com/watch?v=kYv9rE8lQ_U",
+      url: "https://www.youtube.com/watch?v=bk6Xst6euQk",
       titulo: "Warehouse Set Live Stream (4K)",
       ordem: 3,
     },
@@ -163,14 +163,14 @@ const DEMO_VIBRANT_FESTIVAL_DATA: TemplatePublicData = {
     {
       id: "vm-2",
       tipo: "youtube",
-      url: "https://www.youtube.com/watch?v=kYv9rE8lQ_U",
+      url: "https://www.youtube.com/watch?v=bk6Xst6euQk",
       titulo: "Live Main Stage Festival Set (4K)",
       ordem: 2,
     },
     {
       id: "vm-3",
       tipo: "soundcloud",
-      url: "https://soundcloud.com/charlottedewittemusic/charlotte-de-witte-apollo-ep-preview",
+      url: "https://soundcloud.com/forss/flickermood",
       titulo: "Radio Show // Episode 100",
       ordem: 3,
     },
@@ -252,7 +252,7 @@ const DEMO_CLEAN_EDITORIAL_DATA: TemplatePublicData = {
     {
       id: "cem-1",
       tipo: "soundcloud",
-      url: "https://soundcloud.com/charlottedewittemusic/charlotte-de-witte-apollo-ep-preview",
+      url: "https://soundcloud.com/forss/flickermood",
       titulo: "Sunset Nu-Disco & Soulful Session",
       ordem: 1,
     },
@@ -266,7 +266,7 @@ const DEMO_CLEAN_EDITORIAL_DATA: TemplatePublicData = {
     {
       id: "cem-3",
       tipo: "youtube",
-      url: "https://www.youtube.com/watch?v=kYv9rE8lQ_U",
+      url: "https://www.youtube.com/watch?v=bk6Xst6euQk",
       titulo: "Destination Wedding Live Performance",
       ordem: 3,
     },

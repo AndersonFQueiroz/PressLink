@@ -12,7 +12,6 @@ import {
   Mail,
   MapPin,
   Menu,
-  Play,
   Sparkles,
   Ticket,
   X,
@@ -65,7 +64,6 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
   const [lang, setLang] = useState<TemplateLang>(perfil.biografia_pt ? "pt" : "en");
   const [menuOpen, setMenuOpen] = useState(false);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const [openMedia, setOpenMedia] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "spotify" | "soundcloud" | "youtube">("all");
 
   const bio = bioFor(perfil, lang);
@@ -452,51 +450,31 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
 
             {filteredMedia.length > 0 ? (
               <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredMedia.map((media, index) => {
-                  const isOpen = openMedia === media.id;
-                  return (
-                    <Reveal
-                      key={media.id}
-                      variant="scale"
-                      delay={index * 70}
-                      className={cn("group", isOpen && "sm:col-span-2 lg:col-span-3")}
-                    >
-                      <div className="overflow-hidden rounded-3xl border-2 border-[#0b0614] bg-[#0b0614] shadow-[6px_6px_0_#0b0614]">
-                        <button
-                          type="button"
-                          onClick={() => setOpenMedia(isOpen ? null : media.id)}
-                          aria-expanded={isOpen}
-                          className="block w-full text-left"
-                        >
-                          <div className={cn("relative overflow-hidden bg-gradient-to-br p-5 sm:p-6", CARD_GRADIENTS[index % CARD_GRADIENTS.length])}>
-                            <span className="absolute -right-3 -top-6 select-none font-poster text-[7rem] leading-none text-[#0b0614]/15">
-                              {trackNumber(index)}
-                            </span>
-                            <div className="relative flex items-start justify-between gap-4">
-                              <div>
-                                <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0b0614]/30 bg-[#0b0614]/10 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-[#0b0614]">
-                                  <SocialIcon name={media.tipo} className="h-3 w-3" />
-                                  {providerLabel(media.tipo)}
-                                </span>
-                                <p className="mt-6 max-w-[16rem] font-poster text-2xl uppercase leading-[0.95] tracking-[-0.01em] text-[#0b0614] sm:text-3xl">
-                                  {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
-                                </p>
-                              </div>
-                              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-[#0b0614] bg-[#fff6e9] text-[#0b0614] transition group-hover:rotate-12 group-hover:bg-[#d8ff4a]">
-                                {isOpen ? <X className="h-5 w-5" /> : <Play className="ml-0.5 h-5 w-5" />}
-                              </span>
-                            </div>
-                          </div>
-                        </button>
-                        {isOpen && (
-                          <div className="border-t-2 border-[#0b0614] bg-[#0b0614] p-3">
-                            <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
-                          </div>
-                        )}
+                {filteredMedia.map((media, index) => (
+                  <Reveal key={media.id} variant="scale" delay={index * 70}>
+                    <div className="overflow-hidden rounded-3xl border-2 border-[#0b0614] bg-[#0b0614] shadow-[6px_6px_0_#0b0614]">
+                      <div className={cn("relative overflow-hidden bg-gradient-to-br p-5 sm:p-6", CARD_GRADIENTS[index % CARD_GRADIENTS.length])}>
+                        <span className="absolute -right-3 -top-6 select-none font-poster text-[7rem] leading-none text-[#0b0614]/15">
+                          {trackNumber(index)}
+                        </span>
+                        <div className="relative">
+                          <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0b0614]/30 bg-[#0b0614]/10 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-[#0b0614]">
+                            <SocialIcon name={media.tipo} className="h-3 w-3" />
+                            {providerLabel(media.tipo)}
+                          </span>
+                          <p className="mt-6 max-w-[16rem] font-poster text-2xl uppercase leading-[0.95] tracking-[-0.01em] text-[#0b0614] sm:text-3xl">
+                            {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
+                          </p>
+                        </div>
                       </div>
-                    </Reveal>
-                  );
-                })}
+                      {/* Player sempre visível: o iframe só monta quando a faixa
+                          chega perto da viewport (LazyMediaEmbed). */}
+                      <div className="border-t-2 border-[#0b0614] bg-[#0b0614] p-3">
+                        <LazyMediaEmbed tipo={media.tipo} url={media.url} titulo={media.titulo} />
+                      </div>
+                    </div>
+                  </Reveal>
+                ))}
               </div>
             ) : (
               <div className="mt-10 rounded-3xl border-2 border-dashed border-[#0b0614]/30 py-16 text-center">
