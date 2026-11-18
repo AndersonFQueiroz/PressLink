@@ -340,17 +340,17 @@ export default async function PublicArtistPage({ params, searchParams }: PagePro
         // Busca fotos, links e shows vinculados
         const [fotosRes, midiasRes, showsRes] = await Promise.all([
           supabase
-            .from("fotogaleria")
+            .from("foto_galeria")
             .select("*")
             .eq("perfil_id", perfil.id)
             .order("ordem", { ascending: true }),
           supabase
-            .from("linkdemidia")
+            .from("link_de_midia")
             .select("*")
             .eq("perfil_id", perfil.id)
             .order("ordem", { ascending: true }),
           supabase
-            .from("datadeshow")
+            .from("data_de_show")
             .select("*")
             .eq("perfil_id", perfil.id)
             .order("data", { ascending: true }),

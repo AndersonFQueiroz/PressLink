@@ -222,7 +222,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
 
               <SplitText
                 lines={nameLines.map((line) => line.toUpperCase())}
-                className="font-poster uppercase leading-[0.82] tracking-[-0.02em] text-[clamp(4rem,15vw,13rem)]"
+                className="font-poster uppercase tracking-[-0.02em] text-[clamp(4rem,15vw,13rem)] leading-[0.82]"
                 delay={180}
                 stagger={80}
               />

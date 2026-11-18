@@ -134,13 +134,13 @@ export function TemplateThumbnail({ template }: { template: TemplateDef }) {
         <div style={{ flex: "1.2", display: "flex", flexDirection: "column", gap: 3 }}>
           <span style={{ height: 5, width: "70%", borderRadius: 3, background: "var(--pl-tpl-accent)" }} />
           {[0, 1, 2].map((i) => (
-            <span key={i} style={{ height: 4, width: "${88 - i * 12}%", borderRadius: 2, background: overlay }} />
+            <span key={i} style={{ height: 4, width: `${88 - i * 12}%`, borderRadius: 2, background: overlay }} />
           ))}
         </div>
         <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 3 }}>
           <span style={{ height: 5, width: "55%", borderRadius: 3, background: "var(--pl-tpl-fg)", opacity: 0.8 }} />
           {[0, 1].map((i) => (
-            <span key={i} style={{ height: 4, width: "${90 - i * 18}%", borderRadius: 2, background: overlay }} />
+            <span key={i} style={{ height: 4, width: `${90 - i * 18}%`, borderRadius: 2, background: overlay }} />
           ))}
         </div>
       </div>

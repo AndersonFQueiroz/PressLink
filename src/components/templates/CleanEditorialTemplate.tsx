@@ -211,7 +211,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
 
               <SplitText
                 lines={nameLines}
-                className="font-serif leading-[0.88] tracking-[-0.035em] text-[clamp(3.2rem,8.8vw,8.5rem)]"
+                className="font-serif tracking-[-0.035em] text-[clamp(3.2rem,8.8vw,8.5rem)] leading-[0.88]"
                 delay={200}
                 stagger={90}
               />

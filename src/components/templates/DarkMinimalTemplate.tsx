@@ -51,7 +51,7 @@ const NAV = [
   { id: "booking", index: "05", label: "Booking" },
 ];
 
-export function DarkMinimalTemplate({ data }: TemplateComponentProps) {
+export function DarkMinimalTemplate({ data, isPreview = false }: TemplateComponentProps) {
   const { perfil, fotos, midias, shows } = data;
   const [lang, setLang] = useState<TemplateLang>(perfil.biografia_pt ? "pt" : "en");
   const [menuOpen, setMenuOpen] = useState(false);
@@ -221,7 +221,14 @@ export function DarkMinimalTemplate({ data }: TemplateComponentProps) {
 
       <main id="top">
         {/* HERO */}
-        <section className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden pb-10 pt-28">
+        <section
+          className={cn(
+            "relative flex flex-col justify-end overflow-hidden pb-10 pt-28",
+            // No modal de preview o hero não pode ocupar 100svh: o conteúdo
+            // (justify-end) ficaria abaixo da área visível do modal.
+            isPreview ? "min-h-[460px]" : "min-h-[100svh]",
+          )}
+        >
           <div className="absolute inset-0">
             {perfil.foto_url ? (
               <Parallax className="absolute inset-0" speed={10} scale={1.14}>
@@ -254,7 +261,7 @@ export function DarkMinimalTemplate({ data }: TemplateComponentProps) {
 
             <SplitText
               lines={nameLines.map((line) => line.toUpperCase())}
-              className="font-display font-bold uppercase leading-[0.82] tracking-[-0.05em] text-[#f3f1e9] text-[clamp(3.4rem,12.5vw,12rem)]"
+              className="font-display font-bold uppercase tracking-[-0.05em] text-[#f3f1e9] text-[clamp(3.4rem,12.5vw,12rem)] leading-[0.82]"
               delay={250}
               stagger={90}
             />
@@ -389,9 +396,9 @@ export function DarkMinimalTemplate({ data }: TemplateComponentProps) {
                   <Reveal key={paragraph.slice(0, 24)} variant="up" delay={index * 90}>
                     <p
                       className={cn(
-                        "max-w-4xl leading-[1.45] tracking-[-0.01em] text-[#d8d5cb]",
+                        "max-w-4xl tracking-[-0.01em] text-[#d8d5cb]",
                         index === 0
-                          ? "text-[clamp(1.35rem,2.6vw,2.35rem)] font-light"
+                          ? "text-[clamp(1.35rem,2.6vw,2.35rem)] font-light leading-[1.45]"
                           : "mt-6 text-base leading-relaxed text-white/55 sm:text-lg",
                       )}
                     >
