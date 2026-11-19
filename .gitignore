@@ -155,6 +155,12 @@ Fotos-dry/
 # Launcher local PressLink (opencode auto-run, não versionar)
 .vscode/
 a.txt
+
+# Ferramentas locais de agente (skills, comandos) — não são código do produto
+.agents/
+.opencode/
+skills-lock.json
+
 # Playwright
 /test-results/
 /playwright-report/
