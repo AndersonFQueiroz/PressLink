@@ -236,10 +236,10 @@ export function PublicacaoManager({
               type="button"
               onClick={handlePublish}
               isLoading={loading}
-              className="rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-600/30 hover:from-fuchsia-500 hover:to-pink-500 flex items-center gap-2"
+              leftIcon={<Send className="w-4 h-4" />}
+              className="h-12 rounded-full bg-gradient-to-r from-fuchsia-600 to-pink-600 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-600/30 hover:from-fuchsia-500 hover:to-pink-500 flex items-center gap-2 whitespace-nowrap"
             >
-              <Send className="w-4 h-4" />
-              <span>Publicar Portfólio</span>
+              Publicar Portfólio
             </Button>
           )}
         </div>
@@ -314,7 +314,7 @@ export function PublicacaoManager({
             </Button>
             <PublicPageLink
               username={username}
-              className="inline-flex h-10 items-center justify-center gap-2 rounded-xl bg-fuchsia-600 px-4 text-sm font-semibold text-white shadow-md shadow-fuchsia-600/20 transition hover:bg-fuchsia-500"
+              className="inline-flex h-10 items-center justify-center gap-2 whitespace-nowrap rounded-xl bg-fuchsia-600 px-4 text-sm font-semibold text-white shadow-md shadow-fuchsia-600/20 transition hover:bg-fuchsia-500"
             >
               <span>Abrir página pública</span>
               <ExternalLink className="w-4 h-4" />
@@ -333,33 +333,22 @@ export function PublicacaoManager({
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <Button
-              variant="outline"
-              onClick={handleCopyLink}
-              className="w-full flex items-center justify-center gap-2 h-11"
-            >
-              {copied ? (
-                <>
-                  <Check className="w-4 h-4 text-emerald-400" />
-                  <span className="text-emerald-400 font-semibold">Link Copiado!</span>
-                </>
+          <Button
+            variant="outline"
+            onClick={handleCopyLink}
+            leftIcon={
+              copied ? (
+                <Check className="w-4 h-4 text-emerald-400" />
               ) : (
-                <>
-                  <Copy className="w-4 h-4 text-white/70" />
-                  <span>Copiar Link</span>
-                </>
-              )}
-            </Button>
-
-            <PublicPageLink
-              username={username}
-              className="w-full inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-4 text-sm font-semibold text-white transition hover:bg-white/10"
-            >
-              <ExternalLink className="w-4 h-4 text-white/70" />
-              <span>Abrir no Navegador</span>
-            </PublicPageLink>
-          </div>
+                <Copy className="w-4 h-4 text-white/70" />
+              )
+            }
+            className="w-full h-11"
+          >
+            <span className={copied ? "text-emerald-400 font-semibold" : undefined}>
+              {copied ? "Link Copiado!" : "Copiar Link"}
+            </span>
+          </Button>
 
           <p className="text-xs text-white/40 text-center leading-relaxed">
             Você pode atualizar suas fotos, faixas e agenda a qualquer momento. Suas alterações são sincronizadas imediatamente com a página pública.
