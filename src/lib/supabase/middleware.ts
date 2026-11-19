@@ -9,7 +9,6 @@ export function isPublicApiPath(pathname: string): boolean {
   return (
     pathname.startsWith("/api/auth/") ||
     pathname.startsWith("/api/health") ||
-    pathname === "/api/contato" ||
     pathname === "/api/estatisticas/registrar" ||
     pathname === "/api/perfil/check-username"
   );
