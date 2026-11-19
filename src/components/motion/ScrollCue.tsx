@@ -25,7 +25,7 @@ const TONE_CLASSES: Record<
   festival: {
     label: "text-[#fff6e9]/60",
     ring: "border-[#ff3d8b]/50",
-    button: "border-[#fff6e9]/45 bg-[#0b0614]/55 text-[#d8ff4a]",
+    button: "border-[#fff6e9]/45 bg-[#0b0614]/55 text-[#fff6e9]",
   },
   light: {
     label: "text-[#1a1712]/50",

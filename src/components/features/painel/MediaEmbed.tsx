@@ -53,8 +53,8 @@ export function getMediaEmbedDimensions(
 export function ProviderBadge({ tipo }: { tipo: TipoMidia }) {
   if (tipo === "spotify") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#1DB954]/15 text-[#1ed760] border border-[#1DB954]/30">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#1ed760]" />
+      <span className="inline-flex items-center gap-1.5 rounded border border-[#1DB954]/25 bg-[#1DB954]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-[#1ed760]">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#1ed760]" aria-hidden="true" />
         Spotify
       </span>
     );
@@ -62,16 +62,16 @@ export function ProviderBadge({ tipo }: { tipo: TipoMidia }) {
 
   if (tipo === "youtube") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FF0000]/15 text-[#ff4e4e] border border-[#FF0000]/30">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#ff4e4e]" />
+      <span className="inline-flex items-center gap-1.5 rounded border border-[#FF0000]/25 bg-[#FF0000]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-[#ff6b6b]">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#ff6b6b]" aria-hidden="true" />
         YouTube
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FF5500]/15 text-[#ff7733] border border-[#FF5500]/30">
-      <span className="h-1.5 w-1.5 rounded-full bg-[#ff7733]" />
+    <span className="inline-flex items-center gap-1.5 rounded border border-[#FF5500]/25 bg-[#FF5500]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-[#ff8a55]">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#ff8a55]" aria-hidden="true" />
       SoundCloud
     </span>
   );
@@ -105,7 +105,7 @@ export function MediaEmbed({
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-fuchsia-400 hover:underline flex items-center gap-1"
+          className="text-xs text-brand-soft hover:underline flex items-center gap-1"
         >
           <Play className="h-3 w-3" /> Abrir no {tipo}
         </a>

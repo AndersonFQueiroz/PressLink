@@ -90,24 +90,24 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
             <article
               key={tpl.id}
               className={cn(
-                "flex flex-col gap-3 rounded-2xl border p-4 transition-colors",
+                "flex flex-col gap-3 rounded-xl border p-4 transition-colors",
                 ativo
-                  ? "border-[#d8ff4a]/60 bg-white/[0.05]"
-                  : "border-white/10 bg-white/[0.03]",
+                  ? "border-brand/45 bg-panel-raised"
+                  : "border-panel-line bg-panel-surface hover:border-white/20",
               )}
             >
               <TemplateThumbnail template={tpl} />
 
               <div className="flex items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-white">{tpl.nome}</h2>
+                <h2 className="text-[13px] font-medium text-white/90">{tpl.nome}</h2>
                 {ativo && (
-                  <span className="inline-flex items-center gap-1 rounded-full border border-[#d8ff4a]/40 bg-[#d8ff4a]/10 px-2 py-0.5 text-[10px] font-medium uppercase tracking-wide text-[#d8ff4a]">
-                    <Check className="h-3 w-3" /> Ativo
+                  <span className="inline-flex items-center gap-1 rounded border border-brand/30 bg-brand/[0.1] px-1.5 py-0.5 text-[10px] font-medium text-brand-soft">
+                    <Check className="h-3 w-3" aria-hidden="true" /> Ativo
                   </span>
                 )}
               </div>
 
-              <p className="flex-1 text-xs leading-relaxed text-white/55">
+              <p className="flex-1 text-[12px] leading-relaxed text-white/40">
                 {tpl.descricao}
               </p>
 
@@ -145,9 +145,9 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
 
       {/* Dica quando ainda não há perfil cadastrado */}
       {!temConteudo && (
-        <p className="rounded-xl border border-amber-400/30 bg-amber-400/10 px-4 py-3 text-xs text-amber-200">
+        <p className="rounded-lg border border-[#f0d58e]/25 bg-[#f0d58e]/[0.06] px-3.5 py-2.5 text-[12px] text-[#f0d58e]">
           Você ainda não cadastrou seu perfil. Cadastre em{" "}
-          <span className="font-semibold">Perfil</span> para liberar a seleção de
+          <span className="font-medium">Perfil</span> para liberar a seleção de
           template — assim o preview já aparece com os seus dados reais.
         </p>
       )}
@@ -157,10 +157,10 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
         <p
           role="status"
           className={cn(
-            "rounded-xl border px-4 py-3 text-xs",
+            "rounded-lg border px-3.5 py-2.5 text-[12px]",
             feedback.tipo === "ok"
-              ? "border-emerald-400/30 bg-emerald-400/10 text-emerald-200"
-              : "border-rose-400/30 bg-rose-400/10 text-rose-200",
+              ? "border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] text-[#a4edaf]"
+              : "border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] text-[#ff9a9a]",
           )}
         >
           {feedback.texto}

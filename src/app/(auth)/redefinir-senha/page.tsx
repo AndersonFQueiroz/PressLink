@@ -4,20 +4,13 @@ import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Lock,
-  Eye,
-  EyeOff,
-  Loader2,
-  AlertCircle,
-  CheckCircle2,
-  KeyRound,
-} from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle2, KeyRound } from "lucide-react";
 import {
   redefinirSenhaSchema,
   type RedefinirSenhaFormData,
 } from "@/lib/validators/auth";
 import { redefinirSenhaAction } from "@/lib/auth/actions";
+import { Input } from "@/components/ui/Input";
 
 export default function RedefinirSenhaPage() {
   const router = useRouter();
@@ -58,29 +51,25 @@ export default function RedefinirSenhaPage() {
   };
 
   return (
-    <div className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
-      <div className="text-center mb-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
-          Segurança da Conta
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
-          Criar nova senha.<br />
-          <span className="text-fuchsia-400">Proteja seu som.</span>
+    <div className="rounded-xl border border-panel-line bg-panel-surface p-6 sm:p-8">
+      <div className="mb-6">
+        <h1 className="font-display text-2xl font-semibold tracking-tight text-white">
+          Criar nova senha
         </h1>
-        <p className="mt-3 text-sm text-white/65 leading-relaxed">
-          Defina uma nova senha forte para acessar seu painel no presslink.
+        <p className="mt-1.5 text-[13px] leading-relaxed text-white/45">
+          Escolha uma senha nova para voltar a acessar o painel.
         </p>
       </div>
 
       {successMessage && (
         <div
           role="status"
-          className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300"
+          className="mb-5 flex items-start gap-2.5 rounded-lg border border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] p-3 text-[13px] text-[#a4edaf]"
         >
-          <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" />
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <div>
-            <p className="font-medium text-emerald-200">{successMessage}</p>
-            <p className="mt-1 text-xs text-emerald-300/90">
+            <p className="font-medium">{successMessage}</p>
+            <p className="mt-0.5 text-[12px] text-[#a4edaf]/80">
               Redirecionando para o login...
             </p>
           </div>
@@ -90,108 +79,62 @@ export default function RedefinirSenhaPage() {
       {errorMessage && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+          className="mb-5 flex items-start gap-2.5 rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] p-3 text-[13px] text-[#ff9a9a]"
         >
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-400" />
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{errorMessage}</span>
         </div>
       )}
 
       {!successMessage && (
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-          {/* New Password */}
-          <div>
-            <label
-              htmlFor="password"
-              className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-2"
-            >
-              Nova Senha
-            </label>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-white/40">
-                <Lock className="w-4 h-4" />
-              </div>
-              <input
-                id="password"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                disabled={isPending}
-                placeholder="Mínimo 8 caracteres"
-                {...register("password")}
-                className={`w-full rounded-2xl bg-white/[0.04] border pl-11 pr-12 py-3 text-sm text-white placeholder-white/25 transition focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 ${
-                  errors.password
-                    ? "border-rose-500/70 focus:border-rose-500"
-                    : "border-white/10 hover:border-white/20 focus:border-fuchsia-400"
-                }`}
-              />
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+          <Input
+            label="Nova senha"
+            id="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            disabled={isPending}
+            placeholder="Mínimo 8 caracteres"
+            error={errors.password?.message}
+            rightIcon={
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
                 aria-label={showPassword ? "Ocultar senha" : "Ver senha"}
-                className="absolute inset-y-0 right-0 flex items-center pr-4 text-white/40 hover:text-white transition focus:outline-none"
+                className="rounded text-white/40 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
               >
-                {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
-                ) : (
-                  <Eye className="w-4 h-4" />
-                )}
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
-            </div>
-            {errors.password && (
-              <p className="mt-1.5 text-xs text-rose-400 font-medium">
-                {errors.password.message}
-              </p>
-            )}
-          </div>
+            }
+            {...register("password")}
+          />
 
-          {/* Confirm Password */}
-          <div>
-            <label
-              htmlFor="confirmPassword"
-              className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-2"
-            >
-              Confirmar Nova Senha
-            </label>
-            <div className="relative">
-              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-white/40">
-                <Lock className="w-4 h-4" />
-              </div>
-              <input
-                id="confirmPassword"
-                type={showPassword ? "text" : "password"}
-                autoComplete="new-password"
-                disabled={isPending}
-                placeholder="Repita a nova senha"
-                {...register("confirmPassword")}
-                className={`w-full rounded-2xl bg-white/[0.04] border pl-11 pr-4 py-3 text-sm text-white placeholder-white/25 transition focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 ${
-                  errors.confirmPassword
-                    ? "border-rose-500/70 focus:border-rose-500"
-                    : "border-white/10 hover:border-white/20 focus:border-fuchsia-400"
-                }`}
-              />
-            </div>
-            {errors.confirmPassword && (
-              <p className="mt-1.5 text-xs text-rose-400 font-medium">
-                {errors.confirmPassword.message}
-              </p>
-            )}
-          </div>
+          <Input
+            label="Confirmar nova senha"
+            id="confirmPassword"
+            type={showPassword ? "text" : "password"}
+            autoComplete="new-password"
+            disabled={isPending}
+            placeholder="Repita a nova senha"
+            error={errors.confirmPassword?.message}
+            {...register("confirmPassword")}
+          />
 
           <button
             type="submit"
             disabled={isPending}
-            className="w-full group relative flex items-center justify-center gap-2 rounded-full bg-fuchsia-500 py-3.5 px-6 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-400 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-ink"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             {isPending ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
                 <span>Atualizando senha...</span>
               </>
             ) : (
               <>
                 <span>Redefinir senha</span>
-                <KeyRound className="w-4 h-4" />
+                <KeyRound className="h-4 w-4" aria-hidden="true" />
               </>
             )}
           </button>

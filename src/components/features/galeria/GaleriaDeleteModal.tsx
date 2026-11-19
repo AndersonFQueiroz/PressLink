@@ -42,11 +42,11 @@ export function GaleriaDeleteModal({ foto, onClose, onConfirm }: Props) {
         </>
       }
     >
-      <p className="text-white/70">
+      <p className="text-[13px] text-white/60">
         Tem certeza que deseja excluir esta foto da sua galeria?
       </p>
       {foto && (
-        <div className="mt-3 overflow-hidden rounded-xl border border-white/10">
+        <div className="mt-3 overflow-hidden rounded-lg border border-white/10">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src={foto.url} alt={foto.alt_text || ""} className="h-48 w-full object-cover" />
         </div>

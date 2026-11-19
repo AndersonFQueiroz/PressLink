@@ -1,36 +1,98 @@
-"use client";
+import { createClient } from "@/lib/supabase/server";
+import { PainelShell } from "@/components/features/painel/PainelShell";
+import type { PainelPerfil } from "@/components/features/painel/Sidebar";
+import type { RequisitoPublicacao } from "@/components/features/painel/PublicacaoStatus";
 
-import { useState } from "react";
-import { Menu } from "lucide-react";
-import { Sidebar } from "@/components/features/painel/Sidebar";
+export const metadata = {
+  title: "Painel | PressLink",
+  description: "Gerencie seu portfólio profissional de DJ no PressLink.",
+};
 
-export default function PainelLayout({ children }: { children: React.ReactNode }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+/**
+ * Layout do painel.
+ *
+ * A casca (sidebar + topo) é um componente cliente, mas o estado que ela mostra
+ * — nome, @username, status de publicação e o checklist — vem do servidor. Sem
+ * isso o topo piscava "Rascunho" para quem já estava publicado enquanto o
+ * `/api/perfil` respondia.
+ */
+export default async function PainelLayout({
+  children,
+}: Readonly<{ children: React.ReactNode }>) {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let perfil: PainelPerfil = {
+    nome: "",
+    username: null,
+    fotoUrl: null,
+    email: user?.email ?? null,
+  };
+  let publicado = false;
+  let requisitos: RequisitoPublicacao[] = [
+    { label: "Nome artístico", href: "/painel/perfil", done: false },
+    { label: "Endereço da página (@username)", href: "/painel/perfil", done: false },
+    { label: "Pelo menos 1 foto na galeria", href: "/painel/galeria", done: false },
+    { label: "Pelo menos 1 link de música ou vídeo", href: "/painel/musica", done: false },
+  ];
+
+  if (user) {
+    const { data } = await supabase
+      .from("perfil")
+      .select("id, nome_artistico, username, foto_url, publicado")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+
+    if (data) {
+      perfil = {
+        nome: data.nome_artistico ?? "",
+        username: data.username ?? null,
+        fotoUrl: data.foto_url ?? null,
+        email: user.email ?? null,
+      };
+      publicado = Boolean(data.publicado);
+
+      const [fotos, midias] = await Promise.all([
+        supabase
+          .from("foto_galeria")
+          .select("id", { count: "exact", head: true })
+          .eq("perfil_id", data.id),
+        supabase
+          .from("link_de_midia")
+          .select("id", { count: "exact", head: true })
+          .eq("perfil_id", data.id),
+      ]);
+
+      requisitos = [
+        {
+          label: "Nome artístico",
+          href: "/painel/perfil",
+          done: Boolean(data.nome_artistico?.trim()),
+        },
+        {
+          label: "Endereço da página (@username)",
+          href: "/painel/perfil",
+          done: Boolean(data.username),
+        },
+        {
+          label: "Pelo menos 1 foto na galeria",
+          href: "/painel/galeria",
+          done: (fotos.count ?? 0) > 0,
+        },
+        {
+          label: "Pelo menos 1 link de música ou vídeo",
+          href: "/painel/musica",
+          done: (midias.count ?? 0) > 0,
+        },
+      ];
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-ink">
-      <Sidebar open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="md:pl-64">
-        <div className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-white/10 bg-[#0a0a0f]/90 px-4 backdrop-blur md:hidden">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            aria-label="Abrir menu"
-            className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-white/10 bg-white/[0.04] text-white/80 hover:bg-white/10 hover:text-white"
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-          <div className="flex flex-col">
-            <span className="text-sm font-bold tracking-tight">
-              <span className="text-white">Press</span>
-              <span className="text-fuchsia-400">Link</span>
-            </span>
-            <span className="text-xs text-white/50">Painel</span>
-          </div>
-        </div>
-        <main className="p-4 md:p-6 lg:p-8">
-          <div className="mx-auto max-w-6xl">{children}</div>
-        </main>
-      </div>
-    </div>
+    <PainelShell perfil={perfil} publicado={publicado} requisitos={requisitos}>
+      {children}
+    </PainelShell>
   );
 }

@@ -38,10 +38,9 @@ function SortableFoto({ foto, onDelete }: { foto: Foto; onDelete: (f: Foto) => v
   };
 
   return (
-    <div ref={setNodeRef} style={style} className="group relative overflow-hidden rounded-2xl border border-white/10 bg-black/20">
+    <div ref={setNodeRef} style={style} className="group relative overflow-hidden rounded-lg border border-panel-line bg-black/20">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={foto.url} alt={foto.alt_text || "Foto galeria"} className="h-40 w-full object-cover sm:h-44" loading="lazy" />
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
       <Button
         variant="danger"
         size="sm"
@@ -55,7 +54,7 @@ function SortableFoto({ foto, onDelete }: { foto: Foto; onDelete: (f: Foto) => v
       <button
         type="button"
         aria-label="Arrastar para reordenar"
-        className="absolute left-2 top-2 rounded-full bg-black/60 p-1.5 text-white/80 opacity-100 transition-opacity hover:bg-black/80 md:opacity-0 md:group-hover:opacity-100"
+        className="absolute left-2 top-2 rounded-md border border-white/10 bg-black/60 p-1.5 text-white/75 opacity-100 transition-opacity hover:bg-black/80 hover:text-white md:opacity-0 md:group-hover:opacity-100"
         style={{ touchAction: "none" }}
         {...attributes}
         {...listeners}
@@ -86,8 +85,8 @@ export function GaleriaGrid({ fotos, onDelete, onReorder }: Props) {
 
   if (!fotos.length) {
     return (
-      <div className="rounded-2xl border border-dashed border-white/15 bg-white/[0.02] p-10 text-center">
-        <p className="text-sm text-white/60">Nenhuma foto na galeria ainda. Envie suas fotos promocionais acima.</p>
+      <div className="rounded-xl border border-dashed border-white/10 bg-white/[0.02] px-6 py-10 text-center">
+        <p className="text-[13px] text-white/45">Nenhuma foto na galeria ainda. Envie suas fotos promocionais acima.</p>
       </div>
     );
   }

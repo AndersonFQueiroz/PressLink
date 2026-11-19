@@ -40,10 +40,12 @@ export function GaleriaClient({ initialFotos }: { initialFotos: Foto[] }) {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-5">
       <GaleriaUpload onUploaded={handleUploaded as never} />
-      {reorderError && <p className="text-sm text-rose-400">{reorderError}</p>}
-      {fotos.length > 1 && <p className="text-xs text-white/45">Arraste pelo ícone para reordenar.</p>}
+      {reorderError && <p className="text-[13px] text-[#ff9a9a]">{reorderError}</p>}
+      {fotos.length > 1 && (
+        <p className="text-[12px] text-white/35">Arraste pelo ícone para reordenar.</p>
+      )}
       <GaleriaGrid fotos={fotos} onDelete={setToDelete} onReorder={handleReorder} />
       <GaleriaDeleteModal foto={toDelete} onClose={() => setToDelete(null)} onConfirm={handleDelete} />
     </div>

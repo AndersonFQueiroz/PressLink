@@ -46,7 +46,7 @@ export function GraficoDiario({ serie, periodo }: GraficoDiarioProps) {
         role="img"
         aria-label={`Gráfico dos últimos ${periodo} dias: ${formatar(totalVisualizacoes)} visualizações e ${formatar(totalCliques)} interações no total.`}
       >
-        <div className="flex h-44 items-end gap-[3px] border-b border-white/10 pb-1">
+        <div className="flex h-44 items-end gap-[3px] border-b border-panel-line pb-1">
           {serie.map((ponto, indice) => {
             const rotuloVisivel =
               indice % intervaloRotulos === 0 || indice === ultimoIndice;
@@ -58,12 +58,12 @@ export function GraficoDiario({ serie, periodo }: GraficoDiarioProps) {
                 title={`${ponto.rotulo}: ${formatar(ponto.visualizacoes)} visualizações, ${formatar(ponto.cliques)} interações`}
               >
                 <div
-                  className="w-full max-w-[12px] rounded-t-sm bg-fuchsia-500/90 transition-all group-hover:bg-fuchsia-400"
+                  className="w-full max-w-[12px] rounded-t-sm bg-brand/85 transition-all group-hover:bg-brand"
                   style={{ height: alturaBarra(ponto.visualizacoes, maximo) }}
                   aria-hidden="true"
                 />
                 <div
-                  className="w-full max-w-[12px] rounded-t-sm bg-emerald-400/90 transition-all group-hover:bg-emerald-300"
+                  className="w-full max-w-[12px] rounded-t-sm bg-white/30 transition-all group-hover:bg-white/45"
                   style={{ height: alturaBarra(ponto.cliques, maximo) }}
                   aria-hidden="true"
                 />
@@ -81,11 +81,11 @@ export function GraficoDiario({ serie, periodo }: GraficoDiarioProps) {
         </div>
         <div className="mt-7 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs text-white/60">
           <span className="inline-flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-sm bg-fuchsia-500" aria-hidden="true" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-brand" aria-hidden="true" />
             Visualizações
           </span>
           <span className="inline-flex items-center gap-2">
-            <span className="h-2.5 w-2.5 rounded-sm bg-emerald-400" aria-hidden="true" />
+            <span className="h-2.5 w-2.5 rounded-sm bg-white/30" aria-hidden="true" />
             Interações
           </span>
           <span className="text-white/35">

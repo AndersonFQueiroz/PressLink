@@ -187,7 +187,7 @@ export function CadastroForm() {
             onClick={() => setShowSenha((v) => !v)}
             aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
             aria-pressed={showSenha}
-            className="flex items-center text-white/40 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-fuchsia-500 rounded"
+            className="flex items-center rounded text-white/40 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
           >
             {showSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -198,30 +198,30 @@ export function CadastroForm() {
       <label className="flex items-start gap-2.5 text-sm leading-snug cursor-pointer select-none">
         <input
           type="checkbox"
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-white/[0.04] text-fuchsia-600 focus:ring-fuchsia-500 focus:ring-offset-0"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-white/[0.04] accent-brand focus:ring-brand/40 focus:ring-offset-0"
           {...register("aceiteLgpd")}
         />
         <span className="text-white/70">
           Li e aceito os{" "}
-          <Link href="/termos" target="_blank" className="text-fuchsia-300 hover:text-fuchsia-200 underline underline-offset-2">
+          <Link href="/termos" target="_blank" className="text-brand-soft hover:text-brand-soft/80 underline underline-offset-2">
             Termos de Uso
           </Link>{" "}
           e a{" "}
-          <Link href="/privacidade" target="_blank" className="text-fuchsia-300 hover:text-fuchsia-200 underline underline-offset-2">
+          <Link href="/privacidade" target="_blank" className="text-brand-soft hover:text-brand-soft/80 underline underline-offset-2">
             Política de Privacidade
           </Link>{" "}
           (LGPD).
         </span>
       </label>
-      {errors.aceiteLgpd && <p className="text-xs text-rose-400 -mt-2">{errors.aceiteLgpd.message}</p>}
+      {errors.aceiteLgpd && <p className="text-xs text-[#ff9a9a] -mt-2">{errors.aceiteLgpd.message}</p>}
 
       {formError && (
-        <div role="alert" className="rounded-xl border border-rose-500/30 bg-rose-950/30 px-3.5 py-2.5 text-sm text-rose-200">
+        <div role="alert" className="rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] px-3.5 py-2.5 text-[13px] text-[#ff9a9a]">
           {formError}
         </div>
       )}
       {successMsg && (
-        <div role="status" className="rounded-xl border border-emerald-500/30 bg-emerald-950/30 px-3.5 py-2.5 text-sm text-emerald-200">
+        <div role="status" className="rounded-lg border border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] px-3.5 py-2.5 text-[13px] text-[#a4edaf]">
           {successMsg}
         </div>
       )}
@@ -232,7 +232,7 @@ export function CadastroForm() {
             type="button"
             onClick={handleReenviar}
             disabled={resendCooldown > 0 || isResending}
-            className="text-sm font-medium text-fuchsia-300 hover:text-fuchsia-200 disabled:opacity-50 disabled:cursor-not-allowed text-center py-2 rounded-full border border-fuchsia-500/30 hover:border-fuchsia-400/50 transition-colors"
+            className="rounded-lg border border-white/15 py-2 text-center text-[13px] font-medium text-white/70 transition-colors hover:bg-white/[0.05] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isResending ? "Enviando..." : resendCooldown > 0 ? `Aguarde ${resendCooldown}s` : "Reenviar email"}
           </button>
@@ -256,7 +256,7 @@ export function CadastroForm() {
 
       <p className="text-center text-sm text-white/60">
         Já tem conta?{" "}
-        <Link href="/login" className="text-fuchsia-300 hover:text-fuchsia-200 font-medium">
+        <Link href="/login" className="text-brand-soft hover:text-brand-soft/80 font-medium">
           Faça login
         </Link>
       </p>

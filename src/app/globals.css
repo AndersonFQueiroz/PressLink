@@ -16,14 +16,27 @@ html {
 
 body {
   margin: 0;
-  background: #17131f;
-  color: #fff;
+  background: #0a0812;
+  color: #f2f2ef;
   -webkit-tap-highlight-color: transparent;
 }
 
+/* Números de métrica alinham na vertical (Stripe/Linear): sem isso o "1"
+   ocupa menos espaço que o "8" e as colunas dançam a cada atualização. */
+.tabular {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum" 1;
+}
+
+/* Foco único do painel: anel roxo brando, sem sombra colorida. */
+.painel-focus:focus-visible {
+  outline: 2px solid #a78bfa;
+  outline-offset: 2px;
+}
+
 ::selection {
-  background: #d8ff4a;
-  color: #101010;
+  background: #7c3aed;
+  color: #ffffff;
 }
 
 /* ————— Scroll reveal —————

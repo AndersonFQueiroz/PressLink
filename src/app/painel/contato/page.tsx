@@ -1,6 +1,7 @@
 import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ContatoForm } from "@/components/features/painel/ContatoForm";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 
 export const metadata: Metadata = {
   title: "Contato e Booking | Painel PressLink",
@@ -30,18 +31,12 @@ export default async function ContatoPage() {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-      <div className="border-b border-white/10 pb-6 mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-white font-display">
-          Contato Comercial e Booking
-        </h1>
-        <p className="mt-1.5 text-sm text-white/60 max-w-2xl leading-relaxed">
-          Configure os canais diretos para contratação de apresentações e shows. Esses canais serão exibidos
-          no seu Electronic Press Kit (EPK) público para produtores de eventos e contratantes.
-        </p>
-      </div>
-
-      <div>
+    <div>
+      <PageHeader
+        title="Contato público"
+        description="Por onde produtores e contratantes falam com você. Esses botões ficam visíveis na página pública."
+      />
+      <div className="rounded-xl border border-panel-line bg-panel-surface p-5 sm:p-6">
         <ContatoForm defaultValues={defaultValues} />
       </div>
     </div>

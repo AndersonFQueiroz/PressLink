@@ -63,7 +63,7 @@ export default function DesignSystemPage() {
         <header className="space-y-4 border-b border-white/10 pb-8">
           <div className="flex items-center gap-3">
             <span className="font-display text-2xl font-bold tracking-tight">
-              press<span className="text-fuchsia-400">link</span>
+              press<span className="text-brand-soft">link</span>
             </span>
             <Badge variant="default" size="sm" dot>
               Design System v0.1
@@ -279,11 +279,11 @@ export default function DesignSystemPage() {
               </CardHeader>
               <CardContent className="space-y-2">
                 <div className="flex items-center gap-2 text-sm text-white/70">
-                  <Calendar className="h-4 w-4 text-fuchsia-400" />
+                  <Calendar className="h-4 w-4 text-brand-soft" />
                   <span>14 de Outubro, 2026 • 23:30</span>
                 </div>
                 <div className="flex items-center gap-2 text-sm text-white/70">
-                  <Music2 className="h-4 w-4 text-fuchsia-400" />
+                  <Music2 className="h-4 w-4 text-brand-soft" />
                   <span>Palco Principal (Mainstage)</span>
                 </div>
               </CardContent>
@@ -350,7 +350,7 @@ export default function DesignSystemPage() {
               <p>
                 Ao publicar, seu PressLink ficará visível em:
               </p>
-              <div className="p-3 rounded-xl bg-white/5 border border-white/10 font-mono text-xs text-fuchsia-300">
+              <div className="rounded-lg border border-white/10 bg-white/[0.04] p-3 font-mono text-xs text-brand-soft">
                 https://presslink.app/nomedodj
               </div>
               <p className="text-xs text-white/50">

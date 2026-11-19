@@ -46,27 +46,31 @@ function ConfirmContent() {
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-ink p-4">
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.04] p-8 text-center">
-        <p className="text-xl font-bold tracking-tight">
-          <span className="text-white">Press</span>
-          <span className="text-fuchsia-400">Link</span>
+      <div className="w-full max-w-md rounded-xl border border-panel-line bg-panel-surface p-8 text-center">
+        <p className="font-display text-lg font-semibold tracking-tight">
+          <span className="text-white">press</span>
+          <span className="text-brand-soft">link</span>
         </p>
 
         {state === "loading" && (
           <div className="mt-6 flex flex-col items-center gap-3" role="status" aria-live="polite">
-            <Loader2 className="h-10 w-10 animate-spin text-fuchsia-400" />
-            <p className="text-sm text-white/70">Confirmando seu e-mail...</p>
+            <Loader2 className="h-8 w-8 animate-spin text-brand-soft" />
+            <p className="text-[13px] text-white/50">Confirmando seu e-mail...</p>
           </div>
         )}
 
         {state === "success" && (
           <div className="mt-6 flex flex-col items-center gap-3">
-            <CheckCircle2 className="h-12 w-12 text-emerald-400" />
-            <h1 className="text-lg font-semibold text-white">E-mail confirmado!</h1>
-            <p className="text-sm text-white/60">Pode voltar pro seu PressLink, sua conta já está liberada.</p>
+            <CheckCircle2 className="h-8 w-8 text-[#7ce38b]" />
+            <h1 className="font-display text-lg font-semibold tracking-tight text-white">
+              E-mail confirmado
+            </h1>
+            <p className="text-[13px] text-white/45">
+              Sua conta já está liberada. Pode voltar para o seu painel.
+            </p>
             <Link
               href="/painel"
-              className="mt-2 inline-flex h-11 w-full items-center justify-center rounded-xl bg-fuchsia-600 px-4 text-sm font-medium text-white hover:bg-fuchsia-500"
+              className="mt-2 inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
             >
               Ir para o painel
             </Link>
@@ -75,12 +79,16 @@ function ConfirmContent() {
 
         {state === "error" && (
           <div className="mt-6 flex flex-col items-center gap-3">
-            <XCircle className="h-12 w-12 text-rose-400" />
-            <h1 className="text-lg font-semibold text-white">Link inválido ou expirado</h1>
-            <p className="text-sm text-white/60">Peça um novo e-mail de confirmação ou tente fazer login.</p>
+            <XCircle className="h-8 w-8 text-[#ff9a9a]" />
+            <h1 className="font-display text-lg font-semibold tracking-tight text-white">
+              Link inválido ou expirado
+            </h1>
+            <p className="text-[13px] text-white/45">
+              Peça um novo e-mail de confirmação ou tente fazer login.
+            </p>
             <Link
               href="/login"
-              className="mt-2 inline-flex h-11 w-full items-center justify-center rounded-xl bg-white/10 px-4 text-sm font-medium text-white hover:bg-white/15"
+              className="mt-2 inline-flex h-10 w-full items-center justify-center rounded-lg border border-white/15 px-4 text-sm font-medium text-white/75 transition-colors hover:bg-white/[0.05] hover:text-white"
             >
               Fazer login
             </Link>
@@ -96,7 +104,7 @@ export default function ConfirmPage() {
     <Suspense
       fallback={
         <div className="flex min-h-screen items-center justify-center bg-ink p-4">
-          <Loader2 className="h-10 w-10 animate-spin text-fuchsia-400" />
+          <Loader2 className="h-10 w-10 animate-spin text-brand-soft" />
         </div>
       }
     >

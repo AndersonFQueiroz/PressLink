@@ -32,9 +32,9 @@ test.describe("Publicação e Despublicação #24 (UC01) — PressLink", () => {
     await page.goto("/painel");
     await expect(page).toHaveURL(/\/painel/);
 
-    // Valida presença da seção de gerenciamento de publicação
+    // O status de publicação agora é global: fica no topo de todo o painel.
     await expect(
-      page.getByText(/área do artista|gerencie seu portfólio|a pista é sua/i).first(),
+      page.getByRole("button", { name: /publicado|rascunho/i }).first(),
     ).toBeVisible({ timeout: 10000 });
   });
 });

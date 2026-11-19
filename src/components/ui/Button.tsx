@@ -13,23 +13,26 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   rightIcon?: React.ReactNode;
 }
 
+// Sistema do painel: um único acento roxo como preenchimento. Texto de apoio
+// usa o lilás `brand-soft` (contraste alto sobre o fundo escuro), nunca o roxo
+// cheio, que é escuro demais para corpo de texto.
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-fuchsia-600 text-white hover:bg-fuchsia-500 active:bg-fuchsia-700 shadow-md shadow-fuchsia-600/20 focus-visible:ring-fuchsia-500",
+    "bg-brand text-white hover:bg-brand-hover active:bg-[#5b21b6] focus-visible:ring-brand/70",
   secondary:
-    "bg-white/10 text-white hover:bg-white/15 active:bg-white/20 border border-white/10 focus-visible:ring-white/40",
+    "bg-white/[0.06] text-panel-text border border-white/10 hover:bg-white/[0.09] hover:border-white/15 focus-visible:ring-white/30",
   danger:
-    "bg-rose-600 text-white hover:bg-rose-500 active:bg-rose-700 shadow-md shadow-rose-600/20 focus-visible:ring-rose-500",
+    "bg-[#ff6b6b]/10 text-[#ff9a9a] border border-[#ff6b6b]/30 hover:bg-[#ff6b6b]/15 hover:text-[#ffb4b4] focus-visible:ring-[#ff6b6b]/50",
   ghost:
-    "bg-transparent text-white/80 hover:bg-white/10 hover:text-white active:bg-white/15 focus-visible:ring-white/30",
+    "bg-transparent text-white/65 hover:bg-white/[0.06] hover:text-white focus-visible:ring-white/25",
   outline:
-    "bg-transparent text-white border border-white/20 hover:border-white/50 hover:bg-white/5 active:bg-white/10 focus-visible:ring-white/40",
+    "bg-transparent text-white/85 border border-white/15 hover:border-white/30 hover:bg-white/[0.04] focus-visible:ring-white/30",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-xs gap-1.5 rounded-lg",
-  md: "h-10 px-4 text-sm gap-2 rounded-xl",
-  lg: "h-12 px-6 text-base gap-2.5 rounded-2xl",
+  sm: "h-8 px-3 text-xs gap-1.5 rounded-md",
+  md: "h-9 px-3.5 text-[13px] gap-2 rounded-lg",
+  lg: "h-10 px-5 text-sm gap-2 rounded-lg",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -55,9 +58,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         aria-busy={isLoading}
         className={cn(
-          "inline-flex items-center justify-center font-medium transition-all duration-150 cursor-pointer select-none",
-          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-ink",
-          "disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none",
+          "inline-flex items-center justify-center font-medium transition-colors duration-150 cursor-pointer select-none",
+          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-panel-bg",
+          "disabled:opacity-45 disabled:cursor-not-allowed disabled:pointer-events-none",
           variantStyles[variant],
           sizeStyles[size],
           className,

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { LinkDeMidia } from "@/lib/validators/links";
 import { LinksMusicaForm } from "@/components/features/painel/LinksMusicaForm";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 
 export default async function PainelMusicaPage() {
   const supabase = await createClient();
@@ -32,16 +33,13 @@ export default async function PainelMusicaPage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-        <h1 className="text-xl font-semibold text-white">Música e Vídeo</h1>
-        <p className="mt-1 text-sm text-white/60">
-          Gerencie os links de suas músicas, playlists e vídeos. Suas faixas serão exibidas com players embarcados no seu portfólio.
-        </p>
-
-        <div className="mt-6">
-          <LinksMusicaForm initialLinks={initialLinks} />
-        </div>
+    <div>
+      <PageHeader
+        title="Mídia"
+        description="Sets, playlists e vídeos. Os links viram players embarcados na sua página pública."
+      />
+      <div className="rounded-xl border border-panel-line bg-panel-surface p-5 sm:p-6">
+        <LinksMusicaForm initialLinks={initialLinks} />
       </div>
     </div>
   );

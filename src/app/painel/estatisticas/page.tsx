@@ -3,19 +3,16 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  ArrowLeft,
   BarChart3,
-  Eye,
   Mail,
   MessageCircle,
   Minus,
-  MousePointerClick,
   RefreshCw,
-  Sparkles,
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
 import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 import { GraficoDiario } from "@/components/features/estatisticas/GraficoDiario";
 import {
   PERIODOS_ESTATISTICAS,
@@ -74,8 +71,8 @@ function VariacaoBadge({ valor, sufixo }: { valor: number | null; sufixo: string
 
   return (
     <span
-      className={`inline-flex items-center gap-1 text-[11px] font-semibold ${
-        neutro ? "text-white/40" : positivo ? "text-emerald-400" : "text-rose-400"
+      className={`tabular inline-flex items-center gap-1 text-[11px] font-semibold ${
+        neutro ? "text-white/40" : positivo ? "text-[#a4edaf]" : "text-[#ff9a9a]"
       }`}
     >
       <Icone className="h-3 w-3" aria-hidden="true" />
@@ -141,72 +138,60 @@ export default function EstatisticasPage() {
   const despublicado = data?.publicado === false;
 
   return (
-    <div className="space-y-8">
-      {/* Navigation Breadcrumb + ações */}
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <Link
-          href="/painel"
-          className="inline-flex items-center gap-2 text-sm text-white/60 hover:text-white transition"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Voltar ao painel</span>
-        </Link>
+    <div>
+      <PageHeader
+        title="Estatísticas"
+        description="Quanta gente viu sua página e quantas pessoas clicaram para falar com você. Os números vêm só de visitas reais à sua página pública."
+        actions={
+          <>
+            <div
+              role="group"
+              aria-label="Período das estatísticas"
+              className="inline-flex rounded-md border border-panel-line bg-panel-raised p-0.5"
+            >
+              {PERIODOS_ESTATISTICAS.map((opcao) => (
+                <button
+                  key={opcao}
+                  type="button"
+                  onClick={() => trocarPeriodo(opcao)}
+                  aria-pressed={periodo === opcao}
+                  className={`tabular rounded-[5px] px-2.5 py-1 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 ${
+                    periodo === opcao
+                      ? "bg-brand text-white"
+                      : "text-white/50 hover:text-white"
+                  }`}
+                >
+                  {opcao} dias
+                </button>
+              ))}
+            </div>
 
-        <div className="flex flex-wrap items-center gap-2">
-          <div
-            role="group"
-            aria-label="Período das estatísticas"
-            className="inline-flex rounded-xl border border-white/10 bg-white/[0.04] p-1"
-          >
-            {PERIODOS_ESTATISTICAS.map((opcao) => (
-              <button
-                key={opcao}
-                type="button"
-                onClick={() => trocarPeriodo(opcao)}
-                aria-pressed={periodo === opcao}
-                className={`rounded-lg px-3 py-1.5 text-xs font-semibold transition ${
-                  periodo === opcao
-                    ? "bg-fuchsia-600 text-white shadow"
-                    : "text-white/60 hover:text-white"
-                }`}
-              >
-                {opcao} dias
-              </button>
-            ))}
-          </div>
-
-          <button
-            onClick={handleRefresh}
-            disabled={atualizando}
-            className="inline-flex items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-semibold text-white/70 hover:bg-white/10 hover:text-white transition disabled:opacity-60"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${atualizando ? "animate-spin" : ""}`} />
-            <span>Atualizar dados</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Page Header */}
-      <section className="mb-10">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-400">
-          Métricas & Desempenho
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white">
-          Estatísticas do Portfólio
-        </h1>
-        <p className="mt-2 text-base text-white/60 max-w-2xl">
-          Acompanhe o engajamento dos contratantes com o seu EPK, incluindo alcance de
-          visualizações e taxa de conversão em contatos diretos.
-        </p>
-      </section>
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={atualizando}
+              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-panel-line bg-panel-raised px-2.5 text-[12px] font-medium text-white/60 transition-colors hover:bg-white/[0.07] hover:text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+            >
+              <RefreshCw
+                className={`h-3.5 w-3.5 ${atualizando ? "animate-spin" : ""}`}
+                aria-hidden="true"
+              />
+              Atualizar dados
+            </button>
+          </>
+        }
+      />
 
       {loading ? (
-        <div className="flex h-64 items-center justify-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-2 border-fuchsia-500 border-t-transparent" />
+        <div className="flex h-64 items-center justify-center" aria-busy="true">
+          <div
+            className="h-6 w-6 animate-spin rounded-full border-2 border-white/15 border-t-brand"
+            aria-hidden="true"
+          />
         </div>
       ) : (
         <div
-          className={`space-y-10 transition-opacity ${
+          className={`space-y-6 transition-opacity ${
             atualizando ? "pointer-events-none opacity-50" : "opacity-100"
           }`}
           aria-busy={atualizando}
@@ -214,7 +199,7 @@ export default function EstatisticasPage() {
           {erro ? (
             <div
               role="alert"
-              className="rounded-2xl border border-rose-500/20 bg-rose-500/10 p-4 text-sm text-rose-200"
+              className="rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] p-3.5 text-[13px] text-[#ff9a9a]"
             >
               {erro}
             </div>
@@ -223,7 +208,7 @@ export default function EstatisticasPage() {
           {despublicado ? (
             <div
               role="status"
-              className="rounded-2xl border border-amber-500/20 bg-amber-500/10 p-4 text-sm text-amber-200"
+              className="rounded-lg border border-[#e8c468]/25 bg-[#e8c468]/[0.07] p-3.5 text-[13px] text-[#f0d58e]"
             >
               Seu portfólio está despublicado — novos acessos não estão sendo
               contabilizados. Publique no painel para voltar a somar métricas.
@@ -233,183 +218,191 @@ export default function EstatisticasPage() {
           {data?.truncado ? (
             <div
               role="status"
-              className="rounded-2xl border border-white/10 bg-white/[0.04] p-4 text-sm text-white/60"
+              className="rounded-lg border border-panel-line bg-panel-raised p-3.5 text-[13px] text-white/55"
             >
               Volume muito alto de eventos: os números mostram os primeiros 20.000
               registros do período.
             </div>
           ) : null}
 
-          <p className="text-xs text-white/40 -mt-4">
-            Últimos {periodo} dias
-            {data ? (
-              <>
-                {" "}
-                · {data.diasComDados} de {periodo} dias com atividade
-              </>
-            ) : null}
-          </p>
-
           {semDados ? (
-            <section className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-12 text-center">
-              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/10 text-fuchsia-400">
-                <BarChart3 className="h-7 w-7" />
-              </div>
-              <h2 className="font-display text-xl font-bold text-white">
+            <section className="rounded-xl border border-panel-line bg-panel-surface px-6 py-12 text-center">
+              <BarChart3
+                className="mx-auto h-6 w-6 text-white/25"
+                aria-hidden="true"
+              />
+              <h2 className="mt-4 font-display text-lg font-semibold tracking-tight text-white">
                 Ainda não há dados neste período
               </h2>
-              <p className="mx-auto mt-2 max-w-md text-sm text-white/60">
+              <p className="mx-auto mt-2 max-w-md text-[13px] leading-relaxed text-white/50">
                 {despublicado
                   ? "Seu portfólio está despublicado: os acessos só são contados enquanto ele está no ar. Publique para voltar a registrar visualizações e cliques."
                   : "Assim que alguém visitar sua página pública, as visualizações e os cliques aparecem aqui. Divulgue o link oficial para começar."}
               </p>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
                 <PublicPageLink
                   username={data?.username}
-                  className="inline-flex items-center justify-center gap-2 rounded-full bg-fuchsia-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-600/30 transition hover:bg-fuchsia-500 whitespace-nowrap"
+                  className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-brand px-4 text-[13px] font-semibold text-white transition-colors hover:bg-brand-hover whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
                 >
                   Ver meu portfólio
                 </PublicPageLink>
                 <Link
                   href="/painel"
-                  className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 px-6 py-3 text-sm font-semibold text-white/70 transition hover:bg-white/10 hover:text-white whitespace-nowrap"
+                  className="inline-flex h-9 items-center justify-center rounded-md border border-panel-line px-4 text-[13px] font-medium text-white/65 transition-colors hover:bg-white/[0.06] hover:text-white whitespace-nowrap"
                 >
                   Voltar ao painel
                 </Link>
               </div>
-              <p className="mt-5 text-xs text-white/35">
-                Dica: cada visitante conta uma visualização por sessão; cliques
-                repetidos no mesmo link também contam uma única vez.
+              <p className="mx-auto mt-6 max-w-md text-[12px] leading-relaxed text-white/30">
+                Cada visitante conta uma visualização por sessão; cliques repetidos
+                no mesmo link também contam uma única vez.
               </p>
             </section>
           ) : (
             <>
-              {/* Top Metrics Grid (RF-28, RF-29, RF-30) */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Metric 1: Visualizações */}
-                <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-12 w-12 rounded-2xl border border-fuchsia-500/20 bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-400">
-                      <Eye className="w-6 h-6" />
-                    </div>
-                    <VariacaoBadge valor={data?.variacoes.visualizacoes ?? null} sufixo="%" />
+              {/* Métricas */}
+              <section
+                aria-label="Resumo do período"
+                className="rounded-xl border border-panel-line bg-panel-surface"
+              >
+                <dl className="grid divide-y divide-panel-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
+                  <div className="p-5">
+                    <dt className="text-[12px] text-white/45">
+                      Total de Visualizações
+                    </dt>
+                    <dd className="mt-2 flex items-baseline gap-2">
+                      <span className="tabular font-display text-[30px] font-semibold leading-none text-white">
+                        {formatar(data?.totalVisualizacoes ?? 0)}
+                      </span>
+                      <VariacaoBadge
+                        valor={data?.variacoes.visualizacoes ?? null}
+                        sufixo="%"
+                      />
+                    </dd>
+                    <p className="mt-2 text-[12px] text-white/35">
+                      Visitas à sua página nos últimos {periodo} dias
+                    </p>
                   </div>
-                  <p className="text-sm font-medium text-white/60">Total de Visualizações</p>
-                  <p className="mt-2 text-4xl font-extrabold font-display text-white">
-                    {formatar(data?.totalVisualizacoes ?? 0)}
-                  </p>
-                  <p className="mt-2 text-xs text-white/40">
-                    Visitas à sua URL pública nos últimos {periodo} dias
-                  </p>
-                </div>
 
-                {/* Metric 2: Cliques em Contato */}
-                <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-12 w-12 rounded-2xl border border-emerald-500/20 bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                      <MousePointerClick className="w-6 h-6" />
-                    </div>
-                    <VariacaoBadge valor={data?.variacoes.cliques ?? null} sufixo="%" />
+                  <div className="p-5">
+                    <dt className="text-[12px] text-white/45">
+                      Cliques em Contato
+                    </dt>
+                    <dd className="mt-2 flex items-baseline gap-2">
+                      <span className="tabular font-display text-[30px] font-semibold leading-none text-white">
+                        {formatar(data?.totalCliques ?? 0)}
+                      </span>
+                      <VariacaoBadge
+                        valor={data?.variacoes.cliques ?? null}
+                        sufixo="%"
+                      />
+                    </dd>
+                    <p className="mt-2 text-[12px] text-white/35">
+                      Interações diretas em WhatsApp e e-mail
+                    </p>
                   </div>
-                  <p className="text-sm font-medium text-white/60">Cliques em Contato</p>
-                  <p className="mt-2 text-4xl font-extrabold font-display text-white">
-                    {formatar(data?.totalCliques ?? 0)}
-                  </p>
-                  <p className="mt-2 text-xs text-white/40">
-                    Interações diretas em WhatsApp e e-mail
-                  </p>
-                </div>
 
-                {/* Metric 3: Taxa de Conversão */}
-                <div className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-7 backdrop-blur-xl">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="h-12 w-12 rounded-2xl border border-cyan-500/20 bg-cyan-500/10 flex items-center justify-center text-cyan-400">
-                      <TrendingUp className="w-6 h-6" />
-                    </div>
-                    <VariacaoBadge valor={data?.variacoes.conversao ?? null} sufixo=" p.p." />
+                  <div className="p-5">
+                    <dt className="text-[12px] text-white/45">
+                      Taxa de Conversão
+                    </dt>
+                    <dd className="mt-2 flex items-baseline gap-2">
+                      <span className="tabular font-display text-[30px] font-semibold leading-none text-white">
+                        {formatar(data?.taxaConversao ?? 0)}%
+                      </span>
+                      <VariacaoBadge
+                        valor={data?.variacoes.conversao ?? null}
+                        sufixo=" p.p."
+                      />
+                    </dd>
+                    <p className="mt-2 text-[12px] text-white/35">
+                      Proporção de visitantes que iniciaram contato
+                    </p>
                   </div>
-                  <p className="text-sm font-medium text-white/60">Taxa de Conversão</p>
-                  <p className="mt-2 text-4xl font-extrabold font-display text-white">
-                    {formatar(data?.taxaConversao ?? 0)}%
-                  </p>
-                  <p className="mt-2 text-xs text-white/40">
-                    Proporção de visitantes que iniciaram contato
-                  </p>
-                </div>
-              </div>
-
-              <p className="text-xs text-white/40 -mt-4">
-                Variação comparada com os {periodo} dias anteriores.
-              </p>
-
-              {/* Daily Chart (RF-30) */}
-              <section className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-10">
-                <h2 className="text-lg font-bold font-display text-white mb-6 flex items-center gap-2">
-                  <TrendingUp className="w-5 h-5 text-fuchsia-400" />
-                  <span>Visualizações e interações por dia</span>
-                </h2>
-
-                {data ? <GraficoDiario serie={data.serie} periodo={periodo} /> : null}
+                </dl>
+                <p className="border-t border-panel-line px-5 py-2.5 text-[11px] text-white/30">
+                  Comparado com os {periodo} dias anteriores ·{" "}
+                  {data?.diasComDados ?? 0} de {periodo} dias com atividade
+                </p>
               </section>
 
-              {/* Channels Breakdown Section */}
-              <section className="rounded-3xl border border-white/10 bg-white/[0.02] p-8 sm:p-10">
-                <h2 className="text-lg font-bold font-display text-white mb-6 flex items-center gap-2">
-                  <BarChart3 className="w-5 h-5 text-fuchsia-400" />
-                  <span>Canais de Conversão</span>
-                </h2>
+              {/* Gráfico */}
+              <section className="rounded-xl border border-panel-line bg-panel-surface">
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-panel-line px-5 py-3.5">
+                  <h2 className="font-display text-[15px] font-semibold tracking-tight text-white">
+                    Visualizações e interações por dia
+                  </h2>
+                  <span className="text-[12px] text-white/35">Últimos {periodo} dias</span>
+                </div>
+                <div className="px-5 py-5">
+                  {data ? <GraficoDiario serie={data.serie} periodo={periodo} /> : null}
+                </div>
+              </section>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                  {/* WhatsApp */}
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-xl border border-emerald-500/30 bg-emerald-500/10 flex items-center justify-center text-emerald-400">
-                        <MessageCircle className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white">WhatsApp Direto</p>
-                        <p className="text-xs text-white/50">Cliques para conversa comercial</p>
-                      </div>
-                    </div>
-                    <span className="font-display text-2xl font-bold text-emerald-400">
+              {/* Canais */}
+              <section className="rounded-xl border border-panel-line bg-panel-surface">
+                <div className="border-b border-panel-line px-5 py-3.5">
+                  <h2 className="font-display text-[15px] font-semibold tracking-tight text-white">
+                    Canais de Conversão
+                  </h2>
+                </div>
+
+                <ul className="divide-y divide-panel-line">
+                  <li className="flex items-center justify-between gap-4 px-5 py-4">
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-panel-line bg-panel-raised text-white/50">
+                        <MessageCircle className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[13px] font-medium text-white/85">
+                          WhatsApp Direto
+                        </span>
+                        <span className="block text-[12px] text-white/35">
+                          Cliques para conversa comercial
+                        </span>
+                      </span>
+                    </span>
+                    <span className="tabular font-display text-lg font-semibold text-white">
                       {formatar(data?.detalhes.whatsapp ?? 0)}
                     </span>
-                  </div>
+                  </li>
 
-                  {/* E-mail de Booking */}
-                  <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-6 flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                      <div className="h-12 w-12 rounded-xl border border-fuchsia-500/30 bg-fuchsia-500/10 flex items-center justify-center text-fuchsia-400">
-                        <Mail className="w-6 h-6" />
-                      </div>
-                      <div>
-                        <p className="font-semibold text-white">E-mail de Booking</p>
-                        <p className="text-xs text-white/50">Cliques no botão de e-mail</p>
-                      </div>
-                    </div>
-                    <span className="font-display text-2xl font-bold text-fuchsia-400">
+                  <li className="flex items-center justify-between gap-4 px-5 py-4">
+                    <span className="flex min-w-0 items-center gap-3">
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-panel-line bg-panel-raised text-white/50">
+                        <Mail className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[13px] font-medium text-white/85">
+                          E-mail de Booking
+                        </span>
+                        <span className="block text-[12px] text-white/35">
+                          Cliques no botão de e-mail
+                        </span>
+                      </span>
+                    </span>
+                    <span className="tabular font-display text-lg font-semibold text-white">
                       {formatar(data?.detalhes.email ?? 0)}
                     </span>
-                  </div>
-                </div>
+                  </li>
+                </ul>
               </section>
 
-              {/* Public Page Quick Link CTA */}
-              <section className="rounded-3xl border border-fuchsia-500/20 bg-gradient-to-r from-fuchsia-950/30 to-purple-950/20 p-8 flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div className="space-y-1 text-center sm:text-left">
-                  <p className="font-display text-lg font-bold text-white flex items-center justify-center sm:justify-start gap-2">
-                    <Sparkles className="w-5 h-5 text-fuchsia-400" />
-                    <span>Divulgue seu portfólio para gerar mais estatísticas</span>
-                  </p>
-                  <p className="text-sm text-white/60">
-                    Compartilhe seu link oficial na bio do Instagram, YouTube e propostas
-                    para contratantes.
+              {/* Divulgação */}
+              <section className="flex flex-col items-start justify-between gap-4 rounded-xl border border-panel-line bg-panel-surface p-5 sm:flex-row sm:items-center">
+                <div className="min-w-0">
+                  <h2 className="font-display text-[15px] font-semibold tracking-tight text-white">
+                    Divulgue seu portfólio para gerar mais estatísticas
+                  </h2>
+                  <p className="mt-1 max-w-xl text-[13px] leading-relaxed text-white/45">
+                    Use o link oficial na bio do Instagram, no YouTube e nas propostas
+                    enviadas para contratantes.
                   </p>
                 </div>
 
                 <PublicPageLink
                   username={data?.username}
-                  className="rounded-full bg-fuchsia-600 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-fuchsia-600/30 hover:bg-fuchsia-500 transition whitespace-nowrap"
+                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-panel-line bg-panel-raised px-4 text-[13px] font-medium text-white/75 transition-colors hover:bg-white/[0.08] hover:text-white whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
                 >
                   Ver meu portfólio
                 </PublicPageLink>

@@ -61,11 +61,11 @@ export function GaleriaUpload({ onUploaded }: Props) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-4">
+    <div className="rounded-xl border border-panel-line bg-panel-surface p-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-sm font-medium text-white">Upload de fotos</p>
-          <p className="text-xs text-white/60">JPEG, PNG ou WebP — até 5MB cada — máx {MAX_FILES} por vez</p>
+          <p className="text-[13px] font-medium text-white/85">Upload de fotos</p>
+          <p className="text-[12px] text-white/35">JPEG, PNG ou WebP — até 5MB cada — máx {MAX_FILES} por vez</p>
         </div>
         <Button variant="secondary" size="md" isLoading={uploading} onClick={() => inputRef.current?.click()} leftIcon={!uploading ? <Upload className="h-4 w-4" /> : undefined}>
           {uploading ? "Enviando..." : "Selecionar fotos"}
@@ -75,11 +75,11 @@ export function GaleriaUpload({ onUploaded }: Props) {
       <input ref={inputRef} type="file" accept={ALLOWED_TYPES.join(",")} multiple hidden onChange={(e) => handleFiles(e.target.files)} />
 
       {uploading && (
-        <div className="mt-3 h-2 w-full overflow-hidden rounded-full bg-white/10">
-          <div className="h-full bg-fuchsia-600 transition-all duration-300" style={{ width: `${progress}%` }} />
+        <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/[0.07]">
+          <div className="h-full bg-brand transition-all duration-300" style={{ width: `${progress}%` }} />
         </div>
       )}
-      {error && <p className="mt-2 text-xs text-rose-400">{error}</p>}
+      {error && <p className="mt-2 text-[12px] text-[#ff9a9a]">{error}</p>}
     </div>
   );
 }

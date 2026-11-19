@@ -9,7 +9,27 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#17131f",
+        // Base neutra com leve viés violeta (identidade roxa). O painel usa
+        // estes tokens; os templates públicos continuam com `pl-tpl--*` e com
+        // o token `acid`, que é a cor própria do DarkMinimal/Vibrant.
+        ink: "#0a0812",
+        panel: {
+          bg: "#0a0812",
+          surface: "#121019",
+          raised: "#1a1622",
+          line: "rgba(255,255,255,0.08)",
+          "line-strong": "rgba(255,255,255,0.16)",
+          text: "#f2f2ef",
+          muted: "#9a9a94",
+          faint: "#6b6b66",
+        },
+        brand: {
+          DEFAULT: "#7c3aed",
+          hover: "#6d28d9",
+          soft: "#c4b5fd",
+        },
+        lilac: "#efe8fb",
+        graphite: "#2a2333",
         plum: "#6d28d9",
         blush: "#f7e8ff",
         paper: "#f4efe6",

@@ -51,14 +51,19 @@ export function AgendaClient({ initialShows }: { initialShows: Show[] }) {
   const isModalOpen = creating || !!editing;
 
   return (
-    <div className="space-y-6">
-      <div className="flex justify-end">
+    <div className="space-y-4">
+      <div className="flex items-center justify-between gap-3">
+        <p className="tabular text-[12px] text-white/35">
+          {shows.length === 0
+            ? "Nenhuma data"
+            : `${shows.length} ${shows.length === 1 ? "data" : "datas"}`}
+        </p>
         <Button onClick={() => setCreating(true)} leftIcon={<Plus className="h-4 w-4" />}>
           Novo show
         </Button>
       </div>
 
-      {error && <p className="text-sm text-rose-400">{error}</p>}
+      {error && <p className="text-[13px] text-[#ff9a9a]">{error}</p>}
 
       <AgendaList shows={shows} onEdit={setEditing} onDelete={setDeleting} />
 

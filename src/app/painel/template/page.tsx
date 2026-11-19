@@ -5,6 +5,7 @@
 // Sem perfil (ou Supabase indisponível) o seletor entra no estado vazio.
 import { createClient } from "@/lib/supabase/server";
 import { TemplateSelector } from "@/components/features/painel/TemplateSelector";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 import type { TemplatePublicData } from "@/types/template";
 
 export default async function PainelTemplatePage() {
@@ -93,14 +94,11 @@ export default async function PainelTemplatePage() {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-        <h1 className="text-xl font-semibold text-white">Template do Portfólio</h1>
-        <p className="mt-1 text-sm text-white/60">
-          Escolha como sua página pública aparece. O preview usa os seus dados
-          reais — trocar de tema não altera nenhum dado do seu perfil.
-        </p>
-      </div>
+    <div>
+      <PageHeader
+        title="Aparência"
+        description="Escolha o visual da sua página. O preview usa seus dados reais e trocar de tema não altera nada do perfil."
+      />
 
       <TemplateSelector data={portfolioData} currentSlug={currentSlug} />
     </div>

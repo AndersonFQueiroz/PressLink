@@ -11,24 +11,24 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: "bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30",
-  success: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-  warning: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  danger: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  outline: "bg-transparent text-white/80 border-white/20",
+  default: "bg-white/[0.06] text-white/70 border-white/10",
+  success: "bg-[#7ce38b]/10 text-[#a4edaf] border-[#7ce38b]/25",
+  warning: "bg-[#e8c468]/10 text-[#f0d58e] border-[#e8c468]/25",
+  danger: "bg-[#ff6b6b]/10 text-[#ff9a9a] border-[#ff6b6b]/25",
+  outline: "bg-transparent text-white/70 border-white/15",
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: "bg-fuchsia-400",
-  success: "bg-emerald-400",
-  warning: "bg-amber-400",
-  danger: "bg-rose-400",
-  outline: "bg-white/60",
+  default: "bg-white/50",
+  success: "bg-[#7ce38b]",
+  warning: "bg-[#e8c468]",
+  danger: "bg-[#ff6b6b]",
+  outline: "bg-white/50",
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "text-[11px] px-2 py-0.5 gap-1.5",
-  md: "text-xs px-2.5 py-1 gap-2",
+  sm: "text-[10px] px-1.5 py-0.5 gap-1.5",
+  md: "text-[11px] px-2 py-0.5 gap-1.5",
 };
 
 export function Badge({
@@ -42,7 +42,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center font-medium rounded-full border tracking-wide uppercase",
+        "inline-flex items-center font-medium rounded-md border tracking-wide",
         variantStyles[variant],
         sizeStyles[size],
         className,

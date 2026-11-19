@@ -124,7 +124,7 @@ export function LazyMediaEmbed({
           >
             {ytId ? (
               // Glifo de play sobre a thumbnail (YouTube)
-              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/50 backdrop-blur-sm">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/50 ">
                 <Play className="ml-0.5 h-5 w-5 fill-current" />
               </span>
             ) : (

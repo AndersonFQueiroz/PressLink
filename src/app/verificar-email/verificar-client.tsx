@@ -102,33 +102,48 @@ export function VerificarEmailClient() {
 
   // Estado verifying — spinner/texto simples (evita layout shift)
   if (state === "verifying")
-    return <p className="text-white text-center text-sm animate-pulse">Verificando seu email...</p>;
+    return (
+      <p className="py-6 text-center text-[13px] text-white/50" role="status">
+        Verificando seu email...
+      </p>
+    );
 
   // Estado success — email confirmado, redirect para /login?verified=1
   if (state === "success")
     return (
-      <div className="text-center">
-        {/* Título sucesso — verde suave + ícone implícito */}
-        <h1 className="text-xl font-semibold text-white">Email verificado!</h1>
-        <p className="text-white/60 text-sm mt-2">Agora você pode acessar o painel.</p>
-        {/* CTA — fuchsia-600 consistente com Button do design-system */}
+      <div>
+        <h1 className="font-display text-xl font-semibold tracking-tight text-white">
+          Email verificado
+        </h1>
+        <p className="mt-1.5 text-[13px] text-white/45">
+          Agora você pode acessar o painel.
+        </p>
         <Link
           href={next && next.startsWith("/") ? next : "/login?verified=1"}
-          className="mt-4 inline-flex bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-2.5 rounded-full font-medium text-sm transition-colors"
+          className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
         >
-          Ir para login
+          Ir para o login
         </Link>
-        <p className="text-white/40 text-xs mt-3">Redirecionando automaticamente...</p>
+        <p className="mt-3 text-center text-[12px] text-white/30">
+          Redirecionando automaticamente...
+        </p>
       </div>
     );
 
   // Estado already_verified — idempotente, usuário já confirmou antes
   if (state === "already_verified")
     return (
-      <div className="text-center">
-        <h1 className="text-white font-semibold">Já verificado</h1>
-        <p className="text-white/60 text-sm mt-2">Seu email já foi confirmado. Faça login.</p>
-        <Link href="/login" className="mt-4 inline-flex bg-fuchsia-600 hover:bg-fuchsia-500 text-white px-6 py-2.5 rounded-full font-medium text-sm">
+      <div>
+        <h1 className="font-display text-xl font-semibold tracking-tight text-white">
+          Já verificado
+        </h1>
+        <p className="mt-1.5 text-[13px] text-white/45">
+          Seu email já foi confirmado. Faça login para continuar.
+        </p>
+        <Link
+          href="/login"
+          className="mt-5 inline-flex h-10 w-full items-center justify-center rounded-lg bg-brand px-4 text-sm font-semibold text-white transition-colors hover:bg-brand-hover"
+        >
           Fazer login
         </Link>
       </div>
@@ -137,11 +152,18 @@ export function VerificarEmailClient() {
   // Estado expired — link de 1h expirou, oferece reenvio
   if (state === "expired")
     return (
-      <div className="text-center">
-        <h1 className="text-white font-semibold">Link expirado</h1>
-        <p className="text-white/60 text-sm mt-2">{msg || "O link expirou (1 hora). Solicite um novo."}</p>
+      <div>
+        <h1 className="font-display text-xl font-semibold tracking-tight text-white">
+          Link expirado
+        </h1>
+        <p className="mt-1.5 text-[13px] text-white/45">
+          {msg || "O link expirou (1 hora). Solicite um novo."}
+        </p>
         <ReenviarForm email={email || undefined} />
-        <Link href="/login" className="text-fuchsia-300 text-sm mt-4 inline-block hover:text-fuchsia-200">
+        <Link
+          href="/login"
+          className="mt-4 inline-block text-[13px] text-white/50 underline-offset-4 transition-colors hover:text-white hover:underline"
+        >
           Voltar ao login
         </Link>
       </div>
@@ -150,11 +172,18 @@ export function VerificarEmailClient() {
   // Estado error — erro genérico Supabase
   if (state === "error")
     return (
-      <div className="text-center">
-        <h1 className="text-white font-semibold">Erro na verificação</h1>
-        <p className="text-white/60 text-sm mt-2">{msg || "Não foi possível verificar. Tente novamente."}</p>
+      <div>
+        <h1 className="font-display text-xl font-semibold tracking-tight text-white">
+          Erro na verificação
+        </h1>
+        <p className="mt-1.5 text-[13px] text-white/45">
+          {msg || "Não foi possível verificar. Tente novamente."}
+        </p>
         <ReenviarForm email={email || undefined} />
-        <Link href="/login" className="text-fuchsia-300 text-sm mt-4 inline-block hover:text-fuchsia-200">
+        <Link
+          href="/login"
+          className="mt-4 inline-block text-[13px] text-white/50 underline-offset-4 transition-colors hover:text-white hover:underline"
+        >
           Voltar ao login
         </Link>
       </div>
@@ -162,11 +191,18 @@ export function VerificarEmailClient() {
 
   // Estado idle — sem token ou reason=unverified → mostra instrução + reenvio
   return (
-    <div className="text-center">
-      <h1 className="text-white font-semibold">Verifique seu email</h1>
-      <p className="text-white/60 text-sm mt-2">{msg || "Enviamos um link para seu email. Clique para confirmar."}</p>
+    <div>
+      <h1 className="font-display text-xl font-semibold tracking-tight text-white">
+        Verifique seu email
+      </h1>
+      <p className="mt-1.5 text-[13px] leading-relaxed text-white/45">
+        {msg || "Enviamos um link para seu email. Clique para confirmar."}
+      </p>
       <ReenviarForm email={email || undefined} />
-      <Link href="/login" className="text-fuchsia-300 text-sm mt-4 inline-block hover:text-fuchsia-200">
+      <Link
+        href="/login"
+        className="mt-4 inline-block text-[13px] text-white/50 underline-offset-4 transition-colors hover:text-white hover:underline"
+      >
         Voltar ao login
       </Link>
     </div>
@@ -232,7 +268,7 @@ function ReenviarForm({ email }: { email?: string }) {
           value={inputEmail}
           onChange={(e) => setInputEmail(e.target.value)}
           placeholder="seu@email.com"
-          className="w-full rounded-full border border-white/10 bg-white/[0.04] px-4 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-fuchsia-500 focus:outline-none focus:ring-1 focus:ring-fuchsia-500"
+          className="h-10 w-full rounded-lg border border-white/10 bg-[#0e0b16] px-3.5 text-sm text-white placeholder:text-white/25 transition-colors hover:border-white/20 focus:border-brand/60 focus:outline-none focus:ring-2 focus:ring-brand/15"
           aria-label="Email para reenvio"
         />
       )}
@@ -240,7 +276,7 @@ function ReenviarForm({ email }: { email?: string }) {
       <button
         onClick={handleReenviar}
         disabled={cooldown > 0}
-        className="w-full bg-fuchsia-600 hover:bg-fuchsia-500 disabled:opacity-50 disabled:cursor-not-allowed text-white py-2.5 rounded-full font-medium text-sm transition-colors"
+        className="h-10 w-full rounded-lg bg-brand text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-50"
       >
         {cooldown > 0 ? `Aguarde ${cooldown}s` : "Reenviar email"}
       </button>

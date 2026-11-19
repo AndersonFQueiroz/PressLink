@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { PerfilForm } from "@/components/features/painel/PerfilForm";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 
 export default async function PerfilPage() {
   const supabase = await createClient();
@@ -26,10 +27,12 @@ export default async function PerfilPage() {
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6">
-      <h1 className="text-xl font-semibold text-white">Editar Perfil</h1>
-      <p className="mt-1 text-sm text-white/60">Atualize seu nome, username, biografia e redes sociais.</p>
-      <div className="mt-6">
+    <div>
+      <PageHeader
+        title="Perfil"
+        description="Seu nome, seu endereço e o texto que apresenta você. Tudo aqui aparece na página pública."
+      />
+      <div className="rounded-xl border border-panel-line bg-panel-surface p-5 sm:p-6">
         <PerfilForm defaultValues={defaultValues} />
       </div>
     </div>

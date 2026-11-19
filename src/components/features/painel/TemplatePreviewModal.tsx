@@ -44,7 +44,7 @@ export function TemplatePreviewModal({ template, data, onClose, onConfirm, confi
       }
     >
       {data ? (
-        <div className="h-[65vh] overflow-y-auto rounded-xl border border-white/10 bg-black/40">
+        <div className="h-[65vh] overflow-y-auto rounded-lg border border-white/10 bg-black/40">
           {/* pl-tpl-preview-frame: o transform cria um bloco contendo para os
               position:fixed dos templates (nav/menu), mantendo tudo no modal. */}
           <div className="pl-tpl-preview-frame">
@@ -54,9 +54,9 @@ export function TemplatePreviewModal({ template, data, onClose, onConfirm, confi
           </div>
         </div>
       ) : (
-        <div className="flex h-[65vh] flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-white/15 bg-white/[0.02] px-6 text-center">
-          <p className="text-sm font-medium text-white/80">Cadastre seu perfil para ver a pré-visualização</p>
-          <p className="max-w-sm text-xs text-white/50">
+        <div className="flex h-[65vh] flex-col items-center justify-center gap-2 rounded-lg border border-dashed border-white/10 bg-white/[0.02] px-6 text-center">
+          <p className="text-[13px] font-medium text-white/75">Cadastre seu perfil para ver a pré-visualização</p>
+          <p className="max-w-sm text-[12px] leading-relaxed text-white/40">
             Complete nome artístico e username na tela Perfil; o preview mostrará o seu
             portfólio real com este estilo.
           </p>
