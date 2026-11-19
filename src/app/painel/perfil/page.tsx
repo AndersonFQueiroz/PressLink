@@ -29,10 +29,11 @@ export default async function PerfilPage() {
   return (
     <div>
       <PageHeader
+        label="Conteúdo"
         title="Perfil"
         description="Seu nome, seu endereço e o texto que apresenta você. Tudo aqui aparece na página pública."
       />
-      <div className="rounded-xl border border-panel-line bg-panel-surface p-5 sm:p-6">
+      <div className="rounded-lg border border-panel-line bg-panel-surface p-5 sm:p-6">
         <PerfilForm defaultValues={defaultValues} />
       </div>
     </div>

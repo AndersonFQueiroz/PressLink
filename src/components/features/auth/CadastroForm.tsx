@@ -187,7 +187,7 @@ export function CadastroForm() {
             onClick={() => setShowSenha((v) => !v)}
             aria-label={showSenha ? "Ocultar senha" : "Mostrar senha"}
             aria-pressed={showSenha}
-            className="flex items-center rounded text-white/40 transition hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+            className="flex items-center rounded text-panel-muted transition hover:text-panel-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
           >
             {showSenha ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
           </button>
@@ -198,30 +198,30 @@ export function CadastroForm() {
       <label className="flex items-start gap-2.5 text-sm leading-snug cursor-pointer select-none">
         <input
           type="checkbox"
-          className="mt-0.5 h-4 w-4 shrink-0 rounded border-white/20 bg-white/[0.04] accent-brand focus:ring-brand/40 focus:ring-offset-0"
+          className="mt-0.5 h-4 w-4 shrink-0 rounded border-panel-line-strong bg-white/[0.04] accent-signal focus:ring-signal/40 focus:ring-offset-0"
           {...register("aceiteLgpd")}
         />
-        <span className="text-white/70">
+        <span className="text-panel-text">
           Li e aceito os{" "}
-          <Link href="/termos" target="_blank" className="text-brand-soft hover:text-brand-soft/80 underline underline-offset-2">
+          <Link href="/termos" target="_blank" className="text-signal-soft hover:text-signal-soft/80 underline underline-offset-2">
             Termos de Uso
           </Link>{" "}
           e a{" "}
-          <Link href="/privacidade" target="_blank" className="text-brand-soft hover:text-brand-soft/80 underline underline-offset-2">
+          <Link href="/privacidade" target="_blank" className="text-signal-soft hover:text-signal-soft/80 underline underline-offset-2">
             Política de Privacidade
           </Link>{" "}
           (LGPD).
         </span>
       </label>
-      {errors.aceiteLgpd && <p className="text-xs text-[#ff9a9a] -mt-2">{errors.aceiteLgpd.message}</p>}
+      {errors.aceiteLgpd && <p className="text-xs text-danger -mt-2">{errors.aceiteLgpd.message}</p>}
 
       {formError && (
-        <div role="alert" className="rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] px-3.5 py-2.5 text-[13px] text-[#ff9a9a]">
+        <div role="alert" className="rounded-lg border border-danger/25 bg-danger/[0.08] px-3.5 py-2.5 text-[13px] text-danger">
           {formError}
         </div>
       )}
       {successMsg && (
-        <div role="status" className="rounded-lg border border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] px-3.5 py-2.5 text-[13px] text-[#a4edaf]">
+        <div role="status" className="rounded-lg border border-ok/25 bg-ok/[0.08] px-3.5 py-2.5 text-[13px] text-ok">
           {successMsg}
         </div>
       )}
@@ -232,18 +232,18 @@ export function CadastroForm() {
             type="button"
             onClick={handleReenviar}
             disabled={resendCooldown > 0 || isResending}
-            className="rounded-lg border border-white/15 py-2 text-center text-[13px] font-medium text-white/70 transition-colors hover:bg-white/[0.05] hover:text-white disabled:cursor-not-allowed disabled:opacity-50"
+            className="rounded-lg border border-panel-line py-2 text-center text-[13px] font-medium text-panel-text transition-colors hover:bg-white/[0.05] hover:text-panel-text disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isResending ? "Enviando..." : resendCooldown > 0 ? `Aguarde ${resendCooldown}s` : "Reenviar email"}
           </button>
           {resendStatus && (
-            <p role="status" aria-live="polite" className="text-xs text-white/60 text-center">
+            <p role="status" aria-live="polite" className="text-xs text-panel-muted text-center">
               {resendStatus}
             </p>
           )}
           <Link
             href={`/verificar-email?email=${encodeURIComponent(emailEnviado)}`}
-            className="text-sm text-white/60 hover:text-white/80 text-center underline underline-offset-2"
+            className="text-sm text-panel-muted hover:text-panel-text text-center underline underline-offset-2"
           >
             Já recebeu? Verificar status
           </Link>
@@ -254,9 +254,9 @@ export function CadastroForm() {
         Criar conta
       </Button>
 
-      <p className="text-center text-sm text-white/60">
+      <p className="text-center text-sm text-panel-muted">
         Já tem conta?{" "}
-        <Link href="/login" className="text-brand-soft hover:text-brand-soft/80 font-medium">
+        <Link href="/login" className="text-signal-soft hover:text-signal-soft/80 font-medium">
           Faça login
         </Link>
       </p>

@@ -61,11 +61,11 @@ export function GaleriaUpload({ onUploaded }: Props) {
   }
 
   return (
-    <div className="rounded-xl border border-panel-line bg-panel-surface p-4">
+    <div className="border-y border-panel-line py-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <p className="text-[13px] font-medium text-white/85">Upload de fotos</p>
-          <p className="text-[12px] text-white/35">JPEG, PNG ou WebP — até 5MB cada — máx {MAX_FILES} por vez</p>
+          <p className="text-[13px] font-medium text-panel-text">Upload de fotos</p>
+          <p className="text-[12px] text-panel-muted">JPEG, PNG ou WebP — até 5MB cada — máx {MAX_FILES} por vez</p>
         </div>
         <Button variant="secondary" size="md" isLoading={uploading} onClick={() => inputRef.current?.click()} leftIcon={!uploading ? <Upload className="h-4 w-4" /> : undefined}>
           {uploading ? "Enviando..." : "Selecionar fotos"}
@@ -76,10 +76,10 @@ export function GaleriaUpload({ onUploaded }: Props) {
 
       {uploading && (
         <div className="mt-3 h-1 w-full overflow-hidden rounded-full bg-white/[0.07]">
-          <div className="h-full bg-brand transition-all duration-300" style={{ width: `${progress}%` }} />
+          <div className="h-full bg-signal transition-all duration-300" style={{ width: `${progress}%` }} />
         </div>
       )}
-      {error && <p className="mt-2 text-[12px] text-[#ff9a9a]">{error}</p>}
+      {error && <p className="mt-2 text-[12px] text-danger">{error}</p>}
     </div>
   );
 }

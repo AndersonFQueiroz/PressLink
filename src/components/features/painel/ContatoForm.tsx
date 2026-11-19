@@ -14,12 +14,20 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { PreviewCelular } from "@/components/features/painel/PreviewCelular";
 
 type ContatoFormProps = {
   defaultValues?: Partial<ContatoFormData>;
+  /** Dados do perfil usados só na prévia ao lado do formulário. */
+  preview?: {
+    nome?: string;
+    username?: string;
+    fotoUrl?: string;
+    bio?: string;
+  };
 };
 
-export function ContatoForm({ defaultValues }: ContatoFormProps) {
+export function ContatoForm({ defaultValues, preview }: ContatoFormProps) {
   const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
   const initialWhatsApp = defaultValues?.whatsapp ? formatWhatsApp(defaultValues.whatsapp) : "";
@@ -39,6 +47,7 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
     },
   });
 
+  const valores = watch();
   const whatsappValue = watch("whatsapp") || "";
   const cleanDigits = getCleanWhatsAppDigits(whatsappValue);
   const isWhatsAppFilled = whatsappValue.trim().length > 0;
@@ -77,14 +86,16 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_272px]">
+        <div className="flex min-w-0 flex-col gap-8">
       {/* Seção WhatsApp */}
       <section>
-        <h2 className="flex items-center gap-2 text-[13px] font-medium text-white/75">
-          <MessageCircle className="h-4 w-4 text-white/35" aria-hidden="true" />
+        <h2 className="flex items-center gap-2 text-[13px] font-medium text-panel-text">
+          <MessageCircle className="h-4 w-4 text-panel-muted" aria-hidden="true" />
           WhatsApp comercial
         </h2>
-        <p className="mt-0.5 text-[12px] text-white/35">
+        <p className="mt-0.5 text-[12px] text-panel-muted">
           Canal direto para orçamentos, produtores e contratantes.
         </p>
 
@@ -100,7 +111,7 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
           />
 
           <div className="flex flex-col gap-2">
-            <span className="text-xs font-medium tracking-wide text-white/60">
+            <span className="text-[12px] font-medium text-panel-muted">
               Link direto (wa.me)
             </span>
             {waTestUrl ? (
@@ -108,27 +119,27 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
                 href={waTestUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex h-10 w-fit items-center gap-2 rounded-lg border border-white/15 px-4 text-[13px] font-medium text-white/75 transition-colors hover:bg-white/[0.05] hover:text-white"
+                className="inline-flex h-10 w-fit items-center gap-2 rounded-lg border border-panel-line px-4 text-[13px] font-medium text-panel-text transition-colors hover:bg-white/[0.05] hover:text-panel-text"
               >
                 <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>Testar link no WhatsApp</span>
               </a>
             ) : (
-              <span className="inline-flex h-10 w-fit items-center gap-2 rounded-lg border border-white/10 px-4 text-[13px] font-medium text-white/25">
+              <span className="inline-flex h-10 w-fit items-center gap-2 rounded-lg border border-panel-line px-4 text-[13px] font-medium text-panel-muted">
                 <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
                 <span>Testar link no WhatsApp</span>
               </span>
             )}
             {waTestUrl ? (
-              <p className="break-all text-[12px] text-white/35">
-                URL gerada: <span className="tabular text-white/55">{waTestUrl}</span>
+              <p className="break-all text-[12px] text-panel-muted">
+                URL gerada: <span className="tabular text-panel-muted">{waTestUrl}</span>
               </p>
             ) : isWhatsAppFilled ? (
-              <p className="text-[12px] text-[#f0d58e]">
+              <p className="text-[12px] text-warn">
                 Complete o número com DDD válido para habilitar o teste do link.
               </p>
             ) : (
-              <p className="text-[12px] text-white/30">
+              <p className="text-[12px] text-panel-muted">
                 O link <span className="tabular">https://wa.me/...</span> fica disponível para teste assim que você preencher o número.
               </p>
             )}
@@ -138,11 +149,11 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
 
       {/* Seção E-mail de Booking */}
       <section className="border-t border-panel-line pt-7">
-        <h2 className="flex items-center gap-2 text-[13px] font-medium text-white/75">
-          <Mail className="h-4 w-4 text-white/35" aria-hidden="true" />
+        <h2 className="flex items-center gap-2 text-[13px] font-medium text-panel-text">
+          <Mail className="h-4 w-4 text-panel-muted" aria-hidden="true" />
           E-mail para booking
         </h2>
-        <p className="mt-0.5 text-[12px] text-white/35">
+        <p className="mt-0.5 text-[12px] text-panel-muted">
           Endereço oficial para contratos, propostas detalhadas e datas de shows.
         </p>
 
@@ -166,8 +177,8 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
           className={cn(
             "flex items-center gap-2.5 rounded-lg border px-3.5 py-2.5 text-[13px]",
             toast.type === "success"
-              ? "border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] text-[#a4edaf]"
-              : "border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] text-[#ff9a9a]",
+              ? "border-ok/25 bg-ok/[0.08] text-ok"
+              : "border-danger/25 bg-danger/[0.08] text-danger",
           )}
         >
           {toast.type === "success" ? (
@@ -184,6 +195,21 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
         <Button type="submit" size="lg" isLoading={isSubmitting}>
           Salvar canais de contato
         </Button>
+      </div>
+        </div>
+
+        <aside className="hidden lg:block lg:border-l lg:border-white/[0.06] lg:pl-7">
+          <div className="sticky top-20">
+            <PreviewCelular
+              nome={preview?.nome}
+              username={preview?.username}
+              fotoUrl={preview?.fotoUrl}
+              bio={preview?.bio}
+              whatsapp={valores.whatsapp}
+              email={valores.email_booking}
+            />
+          </div>
+        </aside>
       </div>
     </form>
   );

@@ -14,6 +14,9 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   devIndicators: false,
+  // Permite compilar/validar em paralelo com o `npm run dev` do dono, sem os
+  // dois processos disputando a mesma pasta `.next`.
+  distDir: process.env.PRESSLINK_DIST_DIR || ".next",
   experimental: {
     // issue #28: cada rota baixa só o CSS que usa — o layout de (auth) tinha
     // 1,7 KB de folha de estilo entrando no HTML da página pública.

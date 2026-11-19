@@ -51,9 +51,9 @@ export function AgendaClient({ initialShows }: { initialShows: Show[] }) {
   const isModalOpen = creating || !!editing;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-5">
       <div className="flex items-center justify-between gap-3">
-        <p className="tabular text-[12px] text-white/35">
+        <p className="tabular text-[12px] text-panel-muted">
           {shows.length === 0
             ? "Nenhuma data"
             : `${shows.length} ${shows.length === 1 ? "data" : "datas"}`}
@@ -63,7 +63,7 @@ export function AgendaClient({ initialShows }: { initialShows: Show[] }) {
         </Button>
       </div>
 
-      {error && <p className="text-[13px] text-[#ff9a9a]">{error}</p>}
+      {error && <p className="text-[13px] text-danger">{error}</p>}
 
       <AgendaList shows={shows} onEdit={setEditing} onDelete={setDeleting} />
 
@@ -106,8 +106,8 @@ export function AgendaClient({ initialShows }: { initialShows: Show[] }) {
           </>
         }
       >
-        <p className="text-white/70">
-          Tem certeza que deseja excluir <span className="font-semibold text-white">{deleting?.nome_evento}</span> em {deleting?.data}?
+        <p className="text-[13px] text-panel-text">
+          Tem certeza que deseja excluir <span className="font-semibold text-panel-text">{deleting?.nome_evento}</span> em {deleting?.data}?
         </p>
       </Modal>
     </div>

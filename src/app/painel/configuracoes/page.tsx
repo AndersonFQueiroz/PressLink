@@ -17,23 +17,20 @@ export default async function ConfiguracoesPage() {
   return (
     <div>
       <PageHeader
+        label="Conta"
         title="Conta"
         description="Seus dados de acesso e o encerramento da conta. A exclusão é definitiva e pode ser feita por aqui."
       />
 
-      <section className="rounded-xl border border-panel-line bg-panel-surface">
+      <section className="border-y border-panel-line">
         <dl className="divide-y divide-panel-line">
-          <div className="px-5 py-4">
-            <dt className="text-[12px] text-white/40">
-              E-mail de acesso
-            </dt>
-            <dd className="mt-1 text-[13px] text-white/85">{user?.email ?? "-"}</dd>
+          <div className="py-4">
+            <dt className="text-[12px] text-panel-muted">E-mail de acesso</dt>
+            <dd className="mt-1 text-[13px] text-panel-text">{user?.email ?? "-"}</dd>
           </div>
-          <div className="px-5 py-4">
-            <dt className="text-[12px] text-white/40">
-              Base legal (LGPD)
-            </dt>
-            <dd className="mt-1 text-[13px] leading-relaxed text-white/60">
+          <div className="py-4">
+            <dt className="text-[12px] text-panel-muted">Base legal (LGPD)</dt>
+            <dd className="mt-1 max-w-[62ch] text-[13px] leading-relaxed text-panel-muted">
               Art. 18, VI — eliminação dos dados tratados com o consentimento do titular.
             </dd>
           </div>

@@ -13,26 +13,25 @@ export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElemen
   rightIcon?: React.ReactNode;
 }
 
-// Sistema do painel: um único acento roxo como preenchimento. Texto de apoio
-// usa o lilás `brand-soft` (contraste alto sobre o fundo escuro), nunca o roxo
-// cheio, que é escuro demais para corpo de texto.
+// Sistema do painel: o magenta do logo é preenchimento, nunca texto branco em
+// cima (4,08:1 reprova AA). Texto de apoio usa `signal-soft` (11,4:1).
 const variantStyles: Record<ButtonVariant, string> = {
   primary:
-    "bg-brand text-white hover:bg-brand-hover active:bg-[#5b21b6] focus-visible:ring-brand/70",
+    "pl-sheen bg-signal text-ink hover:bg-signal-hover hover:shadow-[0_10px_28px_-12px_rgb(208_24_246/0.7)] active:bg-signal-press focus-visible:ring-signal/70",
   secondary:
-    "bg-white/[0.06] text-panel-text border border-white/10 hover:bg-white/[0.09] hover:border-white/15 focus-visible:ring-white/30",
+    "bg-panel-raised text-panel-text border border-panel-line hover:border-panel-line-strong hover:bg-panel-raised-hover focus-visible:ring-white/30",
   danger:
-    "bg-[#ff6b6b]/10 text-[#ff9a9a] border border-[#ff6b6b]/30 hover:bg-[#ff6b6b]/15 hover:text-[#ffb4b4] focus-visible:ring-[#ff6b6b]/50",
+    "bg-danger/10 text-danger border border-danger/30 hover:bg-danger/15 focus-visible:ring-danger/50",
   ghost:
-    "bg-transparent text-white/65 hover:bg-white/[0.06] hover:text-white focus-visible:ring-white/25",
+    "bg-transparent text-panel-muted hover:bg-white/[0.06] hover:text-panel-text focus-visible:ring-white/25",
   outline:
-    "bg-transparent text-white/85 border border-white/15 hover:border-white/30 hover:bg-white/[0.04] focus-visible:ring-white/30",
+    "bg-transparent text-panel-text border border-panel-line hover:border-panel-line-strong hover:bg-white/[0.04] focus-visible:ring-white/30",
 };
 
 const sizeStyles: Record<ButtonSize, string> = {
-  sm: "h-8 px-3 text-xs gap-1.5 rounded-md",
-  md: "h-9 px-3.5 text-[13px] gap-2 rounded-lg",
-  lg: "h-10 px-5 text-sm gap-2 rounded-lg",
+  sm: "h-8 px-3 text-xs gap-1.5 rounded",
+  md: "h-9 px-3.5 text-[13px] gap-2 rounded",
+  lg: "h-10 px-5 text-sm gap-2 rounded",
 };
 
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
@@ -58,7 +57,7 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         disabled={isDisabled}
         aria-busy={isLoading}
         className={cn(
-          "inline-flex items-center justify-center font-medium transition-colors duration-150 cursor-pointer select-none",
+          "inline-flex items-center justify-center font-medium transition-[background-color,border-color,color,transform,box-shadow] duration-150 cursor-pointer select-none active:scale-[0.98]",
           "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-panel-bg",
           "disabled:opacity-45 disabled:cursor-not-allowed disabled:pointer-events-none",
           variantStyles[variant],

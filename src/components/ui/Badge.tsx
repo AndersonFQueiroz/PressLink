@@ -11,19 +11,19 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: "bg-white/[0.06] text-white/70 border-white/10",
-  success: "bg-[#7ce38b]/10 text-[#a4edaf] border-[#7ce38b]/25",
-  warning: "bg-[#e8c468]/10 text-[#f0d58e] border-[#e8c468]/25",
-  danger: "bg-[#ff6b6b]/10 text-[#ff9a9a] border-[#ff6b6b]/25",
-  outline: "bg-transparent text-white/70 border-white/15",
+  default: "bg-white/[0.06] text-panel-muted border-panel-line",
+  success: "bg-ok/10 text-ok border-ok/25",
+  warning: "bg-warn/10 text-warn border-warn/25",
+  danger: "bg-danger/10 text-danger border-danger/25",
+  outline: "bg-transparent text-panel-muted border-panel-line-strong",
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: "bg-white/50",
-  success: "bg-[#7ce38b]",
-  warning: "bg-[#e8c468]",
-  danger: "bg-[#ff6b6b]",
-  outline: "bg-white/50",
+  default: "bg-panel-muted",
+  success: "bg-ok",
+  warning: "bg-warn",
+  danger: "bg-danger",
+  outline: "bg-panel-muted",
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
@@ -42,7 +42,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center font-medium rounded-md border tracking-wide",
+        "inline-flex items-center font-medium rounded border",
         variantStyles[variant],
         sizeStyles[size],
         className,

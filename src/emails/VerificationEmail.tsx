@@ -1,7 +1,7 @@
-// src/emails/VerificationEmail.tsx — template de verificação, brand ink/violeta, footer LGPD
+// src/emails/VerificationEmail.tsx — template de verificação, identidade PressLink
 // RF: Resend verificação (Alternativa A Hook) — email transacional de confirmação de cadastro
 // Por que existe: React Email gera HTML compatível com clients (Outlook/Gmail); inline styles evitam css externo bloqueado
-// Reuso: mesmas cores do painel (#0a0812 ink, #121019 card, #7c3aed brand) — consistência visual
+// Reuso: mesmas cores do painel (#08050C ink, #17121C card, #D018F6 signal) — consistência visual
 // Pirâmide: meio — render puro, testável via snapshot/preview sem I/O
 
 import { Html, Head, Body, Container, Section, Text, Button, Link, Hr } from "@react-email/components"; // componentes email-safe (table-based)
@@ -14,39 +14,39 @@ export function VerificationEmail({ nome, url, expiresIn = "1 hora" }: Props) {
   return (
     <Html lang="pt-BR">
       <Head />
-      {/* Body com bg ink — fallback #0a0812 se cliente não suporta bg */}
-      <Body style={{ backgroundColor: "#0a0812", margin: 0, padding: 0, fontFamily: "Inter, Arial, sans-serif" }}>
+      {/* Body com bg ink — fallback #08050C se cliente não suporta bg */}
+      <Body style={{ backgroundColor: "#08050C", margin: 0, padding: 0, fontFamily: "'Space Grotesk', Inter, Arial, sans-serif" }}>
         <Container style={{ maxWidth: 480, margin: "0 auto", padding: "32px 24px" }}>
           {/* Card sólido — borda fina, mesmo raio do painel, sem blur */}
           <Section
             style={{
-              backgroundColor: "#121019",
-              border: "1px solid rgba(255,255,255,0.08)",
+              backgroundColor: "#17121C",
+              border: "1px solid rgba(255,255,255,0.09)",
               borderRadius: 12,
               padding: 32,
             }}
           >
-            {/* Logo PressLink — "link" no acento violeta */}
-            <Text style={{ fontSize: 18, fontWeight: 600, margin: "0 0 8px", color: "#fff", letterSpacing: "-0.01em" }}>
-              press<span style={{ color: "#c4b5fd" }}>link</span>
+            {/* Wordmark — "Press" branco + "Link" no magenta do logo */}
+            <Text style={{ fontSize: 18, fontWeight: 600, margin: "0 0 8px", color: "#F6F3F8", letterSpacing: "-0.01em" }}>
+              Press<span style={{ color: "#D018F6" }}>Link</span>
             </Text>
             {/* Saudação personalizada — usa nome do user_metadata ou prefixo do email */}
-            <Text style={{ fontSize: 18, fontWeight: 600, color: "#fff", margin: "16px 0 8px", letterSpacing: "-0.01em" }}>
+            <Text style={{ fontSize: 18, fontWeight: 600, color: "#F6F3F8", margin: "16px 0 8px", letterSpacing: "-0.01em" }}>
               Confirme seu email, {nome}
             </Text>
             {/* Instrução + expiração — LGPD: informa prazo, evita link eterno */}
-            <Text style={{ fontSize: 14, color: "rgba(255,255,255,0.55)", lineHeight: "21px", margin: "0 0 20px" }}>
+            <Text style={{ fontSize: 14, color: "#A79FAD", lineHeight: "21px", margin: "0 0 20px" }}>
               Clique no botão abaixo para verificar seu email e liberar o acesso ao painel. O link expira em {expiresIn}.
             </Text>
-            {/* CTA — botão violeta com texto branco, fallback text se cliente bloqueia button */}
+            {/* CTA — magenta com texto ink (4,9:1); branco sobre magenta reprovaria AA */}
             <Section style={{ margin: "24px 0" }}>
               <Button
                 href={url}
                 style={{
-                  backgroundColor: "#7c3aed",
-                  color: "#ffffff",
+                  backgroundColor: "#D018F6",
+                  color: "#08050C",
                   padding: "12px 24px",
-                  borderRadius: 8,
+                  borderRadius: 4,
                   fontWeight: 600,
                   fontSize: 14,
                   textDecoration: "none",
@@ -57,27 +57,27 @@ export function VerificationEmail({ nome, url, expiresIn = "1 hora" }: Props) {
               </Button>
             </Section>
             {/* Fallback plain link — se botão não renderiza, copia e cola URL */}
-            <Text style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", margin: "0 0 8px" }}>
+            <Text style={{ fontSize: 12, color: "#A79FAD", margin: "0 0 8px" }}>
               Se o botão não funcionar, copie e cole:
             </Text>
-            <Link href={url} style={{ fontSize: 12, color: "#c4b5fd", wordBreak: "break-all" }}>
+            <Link href={url} style={{ fontSize: 12, color: "#F2A8FF", wordBreak: "break-all" }}>
               {url}
             </Link>
-            <Hr style={{ borderColor: "rgba(255,255,255,0.08)", margin: "24px 0" }} />
+            <Hr style={{ borderColor: "rgba(255,255,255,0.09)", margin: "24px 0" }} />
             {/* Footer LGPD — informa motivo do email, links privacidade/termos, opt-out implícito (ignore) */}
-            <Text style={{ fontSize: 11, color: "rgba(255,255,255,0.35)", lineHeight: "16px", margin: 0 }}>
+            <Text style={{ fontSize: 11, color: "#A79FAD", lineHeight: "16px", margin: 0 }}>
               Você recebeu porque criou conta em presslink.app. Se não foi você, ignore. Dúvidas?{" "}
-              <Link href="https://presslink.app/privacidade" style={{ color: "#c4b5fd" }}>
+              <Link href="https://presslink.app/privacidade" style={{ color: "#F2A8FF" }}>
                 Política de Privacidade
               </Link>{" "}
               ·{" "}
-              <Link href="https://presslink.app/termos" style={{ color: "#c4b5fd" }}>
+              <Link href="https://presslink.app/termos" style={{ color: "#F2A8FF" }}>
                 Termos
               </Link>
             </Text>
           </Section>
           {/* Assinatura curta — branding + LGPD compliant */}
-          <Text style={{ fontSize: 11, color: "rgba(255,255,255,0.25)", textAlign: "center", marginTop: 16 }}>
+          <Text style={{ fontSize: 11, color: "#A79FAD", textAlign: "center", marginTop: 16 }}>
             PressLink — EPK para DJs · LGPD compliant
           </Text>
         </Container>

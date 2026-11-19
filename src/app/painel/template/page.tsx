@@ -96,6 +96,7 @@ export default async function PainelTemplatePage() {
   return (
     <div>
       <PageHeader
+        label="Página"
         title="Aparência"
         description="Escolha o visual da sua página. O preview usa seus dados reais e trocar de tema não altera nada do perfil."
       />

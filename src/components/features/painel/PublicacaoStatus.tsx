@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Check, ChevronDown, Circle, PowerOff } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, Circle, PowerOff } from "lucide-react";
 import { Modal } from "@/components/ui/Modal";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+
 export type RequisitoPublicacao = {
   label: string;
   href: string;
@@ -21,10 +23,9 @@ interface PublicacaoStatusProps {
 /**
  * Status de publicação global do painel.
  *
- * Antes (até 19/11/2026) publicar/despublicar só existia no dashboard, e o
- * usuário descobria o que faltava levando um erro depois do clique. Agora o
- * estado fica no topo de todas as telas e o checklist mostra o que falta com
- * link direto para resolver.
+ * O estado fica no topo de todas as telas: a chave mostra Rascunho/No ar e abre
+ * o menu com ver página, copiar link e despublicar. O botão "Publicar" executa;
+ * a placa magenta desliza com ease-out expo — o único gesto expressivo do painel.
  */
 export function PublicacaoStatus({
   initialPublicado,
@@ -40,8 +41,15 @@ export function PublicacaoStatus({
   const [erro, setErro] = useState<string | null>(null);
   const [pendenciasApi, setPendenciasApi] = useState<string[]>([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   const faltando = requisitos.filter((r) => !r.done);
+
+  // O servidor manda o estado real; quando o refresh chega, a chave local
+  // acompanha (o cabeçalho da Visão geral lê o mesmo dado no servidor).
+  useEffect(() => {
+    setPublicado(initialPublicado);
+  }, [initialPublicado]);
 
   useEffect(() => {
     if (!menuAberto) return;
@@ -106,6 +114,9 @@ export function PublicacaoStatus({
       setPublicado(true);
       setModal(null);
       setAviso("Sua página está no ar.");
+      // Re-renderiza o que é do servidor (texto do cabeçalho, selo do painel)
+      // na hora, sem esperar F5.
+      router.refresh();
     } catch {
       setErro("Erro de conexão ao publicar. Tente novamente.");
       setModal("checklist");
@@ -127,6 +138,7 @@ export function PublicacaoStatus({
       setPublicado(false);
       setModal(null);
       setAviso("Sua página saiu do ar. Só você consegue vê-la agora.");
+      router.refresh();
     } catch {
       setErro("Erro de conexão ao despublicar. Tente novamente.");
     } finally {
@@ -139,14 +151,14 @@ export function PublicacaoStatus({
       {aviso && (
         <span
           role="status"
-          className="hidden max-w-[220px] truncate text-[12px] text-[#a4edaf] lg:inline"
+          className="hidden max-w-[220px] truncate text-[12px] text-ok lg:inline"
         >
           {aviso}
         </span>
       )}
 
       {copiado && (
-        <span role="status" className="hidden text-[12px] text-white/50 lg:inline">
+        <span role="status" className="hidden text-[12px] text-panel-muted lg:inline">
           Link copiado
         </span>
       )}
@@ -157,29 +169,38 @@ export function PublicacaoStatus({
           onClick={() => setMenuAberto((v) => !v)}
           aria-haspopup="menu"
           aria-expanded={menuAberto}
-          className={cn(
-            "inline-flex h-8 items-center gap-2 rounded-md border px-2.5 text-[12px] font-medium transition-colors",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60",
-            publicado
-              ? "border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] text-[#a4edaf] hover:bg-[#7ce38b]/[0.12]"
-              : "border-white/10 bg-white/[0.04] text-white/60 hover:bg-white/[0.07] hover:text-white/80",
-          )}
+          aria-label={`Status da página: ${publicado ? "no ar" : "rascunho"}. Abrir opções.`}
+          className="pl-spring relative inline-flex h-8 items-stretch overflow-hidden rounded border border-panel-line bg-panel-raised p-[3px] text-[11px] font-medium transition-colors hover:border-panel-line-strong focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60 focus-visible:ring-offset-2 focus-visible:ring-offset-panel-bg"
         >
           <span
             aria-hidden="true"
             className={cn(
-              "h-1.5 w-1.5 rounded-full",
-              publicado ? "bg-[#7ce38b]" : "bg-[#e8c468]",
+              "absolute inset-y-[3px] left-[3px] w-[60px] rounded-[3px] transition-[transform,background-color] duration-300 ease-[cubic-bezier(0.22,1,0.36,1)]",
+              publicado ? "translate-x-[60px] bg-signal" : "translate-x-0 bg-white/[0.07]",
             )}
           />
-          <span className="hidden sm:inline">{publicado ? "Publicado" : "Rascunho"}</span>
-          <ChevronDown className="h-3 w-3 opacity-60" aria-hidden="true" />
+          <span
+            className={cn(
+              "relative z-10 flex w-[60px] items-center justify-center transition-colors duration-200",
+              publicado ? "text-panel-muted" : "text-panel-text",
+            )}
+          >
+            Rascunho
+          </span>
+          <span
+            className={cn(
+              "relative z-10 flex w-[60px] items-center justify-center transition-colors duration-200",
+              publicado ? "text-ink" : "text-panel-muted",
+            )}
+          >
+            No ar
+          </span>
         </button>
 
         {menuAberto && (
           <div
             role="menu"
-            className="absolute right-0 z-40 mt-1.5 w-56 rounded-lg border border-white/10 bg-panel-raised p-1 shadow-xl shadow-black/50"
+            className="pl-pop absolute right-0 z-40 mt-2 w-56 rounded-lg border border-panel-line bg-panel-raised p-1 shadow-xl shadow-black/50"
           >
             <MenuItem href={publicado && username ? `/${username}` : "/painel/perfil"}>
               Ver página
@@ -242,21 +263,23 @@ export function PublicacaoStatus({
           </>
         }
       >
-        <ul className="divide-y divide-white/[0.06]">
+        <ul className="divide-y divide-panel-line">
           {requisitos.map((req) => (
-            <li key={req.label} className="flex items-center justify-between gap-3 py-2.5">
+            <li key={req.label} className="pl-row flex items-center justify-between gap-3 py-2.5 pl-3">
               <span className="flex items-center gap-2.5">
                 {req.done ? (
-                  <Check className="h-4 w-4 shrink-0 text-brand-soft" aria-hidden="true" />
+                  <Check className="h-4 w-4 shrink-0 text-signal-soft" aria-hidden="true" />
                 ) : (
-                  <Circle className="h-4 w-4 shrink-0 text-white/25" aria-hidden="true" />
+                  <Circle className="h-4 w-4 shrink-0 text-panel-muted/50" aria-hidden="true" />
                 )}
-                <span className={req.done ? "text-white/45" : "text-white/85"}>{req.label}</span>
+                <span className={req.done ? "text-panel-muted" : "text-panel-text"}>
+                  {req.label}
+                </span>
               </span>
               {!req.done && (
                 <Link
                   href={req.href}
-                  className="shrink-0 text-[12px] font-medium text-brand-soft/90 underline-offset-4 hover:underline"
+                  className="shrink-0 text-[12px] font-medium text-signal-soft underline-offset-4 hover:underline"
                 >
                   Resolver
                 </Link>
@@ -266,7 +289,7 @@ export function PublicacaoStatus({
         </ul>
 
         {pendenciasApi.length > 0 && (
-          <ul className="mt-3 space-y-1 rounded-md border border-[#e8c468]/25 bg-[#e8c468]/[0.07] p-3 text-[12px] text-[#f0d58e]">
+          <ul className="mt-3 space-y-1 rounded border border-warn/25 bg-warn/[0.07] p-3 text-[12px] text-warn">
             {pendenciasApi.map((p) => (
               <li key={p}>{p}</li>
             ))}
@@ -274,7 +297,7 @@ export function PublicacaoStatus({
         )}
 
         {erro && (
-          <p role="alert" className="mt-3 text-[12px] text-[#ff9a9a]">
+          <p role="alert" className="mt-3 text-[12px] text-danger">
             {erro}
           </p>
         )}
@@ -299,7 +322,7 @@ export function PublicacaoStatus({
         }
       >
         {erro && (
-          <p role="alert" className="text-[12px] text-[#ff9a9a]">
+          <p role="alert" className="text-[12px] text-danger">
             {erro}
           </p>
         )}
@@ -322,8 +345,10 @@ function MenuItem({
   danger?: boolean;
 }) {
   const classes = cn(
-    "flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px] transition-colors",
-    danger ? "text-[#ff9a9a] hover:bg-[#ff6b6b]/10" : "text-white/75 hover:bg-white/[0.06] hover:text-white",
+    "flex w-full items-center gap-2 rounded px-2.5 py-1.5 text-left text-[13px] transition-colors",
+    danger
+      ? "text-danger hover:bg-danger/10"
+      : "text-panel-muted hover:bg-white/[0.06] hover:text-panel-text",
     disabled && "pointer-events-none opacity-35",
   );
 

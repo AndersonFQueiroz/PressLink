@@ -1,6 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
+import { PressLinkLogo } from "@/components/brand/PressLinkLogo";
 import {
   Sparkles,
   Music2,
@@ -57,22 +59,26 @@ export default function DesignSystemPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-ink text-white p-6 sm:p-12 lg:p-16">
+    <main className="min-h-screen bg-ink text-panel-text p-6 sm:p-12 lg:p-16">
       <div className="max-w-6xl mx-auto space-y-16">
         {/* Header */}
-        <header className="space-y-4 border-b border-white/10 pb-8">
+        <header className="space-y-4 border-b border-panel-line pb-8">
           <div className="flex items-center gap-3">
-            <span className="font-display text-2xl font-bold tracking-tight">
-              press<span className="text-brand-soft">link</span>
-            </span>
+            <Link
+              href="/"
+              aria-label="PressLink — início"
+              className="rounded-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
+            >
+              <PressLinkLogo size={22} />
+            </Link>
             <Badge variant="default" size="sm" dot>
               Design System v0.1
             </Badge>
           </div>
-          <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight">
+          <h1 className="font-serif font-bold text-[40px] leading-tight text-panel-text sm:text-[48px]">
             Biblioteca de Componentes UI
           </h1>
-          <p className="text-white/60 text-lg max-w-2xl">
+          <p className="text-panel-muted text-lg max-w-2xl">
             Catálogo interno de componentes reutilizáveis construídos com Tailwind CSS e
             Lucide React para o PressLink.
           </p>
@@ -81,8 +87,8 @@ export default function DesignSystemPage() {
         {/* 1. Buttons */}
         <section className="space-y-6">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-semibold">1. Buttons</h2>
-            <p className="text-sm text-white/60">
+            <h2 className="font-serif font-bold text-[26px] leading-tight">1. Buttons</h2>
+            <p className="text-sm text-panel-muted">
               Variantes, tamanhos, estados interativos e suporte a ícones.
             </p>
           </div>
@@ -90,7 +96,7 @@ export default function DesignSystemPage() {
           <Card>
             <CardContent className="space-y-6 p-6">
               <div className="space-y-2">
-                <span className="text-xs uppercase tracking-wider text-white/50 font-semibold">
+                <span className="text-[12px] font-medium text-panel-muted">
                   Variantes
                 </span>
                 <div className="flex flex-wrap gap-3 items-center">
@@ -103,7 +109,7 @@ export default function DesignSystemPage() {
               </div>
 
               <div className="space-y-2">
-                <span className="text-xs uppercase tracking-wider text-white/50 font-semibold">
+                <span className="text-[12px] font-medium text-panel-muted">
                   Tamanhos
                 </span>
                 <div className="flex flex-wrap gap-3 items-center">
@@ -114,7 +120,7 @@ export default function DesignSystemPage() {
               </div>
 
               <div className="space-y-2">
-                <span className="text-xs uppercase tracking-wider text-white/50 font-semibold">
+                <span className="text-[12px] font-medium text-panel-muted">
                   Com Ícones & Estados
                 </span>
                 <div className="flex flex-wrap gap-3 items-center">
@@ -138,8 +144,8 @@ export default function DesignSystemPage() {
         {/* 2. Inputs */}
         <section className="space-y-6">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-semibold">2. Inputs</h2>
-            <p className="text-sm text-white/60">
+            <h2 className="font-serif font-bold text-[26px] leading-tight">2. Inputs</h2>
+            <p className="text-sm text-panel-muted">
               Campos de formulário com rótulos, ícones e validação de erros.
             </p>
           </div>
@@ -203,8 +209,8 @@ export default function DesignSystemPage() {
         {/* 3. Badges */}
         <section className="space-y-6">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-semibold">3. Badges</h2>
-            <p className="text-sm text-white/60">
+            <h2 className="font-serif font-bold text-[26px] leading-tight">3. Badges</h2>
+            <p className="text-sm text-panel-muted">
               Etiquetas e marcadores de status com variações de cor.
             </p>
           </div>
@@ -236,8 +242,8 @@ export default function DesignSystemPage() {
         {/* 4. Cards */}
         <section className="space-y-6">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-semibold">4. Cards</h2>
-            <p className="text-sm text-white/60">
+            <h2 className="font-serif font-bold text-[26px] leading-tight">4. Cards</h2>
+            <p className="text-sm text-panel-muted">
               Containers modulares com Header, Content e Footer.
             </p>
           </div>
@@ -260,12 +266,12 @@ export default function DesignSystemPage() {
                 <CardDescription>Adicionado há 2 dias • 45 min</CardDescription>
               </CardHeader>
               <CardContent>
-                <p className="text-sm text-white/70">
+                <p className="text-sm text-panel-text">
                   Card com suporte a hover suave e ações integradas via Dropdown.
                 </p>
               </CardContent>
               <CardFooter className="justify-between">
-                <span className="text-xs text-white/40">1.240 reproduções</span>
+                <span className="text-xs text-panel-muted">1.240 reproduções</span>
                 <Button size="sm" variant="secondary">
                   Ouvir
                 </Button>
@@ -278,12 +284,12 @@ export default function DesignSystemPage() {
                 <CardDescription>Festival Tomorrowland Brasil</CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-white/70">
-                  <Calendar className="h-4 w-4 text-brand-soft" />
+                <div className="flex items-center gap-2 text-sm text-panel-text">
+                  <Calendar className="h-4 w-4 text-signal-soft" />
                   <span>14 de Outubro, 2026 • 23:30</span>
                 </div>
-                <div className="flex items-center gap-2 text-sm text-white/70">
-                  <Music2 className="h-4 w-4 text-brand-soft" />
+                <div className="flex items-center gap-2 text-sm text-panel-text">
+                  <Music2 className="h-4 w-4 text-signal-soft" />
                   <span>Palco Principal (Mainstage)</span>
                 </div>
               </CardContent>
@@ -299,10 +305,10 @@ export default function DesignSystemPage() {
         {/* 5. Modal & Dropdown */}
         <section className="space-y-6">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-semibold">
+            <h2 className="font-serif font-bold text-[26px] leading-tight">
               5. Modal & Dropdown
             </h2>
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-panel-muted">
               Componentes de diálogo interativo e menus suspensos com acessibilidade.
             </p>
           </div>
@@ -350,10 +356,10 @@ export default function DesignSystemPage() {
               <p>
                 Ao publicar, seu PressLink ficará visível em:
               </p>
-              <div className="rounded-lg border border-white/10 bg-white/[0.04] p-3 font-mono text-xs text-brand-soft">
+              <div className="rounded-lg border border-panel-line bg-white/[0.04] p-3 font-mono text-xs text-signal-soft">
                 https://presslink.app/nomedodj
               </div>
-              <p className="text-xs text-white/50">
+              <p className="text-xs text-panel-muted">
                 Pressione <kbd className="px-1.5 py-0.5 rounded bg-white/10 font-mono">ESC</kbd> ou clique fora para fechar o diálogo.
               </p>
             </div>
@@ -363,10 +369,10 @@ export default function DesignSystemPage() {
         {/* 6. Skeleton Loader */}
         <section className="space-y-6">
           <div className="space-y-1">
-            <h2 className="font-display text-2xl font-semibold">
+            <h2 className="font-serif font-bold text-[26px] leading-tight">
               6. Skeleton Loader
             </h2>
-            <p className="text-sm text-white/60">
+            <p className="text-sm text-panel-muted">
               Efeito de carregamento placeholder para conteúdo assíncrono.
             </p>
           </div>
@@ -374,7 +380,7 @@ export default function DesignSystemPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <Card>
               <CardContent className="space-y-4 p-6">
-                <span className="text-xs uppercase tracking-wider text-white/50 font-semibold block">
+                <span className="block text-[12px] font-medium text-panel-muted">
                   Variantes Individuais
                 </span>
                 <div className="flex items-center gap-3">
@@ -384,7 +390,7 @@ export default function DesignSystemPage() {
                     <SkeletonLoader variant="text" className="w-1/2 h-3" />
                   </div>
                 </div>
-                <SkeletonLoader variant="rectangular" className="h-20 w-full rounded-xl" />
+                <SkeletonLoader variant="rectangular" className="h-20 w-full rounded-lg" />
               </CardContent>
             </Card>
             <SkeletonCard />

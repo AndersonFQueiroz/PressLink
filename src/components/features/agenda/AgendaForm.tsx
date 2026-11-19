@@ -43,7 +43,7 @@ export function AgendaForm({ defaultValues, onSubmit, onCancel }: Props) {
   return (
     <form onSubmit={handleSubmit(submit as never)} className="space-y-4">
       {serverError && (
-        <p className="rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] p-3 text-[13px] text-[#ff9a9a]">
+        <p className="rounded-lg border border-danger/25 bg-danger/[0.08] p-3 text-[13px] text-danger">
           {serverError}
         </p>
       )}

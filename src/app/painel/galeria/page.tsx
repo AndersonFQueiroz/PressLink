@@ -23,6 +23,7 @@ export default async function GaleriaPage() {
   return (
     <div>
       <PageHeader
+        label="Conteúdo"
         title="Galeria"
         description="Fotos de festa, estúdio e bastidores. Arraste para enviar, reordene e exclua o que não quiser mostrar."
       />

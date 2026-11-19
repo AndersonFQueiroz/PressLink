@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import Link from "next/link";
+import { PressLinkLogo } from "@/components/brand/PressLinkLogo";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -16,6 +18,7 @@ import {
   X,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isNavActive } from "@/lib/nav";
 import { LogoutButton } from "@/components/features/auth/LogoutButton";
 import { AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
 
@@ -90,11 +93,6 @@ export function Sidebar({ open, onClose, perfil }: SidebarProps) {
     return () => window.removeEventListener(AVATAR_UPDATED_EVENT, onAvatar);
   }, []);
 
-  const isActive = (href: string, exact?: boolean) => {
-    if (exact) return pathname === href;
-    return pathname === href || pathname.startsWith(href + "/");
-  };
-
   const initials = (perfil.nome || perfil.email || "P").slice(0, 2).toUpperCase();
   const subtitle = perfil.username ? `@${perfil.username}` : perfil.email ?? "Sem @username";
 
@@ -110,21 +108,22 @@ export function Sidebar({ open, onClose, perfil }: SidebarProps) {
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-[248px] flex-col border-r border-panel-line bg-[#080610] transition-transform duration-200 md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-[248px] flex-col bg-panel-bg transition-transform duration-200 md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-14 shrink-0 items-center justify-between border-b border-panel-line px-4">
+        <div className="flex h-14 shrink-0 items-center justify-between px-4">
           <Link
             href="/painel"
             onClick={onClose}
-            className="font-display text-[15px] font-semibold tracking-tight text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+            aria-label="PressLink — Visão geral"
+            className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60 focus-visible:ring-offset-4 focus-visible:ring-offset-panel-bg"
           >
-            press<span className="text-brand-soft">link</span>
+            <PressLinkLogo size={21} />
           </Link>
           <button
             onClick={onClose}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-md text-white/50 transition-colors hover:bg-white/[0.06] hover:text-white md:hidden"
+            className="inline-flex h-8 w-8 items-center justify-center rounded text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text md:hidden"
             aria-label="Fechar menu"
           >
             <X className="h-4 w-4" />
@@ -135,41 +134,47 @@ export function Sidebar({ open, onClose, perfil }: SidebarProps) {
           {NAV_GROUPS.map((grupo, indice) => (
             <div key={grupo.label ?? `grupo-${indice}`} className={cn(indice > 0 && "mt-5")}>
               {grupo.label && (
-                <p className="px-2.5 pb-1.5 text-[11px] font-medium text-white/35">
+                <p className="px-2.5 pb-1.5 text-[11px] font-normal text-panel-muted">
                   {grupo.label}
                 </p>
               )}
-              <ul className="flex flex-col gap-0.5">
-                {grupo.items.map((item) => {
-                  const active = isActive(item.href, item.exact);
+              <ul className="pl-stagger flex flex-col gap-0.5">
+                {grupo.items.map((item, indiceItem) => {
+                  const active = isNavActive(pathname, item.href, item.exact);
                   const Icon = item.icon;
                   return (
-                    <li key={item.href}>
+                    <li key={item.href} style={{ "--pl-i": indiceItem } as CSSProperties}>
                       <Link
                         href={item.href}
                         onClick={onClose}
                         aria-current={active ? "page" : undefined}
                         className={cn(
-                          "group relative flex items-center gap-2.5 rounded-md px-2.5 py-1.5 text-[13px] font-medium transition-colors",
+                          "group relative flex items-center gap-2.5 rounded px-2.5 py-[7px] text-[13px] font-medium transition-colors duration-150",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60",
                           active
-                            ? "bg-white/[0.06] text-white"
-                            : "text-white/55 hover:bg-white/[0.04] hover:text-white/90",
+                            ? "bg-white/[0.05] text-panel-text"
+                            : "text-panel-muted hover:bg-white/[0.03] hover:text-panel-text",
                         )}
                       >
                         {active && (
                           <span
                             aria-hidden="true"
-                            className="absolute left-0 top-1/2 h-3.5 w-[2px] -translate-y-1/2 rounded-full bg-brand"
+                            className="pl-rail absolute left-0 top-1/2 h-4 w-[2px] rounded-r bg-signal"
                           />
                         )}
                         <Icon
                           className={cn(
-                            "h-4 w-4 shrink-0",
-                            active ? "text-brand-soft" : "text-white/35 group-hover:text-white/60",
+                            "h-4 w-4 shrink-0 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:scale-110",
+                            active
+                              ? "text-panel-text"
+                              : "text-panel-muted/80 group-hover:text-panel-text",
                           )}
                           strokeWidth={1.75}
+                          aria-hidden="true"
                         />
-                        {item.label}
+                        <span className="truncate transition-transform duration-200 group-hover:translate-x-0.5">
+                          {item.label}
+                        </span>
                       </Link>
                     </li>
                   );
@@ -184,10 +189,10 @@ export function Sidebar({ open, onClose, perfil }: SidebarProps) {
             <Link
               href="/painel/configuracoes"
               onClick={onClose}
-              className="flex min-w-0 flex-1 items-center gap-2.5 rounded-md p-1.5 transition-colors hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+              className="flex min-w-0 flex-1 items-center gap-2.5 rounded p-1.5 transition-colors hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
               title="Conta e configurações"
             >
-              <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-panel-raised text-[10px] font-semibold text-white/80">
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-panel-line bg-panel-raised text-[10px] font-semibold text-panel-text">
                 {fotoUrl ? (
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={fotoUrl} alt="" className="h-full w-full object-cover" />
@@ -196,17 +201,17 @@ export function Sidebar({ open, onClose, perfil }: SidebarProps) {
                 )}
               </span>
               <span className="min-w-0 flex-1">
-                <span className="block truncate text-[12px] font-medium text-white/85">
+                <span className="block truncate text-[12px] font-medium text-panel-text">
                   {perfil.nome || "Sua conta"}
                 </span>
-                <span className="block truncate text-[11px] text-white/35">{subtitle}</span>
+                <span className="block truncate text-[11px] text-panel-muted">{subtitle}</span>
               </span>
-              <Settings className="h-3.5 w-3.5 shrink-0 text-white/25" aria-hidden="true" />
+              <Settings className="h-3.5 w-3.5 shrink-0 text-panel-muted/70" aria-hidden="true" />
             </Link>
             <LogoutButton
               variant="ghost"
               showText={false}
-              className="h-7 w-7 shrink-0 rounded-md px-0 text-white/40 hover:text-white"
+              className="h-7 w-7 shrink-0 rounded px-0 text-panel-muted hover:text-panel-text"
             />
           </div>
         </div>

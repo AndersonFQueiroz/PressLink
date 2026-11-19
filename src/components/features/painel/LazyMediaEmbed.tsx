@@ -119,7 +119,7 @@ export function LazyMediaEmbed({
           <span
             className={cn(
               "flex animate-pulse flex-col items-center gap-2",
-              ytId ? "text-white/90" : "text-white/30"
+              ytId ? "text-panel-text" : "text-panel-muted"
             )}
           >
             {ytId ? (

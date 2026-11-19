@@ -92,7 +92,7 @@ export function Modal({
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div
-        className="fixed inset-0 bg-black/70 animate-in fade-in duration-150"
+        className="pl-fade fixed inset-0 bg-black/70"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -103,8 +103,7 @@ export function Modal({
         aria-modal="true"
         aria-labelledby={title ? titleId : undefined}
         className={cn(
-          "relative z-10 w-full rounded-xl border border-white/10 bg-[#16121f] p-6 shadow-2xl shadow-black/60",
-          "animate-in zoom-in-95 duration-150 ease-out",
+          "pl-pop relative z-10 w-full rounded-xl border border-panel-line bg-panel-raised p-6 shadow-2xl shadow-black/60",
           sizeStyles[size],
           className,
         )}
@@ -114,7 +113,7 @@ export function Modal({
             {title && (
               <h2
                 id={titleId}
-                className="font-display text-lg font-semibold tracking-tight text-panel-text"
+                className="font-serif text-[22px] leading-tight text-panel-text"
               >
                 {title}
               </h2>
@@ -126,14 +125,14 @@ export function Modal({
           <button
             onClick={onClose}
             type="button"
-            className="rounded-md p-1.5 text-white/40 transition-colors hover:bg-white/[0.06] hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+            className="rounded p-1.5 text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
             aria-label="Fechar modal"
           >
             <X className="h-4 w-4" />
           </button>
         </div>
 
-        <div className="text-sm text-white/75">{children}</div>
+        <div className="text-[13px] text-panel-text">{children}</div>
 
         {footer && (
           <div className="mt-6 flex flex-wrap items-center justify-end gap-2 border-t border-panel-line pt-4">

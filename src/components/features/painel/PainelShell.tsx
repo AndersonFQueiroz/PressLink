@@ -1,6 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { cn } from "@/lib/utils";
+import { usePathname } from "next/navigation";
 import { Sidebar, type PainelPerfil } from "./Sidebar";
 import { PainelTopbar } from "./PainelTopbar";
 import type { RequisitoPublicacao } from "./PublicacaoStatus";
@@ -17,6 +19,7 @@ export function PainelShell({
   children: React.ReactNode;
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const pathname = usePathname();
 
   return (
     <div className="min-h-screen bg-panel-bg text-panel-text">
@@ -28,8 +31,16 @@ export function PainelShell({
           requisitos={requisitos}
           onMenuClick={() => setSidebarOpen(true)}
         />
-        <main className="px-4 py-6 sm:px-6 lg:px-8 lg:py-8">
-          <div className="mx-auto w-full max-w-5xl">{children}</div>
+        <main
+          className={cn(
+            "pl-stage relative min-h-[calc(100dvh-3.5rem)] overflow-hidden",
+            pathname !== "/painel" && "px-4 py-6 sm:px-6 lg:px-8 lg:py-8",
+          )}
+        >
+          <span aria-hidden="true" className="pl-aura" />
+          <div key={pathname} className="pl-enter relative w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>

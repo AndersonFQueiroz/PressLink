@@ -9,6 +9,7 @@ import { perfilSchema, type PerfilFormData } from "@/lib/validators/perfil";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { AvatarUpload, AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
+import { PreviewCelular } from "@/components/features/painel/PreviewCelular";
 import { cn } from "@/lib/utils";
 
 type PerfilFormProps = {
@@ -27,6 +28,7 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
     handleSubmit,
     formState: { errors, isSubmitting },
     getValues,
+    watch,
   } = useForm<PerfilFormData>({
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     resolver: zodResolver(perfilSchema) as any,
@@ -43,6 +45,8 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
       ...defaultValues,
     },
   });
+
+  const valores = watch();
 
   const checkUsername = async () => {
     const username = getValues("username")?.toLowerCase().trim();
@@ -83,11 +87,13 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-8">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_272px]">
+        <div className="flex min-w-0 flex-col gap-8">
       {/* Identidade */}
       <section>
-        <h2 className="text-[13px] font-medium text-white/75">Identidade</h2>
-        <p className="mt-0.5 text-[12px] text-white/35">
+        <h2 className="text-[13px] font-medium text-panel-text">Identidade</h2>
+        <p className="mt-0.5 text-[12px] text-panel-muted">
           É o que aparece primeiro no topo da sua página pública.
         </p>
 
@@ -110,20 +116,20 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
                 onBlur={checkUsername}
               />
               {usernameStatus === "checking" && (
-                <p className="mt-1 text-[11px] text-white/40">Verificando...</p>
+                <p className="mt-1 text-[11px] text-panel-muted">Verificando...</p>
               )}
               {usernameStatus === "available" && (
-                <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#a4edaf]">
+                <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-ok">
                   <Check className="h-3 w-3" aria-hidden="true" /> Disponível
                 </p>
               )}
               {usernameStatus === "taken" && (
-                <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-[#ff9a9a]">
+                <p className="mt-1 inline-flex items-center gap-1 text-[11px] text-danger">
                   <X className="h-3 w-3" aria-hidden="true" /> Já está em uso
                 </p>
               )}
               {usernameStatus === "invalid" && (
-                <p className="mt-1 text-[11px] text-[#f0d58e]">
+                <p className="mt-1 text-[11px] text-warn">
                   Use letras minúsculas, números e hífen
                 </p>
               )}
@@ -136,8 +142,8 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
       <section className="border-t border-panel-line pt-7">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="text-[13px] font-medium text-white/75">Biografia</h2>
-            <p className="mt-0.5 text-[12px] text-white/35">
+            <h2 className="text-[13px] font-medium text-panel-text">Biografia</h2>
+            <p className="mt-0.5 text-[12px] text-panel-muted">
               Um texto curto sobre sua trajetória e seu som. A versão em inglês aparece para quem abre a página em outro idioma.
             </p>
           </div>
@@ -154,10 +160,10 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
                 onClick={() => setBioTab(idioma)}
                 aria-pressed={bioTab === idioma}
                 className={cn(
-                  "rounded-[5px] px-2.5 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60",
+                  "rounded-[5px] px-2.5 py-1 text-[11px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60",
                   bioTab === idioma
-                    ? "bg-white/[0.09] text-white"
-                    : "text-white/45 hover:text-white/80",
+                    ? "bg-panel-raised text-panel-text"
+                    : "text-panel-muted hover:text-panel-text",
                 )}
               >
                 {idioma.toUpperCase()}
@@ -168,34 +174,34 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
 
         {bioTab === "pt" ? (
           <div className="mt-4">
-            <label htmlFor="bio_pt" className="text-xs font-medium tracking-wide text-white/60">
+            <label htmlFor="bio_pt" className="text-[12px] font-medium text-panel-muted">
               Biografia (PT)
             </label>
             <textarea
               id="bio_pt"
               rows={5}
               placeholder="Conte sua história em português"
-              className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0e0b16] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition-colors hover:border-white/20 focus:border-brand/60 focus:ring-2 focus:ring-brand/15"
+              className="mt-1.5 w-full rounded-lg border border-panel-line bg-panel-bg px-3.5 py-2.5 text-sm text-panel-text placeholder-panel-muted/70 outline-none transition-colors hover:border-panel-line-strong focus:border-signal/60 focus:ring-2 focus:ring-signal/15"
               {...register("biografia_pt")}
             />
             {errors.biografia_pt && (
-              <p className="mt-1 text-xs text-[#ff9a9a]">{errors.biografia_pt.message}</p>
+              <p className="mt-1 text-xs text-danger">{errors.biografia_pt.message}</p>
             )}
           </div>
         ) : (
           <div className="mt-4">
-            <label htmlFor="bio_en" className="text-xs font-medium tracking-wide text-white/60">
+            <label htmlFor="bio_en" className="text-[12px] font-medium text-panel-muted">
               Biography (EN)
             </label>
             <textarea
               id="bio_en"
               rows={5}
               placeholder="Tell your story in English"
-              className="mt-1.5 w-full rounded-lg border border-white/10 bg-[#0e0b16] px-3.5 py-2.5 text-sm text-white placeholder-white/25 outline-none transition-colors hover:border-white/20 focus:border-brand/60 focus:ring-2 focus:ring-brand/15"
+              className="mt-1.5 w-full rounded-lg border border-panel-line bg-panel-bg px-3.5 py-2.5 text-sm text-panel-text placeholder-panel-muted/70 outline-none transition-colors hover:border-panel-line-strong focus:border-signal/60 focus:ring-2 focus:ring-signal/15"
               {...register("biografia_en")}
             />
             {errors.biografia_en && (
-              <p className="mt-1 text-xs text-[#ff9a9a]">{errors.biografia_en.message}</p>
+              <p className="mt-1 text-xs text-danger">{errors.biografia_en.message}</p>
             )}
           </div>
         )}
@@ -203,8 +209,8 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
 
       {/* Redes */}
       <section className="border-t border-panel-line pt-7">
-        <h2 className="text-[13px] font-medium text-white/75">Redes sociais</h2>
-        <p className="mt-0.5 text-[12px] text-white/35">
+        <h2 className="text-[13px] font-medium text-panel-text">Redes sociais</h2>
+        <p className="mt-0.5 text-[12px] text-panel-muted">
           Links completos. Os ícones aparecem no rodapé da sua página.
         </p>
 
@@ -222,8 +228,8 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
           className={cn(
             "rounded-lg border px-3.5 py-2.5 text-[13px]",
             toast.type === "success"
-              ? "border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] text-[#a4edaf]"
-              : "border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] text-[#ff9a9a]",
+              ? "border-ok/25 bg-ok/[0.08] text-ok"
+              : "border-danger/25 bg-danger/[0.08] text-danger",
           )}
         >
           {toast.msg}
@@ -234,6 +240,25 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
         <Button type="submit" size="lg" isLoading={isSubmitting}>
           Salvar alterações
         </Button>
+      </div>
+        </div>
+
+        <aside className="hidden lg:block lg:border-l lg:border-white/[0.06] lg:pl-7">
+          <div className="sticky top-20">
+            <PreviewCelular
+              nome={valores.nome_artistico}
+              username={valores.username}
+              fotoUrl={fotoUrl}
+              bio={valores.biografia_pt}
+              redes={{
+                instagram: valores.instagram,
+                tiktok: valores.tiktok,
+                twitter_x: valores.twitter_x,
+                facebook: valores.facebook,
+              }}
+            />
+          </div>
+        </aside>
       </div>
     </form>
   );

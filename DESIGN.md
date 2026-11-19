@@ -34,43 +34,49 @@ Regras:
 
 | Papel | Fonte | Escala |
 | --- | --- | --- |
-| Título de página | Instrument Serif 400 | 30–36 px, `leading-tight`, sem tracking negativo |
+| Título de página | Poppins 700 | 30–36 px, `leading-tight`, `tracking-[-0.02em]` |
 | Título de seção | Space Grotesk 500 | 15 px |
 | Corpo e UI | Space Grotesk 400/500 | 13–14 px, `leading-relaxed` |
 | Número-herói | Space Grotesk 500, `tabular` | 34–40 px |
 | Rótulo | Space Grotesk 400 | 12 px, `muted`, sentence case |
 
+- A voz dos títulos é a **fonte do wordmark**: Poppins Bold (`font-display`, `font-serif`, `font-poster` e `font-brand` apontam para ela). Corpo segue Space Grotesk.
 - Nunca CAIXA ALTA com tracking como "eyebrow". Siglas naturais (EPK, LGPD) são exceção.
-- `font-display` = Space Grotesk, `font-serif` = Instrument Serif. Anton fica restrito à landing pública.
+- Wordmark = corrente em gradiente branco→magenta + "Press" branco + "Link" magenta, componente `PressLinkLogo`.
 
 ## 3. Espaço, raio, borda
 
 - Base 4 px; ritmo vertical 8/12/16/20/24/32.
-- Conteúdo do painel: `max-width: 1024px`, padding 16 (mobile) / 32 (desktop).
-- Raios: **4** controles pequenos, **8** superfícies, **12** modais. Nunca o mesmo raio em tudo.
-- Borda sempre 1 px `line`; elevação por cor de superfície, não por sombra (sombra só em modal/menu flutuante).
+- Conteúdo do painel: **largura total do palco** (sem `max-width`), padding 16 (mobile) / 24 (tablet) / 32 (desktop).
+- Raios: **4** controles pequenos, **8** superfícies pequenas, **12** flutuantes (modal/menu), **14** card, **16** painel contínuo. Nunca o mesmo raio em tudo.
+- Borda de 1 px em `line / 6%` (mais discreta que a régua interna antiga); brilho interno de 1 px no topo (`inset 0 1px 0 white/4%`) simula luz de cima.
+- Elevação vem da cor da superfície (`surface` → `raised` → `raised-hover`), não de sombra pesada; sombra só em modal/menu e no recorte do painel inteiro.
 
 ## 4. Layout do painel
 
-- Sidebar fixa 248 px (desktop), topbar 56 px, conteúdo em coluna de leitura.
-- Uma coluna de conteúdo; duas colunas só quando os blocos são de naturezas diferentes (checklist × agenda).
-- **Sem grade de cards idênticos**: métricas são uma faixa com réguas, "Sua página" é uma linha, listas são listas.
-- Mobile 390: sidebar vira gaveta; faixa de métricas empilha com réguas horizontais; ações quebram em duas linhas.
+- Sidebar fixa 248 px (desktop), topbar 56 px, palco ocupando toda a largura restante.
+- **Divisão por superfície, não por régua**: o chrome (sidebar/topbar) fica no `ink`; o conteúdo é o palco (`.pl-stage`) em `surface`, com canto superior esquerdo de 22 px e glow radial da marca. Sem `border-r` na sidebar nem `border-b` na topbar.
+- **Painel contínuo full-bleed**: a Visão geral encosta nas bordas do palco (sem margem externa e sem moldura); o cabeçalho tem padding interno e as células são separadas por fios internos de 6%. Nada de cards soltos com gap dentro do painel.
+- Grade de 12 colunas dentro do painel: topo (12), prontidão (4) + métricas (8, faixa dividida), gráfico (8) + canal (4), agenda (8) + atalhos (4).
+- **KPIs são uma faixa com réguas**, não três cards iguais; o número manda e a sparkline é apoio.
+- Mobile 390: sidebar vira gaveta; o painel empilha célula a célula; fios viram horizontais; ações quebram em duas linhas.
 
 ## 5. Componentes
 
-- **Botão primário**: fundo `signal`, texto `ink`, raio 8, altura 32/36/40. Hover `signal-hover`. Nunca branco no magenta.
+- **Botão primário**: fundo `signal`, texto `ink`, raio 4, altura 32/36/40. Hover `signal-hover`. Nunca branco no magenta.
 - **Botão secundário**: fundo `raised`, borda `line`, texto `text`. Ghost: só texto `muted` → `text` no hover.
 - **Campo**: fundo `ink`, borda `line`; foco = borda `signal` + anel `signal/25`; erro = borda `danger` + mensagem com ícone.
 - **Navegação**: item 13 px `muted`; ativo = texto `text` + barra de 2 px `signal` à esquerda; só **um** item ativo (`aria-current="page"`).
-- **Status de publicação**: chave de dois estados (`Rascunho` ⇄ `No ar`). O estado no ar usa placa magenta com texto `ink`; o rascunho usa `raised` com texto `muted`. A chave abre o menu de ações; o botão "Publicar" executa e move a placa com mola.
+- **Status de publicação**: chave de dois estados (`Rascunho` ⇄ `No ar`). O estado no ar usa placa magenta com texto `ink`; o rascunho usa `raised` com texto `muted`. A chave abre o menu de ações; o botão "Publicar" executa e move a placa.
 - **Lista**: linha com régua inferior, hover `raised`, ação à direita sempre visível (nunca só no hover).
 - **Vazio**: uma frase útil + uma ação. Sem ilustração.
 
 ## 6. Movimento
 
-- Só `transform` e `opacity`. Durações 150–250 ms; entrada com `--pl-ease` (`.22, 1, .36, 1`); mola só na chave de publicação.
-- **Uma** entrada orquestrada por tela: na Visão geral, números contam e a régua da prontidão cresce (uma vez, 400 ms, sem repetir em navegação de volta).
+- Só `transform` e `opacity`. Durações 150–250 ms; entrada com `--pl-ease` (`.22, 1, .36, 1`); a chave de publicação desliza 300 ms com esse mesmo ease-out expo, sem bounce.
+- **Uma** entrada orquestrada por tela: o cabeçalho sobe (`.pl-rise`) e, na Visão geral, as faixas entram em cascata com atrasos de 40–220 ms. Trocou de rota, a cascata roda de novo (o shell remonta pelo `key`).
+- **Corrente em repouso aberta**: os elos ficam separados 1,5 px. No hover da marca eles encostam e voltam a abrir (620 ms), terminando abertos — o estado final nunca "pula".
+- **Clique**: alvos importantes afundam 2% (`.pl-press` / `Button`); setas de link deslizam 2 px e ícones de ação crescem 10% no hover.
 - Feedback de ação: salvar/publicar confirma no lugar; reordenar tem mola; expandir/recolher 200 ms.
 - Nada de fade-and-slide em cada seção; nada animando em hover que não seja clicável.
 - `prefers-reduced-motion`: zero animação de entrada, zero mola, transições para 0 ms.
@@ -81,10 +87,10 @@ Toda tela entrega: vazio, carregando (skeleton com a mesma silhueta do conteúdo
 
 ## 8. Anti-cara-de-IA (checklist de revisão)
 
-- [ ] Nenhuma grade de cards iguais.
+- [ ] Nenhuma grade de cards iguais soltos (o painel é contínuo, com fios internos).
 - [ ] Nenhum rótulo em caixa alta com tracking.
 - [ ] Nenhum tile de ícone decorando título.
-- [ ] Nenhum gradiente/glow decorativo.
+- [ ] Glow só no topo do painel (gradiente da marca), nunca em cada card.
 - [ ] Texto secundário legível (≥ 4,5:1), não cinza fantasma.
 - [ ] Hover só em elemento clicável e ≤ 150 ms.
 - [ ] Uma única entrada orquestrada por tela.

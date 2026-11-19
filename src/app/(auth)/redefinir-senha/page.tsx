@@ -51,12 +51,12 @@ export default function RedefinirSenhaPage() {
   };
 
   return (
-    <div className="rounded-xl border border-panel-line bg-panel-surface p-6 sm:p-8">
+    <div className="rounded-lg border border-panel-line bg-panel-surface p-6 sm:p-8">
       <div className="mb-6">
-        <h1 className="font-display text-2xl font-semibold tracking-tight text-white">
+        <h1 className="font-serif font-bold text-[30px] leading-tight text-panel-text">
           Criar nova senha
         </h1>
-        <p className="mt-1.5 text-[13px] leading-relaxed text-white/45">
+        <p className="mt-1.5 text-[13px] leading-relaxed text-panel-muted">
           Escolha uma senha nova para voltar a acessar o painel.
         </p>
       </div>
@@ -64,12 +64,12 @@ export default function RedefinirSenhaPage() {
       {successMessage && (
         <div
           role="status"
-          className="mb-5 flex items-start gap-2.5 rounded-lg border border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] p-3 text-[13px] text-[#a4edaf]"
+          className="mb-5 flex items-start gap-2.5 rounded-lg border border-ok/25 bg-ok/[0.08] p-3 text-[13px] text-ok"
         >
           <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <div>
             <p className="font-medium">{successMessage}</p>
-            <p className="mt-0.5 text-[12px] text-[#a4edaf]/80">
+            <p className="mt-0.5 text-[12px] text-ok/80">
               Redirecionando para o login...
             </p>
           </div>
@@ -79,7 +79,7 @@ export default function RedefinirSenhaPage() {
       {errorMessage && (
         <div
           role="alert"
-          className="mb-5 flex items-start gap-2.5 rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] p-3 text-[13px] text-[#ff9a9a]"
+          className="mb-5 flex items-start gap-2.5 rounded-lg border border-danger/25 bg-danger/[0.08] p-3 text-[13px] text-danger"
         >
           <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{errorMessage}</span>
@@ -102,7 +102,7 @@ export default function RedefinirSenhaPage() {
                 onClick={() => setShowPassword(!showPassword)}
                 tabIndex={-1}
                 aria-label={showPassword ? "Ocultar senha" : "Ver senha"}
-                className="rounded text-white/40 transition-colors hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+                className="rounded text-panel-muted transition-colors hover:text-panel-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
               >
                 {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
               </button>
@@ -124,7 +124,7 @@ export default function RedefinirSenhaPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-brand px-5 text-sm font-semibold text-white transition-colors hover:bg-brand-hover disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
+            className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-signal px-5 text-sm font-semibold text-ink transition-colors hover:bg-signal-hover disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
           >
             {isPending ? (
               <>

@@ -11,6 +11,7 @@
 // perfil repetidos sem alteração + apenas o template_slug — para que os dados
 // do DJ permaneçam intactos após trocar de tema.
 import { useCallback, useState } from "react";
+import type { CSSProperties } from "react";
 import { Check, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
@@ -83,31 +84,34 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
   return (
     <div className="space-y-4">
       {/* Grade de temas */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className="pl-stagger grid gap-4 md:grid-cols-3">
         {TEMPLATES.map((tpl) => {
           const ativo = tpl.id === appliedSlug;
           return (
             <article
               key={tpl.id}
               className={cn(
-                "flex flex-col gap-3 rounded-xl border p-4 transition-colors",
+                "pl-lift group flex flex-col gap-3 rounded-lg border p-3",
                 ativo
-                  ? "border-brand/45 bg-panel-raised"
-                  : "border-panel-line bg-panel-surface hover:border-white/20",
+                  ? "border-signal/45 bg-panel-raised shadow-[0_0_0_1px_rgb(208_24_246/0.25),0_18px_40px_-30px_rgb(208_24_246/0.6)]"
+                  : "border-panel-line bg-panel-surface hover:border-panel-line-strong",
               )}
+              style={{ "--pl-i": TEMPLATES.indexOf(tpl) } as CSSProperties}
             >
-              <TemplateThumbnail template={tpl} />
+              <div className="overflow-hidden rounded-xl transition-transform duration-500 ease-out group-hover:scale-[1.015]">
+                <TemplateThumbnail template={tpl} />
+              </div>
 
               <div className="flex items-center justify-between gap-2">
-                <h2 className="text-[13px] font-medium text-white/90">{tpl.nome}</h2>
+                <h2 className="text-[13px] font-medium text-panel-text">{tpl.nome}</h2>
                 {ativo && (
-                  <span className="inline-flex items-center gap-1 rounded border border-brand/30 bg-brand/[0.1] px-1.5 py-0.5 text-[10px] font-medium text-brand-soft">
+                  <span className="inline-flex items-center gap-1 text-[11px] font-medium text-signal-soft">
                     <Check className="h-3 w-3" aria-hidden="true" /> Ativo
                   </span>
                 )}
               </div>
 
-              <p className="flex-1 text-[12px] leading-relaxed text-white/40">
+              <p className="flex-1 text-[12px] leading-relaxed text-panel-muted">
                 {tpl.descricao}
               </p>
 
@@ -145,7 +149,7 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
 
       {/* Dica quando ainda não há perfil cadastrado */}
       {!temConteudo && (
-        <p className="rounded-lg border border-[#f0d58e]/25 bg-[#f0d58e]/[0.06] px-3.5 py-2.5 text-[12px] text-[#f0d58e]">
+        <p className="border-y border-warn/25 py-2.5 text-[12px] text-warn">
           Você ainda não cadastrou seu perfil. Cadastre em{" "}
           <span className="font-medium">Perfil</span> para liberar a seleção de
           template — assim o preview já aparece com os seus dados reais.
@@ -157,10 +161,10 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
         <p
           role="status"
           className={cn(
-            "rounded-lg border px-3.5 py-2.5 text-[12px]",
+            "border-y py-2.5 text-[12px]",
             feedback.tipo === "ok"
-              ? "border-[#7ce38b]/25 bg-[#7ce38b]/[0.08] text-[#a4edaf]"
-              : "border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] text-[#ff9a9a]",
+              ? "border-ok/25 text-ok"
+              : "border-danger/25 text-danger",
           )}
         >
           {feedback.texto}

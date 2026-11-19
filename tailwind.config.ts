@@ -9,39 +9,49 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Base neutra com leve viés violeta (identidade roxa). O painel usa
-        // estes tokens; os templates públicos continuam com `pl-tpl--*` e com
-        // o token `acid`, que é a cor própria do DarkMinimal/Vibrant.
-        ink: "#0a0812",
+        // Fonte única: canais em `--pl-*` (src/app/globals.css). Os templates
+        // públicos continuam com `pl-tpl--*` e com o token `acid`, que é a cor
+        // própria do DarkMinimal/Vibrant.
+        ink: "rgb(var(--pl-ink) / <alpha-value>)",
         panel: {
-          bg: "#0a0812",
-          surface: "#121019",
-          raised: "#1a1622",
-          line: "rgba(255,255,255,0.08)",
-          "line-strong": "rgba(255,255,255,0.16)",
-          text: "#f2f2ef",
-          muted: "#9a9a94",
-          faint: "#6b6b66",
+          bg: "rgb(var(--pl-ink) / <alpha-value>)",
+          surface: "rgb(var(--pl-surface) / <alpha-value>)",
+          raised: "rgb(var(--pl-raised) / <alpha-value>)",
+          "raised-hover": "rgb(var(--pl-raised-hover) / <alpha-value>)",
+          line: "rgb(var(--pl-line) / var(--pl-line-alpha))",
+          "line-strong": "rgb(var(--pl-line) / 0.16)",
+          text: "rgb(var(--pl-text) / <alpha-value>)",
+          muted: "rgb(var(--pl-muted) / <alpha-value>)",
         },
-        brand: {
-          DEFAULT: "#7c3aed",
-          hover: "#6d28d9",
-          soft: "#c4b5fd",
+        // Magenta do logo. Preenchimento magenta leva texto `ink` (4,9:1);
+        // branco sobre magenta reprova AA (4,08:1).
+        signal: {
+          DEFAULT: "rgb(var(--pl-signal) / <alpha-value>)",
+          hover: "rgb(var(--pl-signal-hover) / <alpha-value>)",
+          press: "rgb(var(--pl-signal-press) / <alpha-value>)",
+          soft: "rgb(var(--pl-signal-soft) / <alpha-value>)",
         },
+        ok: "rgb(var(--pl-ok) / <alpha-value>)",
+        warn: "rgb(var(--pl-warn) / <alpha-value>)",
+        danger: "rgb(var(--pl-danger) / <alpha-value>)",
+        acid: "#d8ff4a",
+        stage: "#ff3d8b",
+        paper: "#f4efe6",
+        vermilion: "#b8472b",
+        // Paleta editorial da landing pública (fora do painel): mantida para
+        // não quebrar `src/app/page.tsx`.
         lilac: "#efe8fb",
         graphite: "#2a2333",
         plum: "#6d28d9",
         blush: "#f7e8ff",
-        paper: "#f4efe6",
-        acid: "#d8ff4a",
-        stage: "#ff3d8b",
-        vermilion: "#b8472b",
       },
       fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji"],
-        display: ["var(--font-space-grotesk)", "sans-serif"],
-        poster: ["var(--font-anton)", "Impact", "sans-serif"],
-        serif: ["var(--font-instrument-serif)", "Georgia", "serif"],
+        sans: ["var(--font-space-grotesk)", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Títulos, wordmark e poster usam a fonte do logo (Poppins).
+        display: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        poster: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        brand: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       keyframes: {
         marquee: {

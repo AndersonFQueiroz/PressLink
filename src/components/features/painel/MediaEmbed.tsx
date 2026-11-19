@@ -62,8 +62,8 @@ export function ProviderBadge({ tipo }: { tipo: TipoMidia }) {
 
   if (tipo === "youtube") {
     return (
-      <span className="inline-flex items-center gap-1.5 rounded border border-[#FF0000]/25 bg-[#FF0000]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-[#ff6b6b]">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#ff6b6b]" aria-hidden="true" />
+      <span className="inline-flex items-center gap-1.5 rounded border border-[#FF0000]/25 bg-[#FF0000]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-danger">
+        <span className="h-1.5 w-1.5 rounded-full bg-danger" aria-hidden="true" />
         YouTube
       </span>
     );
@@ -93,19 +93,19 @@ export function MediaEmbed({
     return (
       <div
         className={cn(
-          "w-full rounded-xl border border-white/10 bg-white/[0.02] p-4 flex flex-col items-center justify-center text-center text-white/60 gap-2",
+          "w-full rounded-xl border border-panel-line bg-white/[0.02] p-4 flex flex-col items-center justify-center text-center text-panel-muted gap-2",
           className
         )}
       >
         <AlertTriangle className="h-5 w-5 text-amber-400/80" />
-        <p className="text-xs text-white/70">
+        <p className="text-xs text-panel-text">
           Não foi possível carregar a prévia do player para esta URL.
         </p>
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-brand-soft hover:underline flex items-center gap-1"
+          className="text-xs text-signal-soft hover:underline flex items-center gap-1"
         >
           <Play className="h-3 w-3" /> Abrir no {tipo}
         </a>
@@ -173,7 +173,7 @@ export function MediaEmbed({
   }
 
   return (
-    <div className="flex items-center gap-2 text-sm text-white/60 p-3 bg-white/[0.02] rounded-xl border border-white/10">
+    <div className="flex items-center gap-2 text-sm text-panel-muted p-3 bg-white/[0.02] rounded-xl border border-panel-line">
       <Music className="h-4 w-4" />
       <span>{titulo || url}</span>
     </div>

@@ -3,7 +3,6 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
-  BarChart3,
   Mail,
   MessageCircle,
   Minus,
@@ -11,6 +10,7 @@ import {
   TrendingDown,
   TrendingUp,
 } from "lucide-react";
+import { CountUp } from "@/components/ui/CountUp";
 import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
 import { PageHeader } from "@/components/features/painel/PageHeader";
 import { GraficoDiario } from "@/components/features/estatisticas/GraficoDiario";
@@ -20,6 +20,7 @@ import {
   type PeriodoEstatisticas,
   type PontoSerie,
 } from "@/lib/estatisticas";
+import { cn } from "@/lib/utils";
 
 type EstatisticasData = {
   totalVisualizacoes: number;
@@ -58,12 +59,10 @@ function formatarVariacao(valor: number): string {
   return `${sinal}${valor.toLocaleString("pt-BR", { maximumFractionDigits: 1 })}`;
 }
 
-function VariacaoBadge({ valor, sufixo }: { valor: number | null; sufixo: string }) {
-  if (valor === null) {
-    return (
-      <span className="text-[11px] font-medium text-white/30">sem base anterior</span>
-    );
-  }
+function Variacao({ valor, sufixo }: { valor: number | null; sufixo: string }) {
+  // Sem base de comparação não é um dado: esconder evita repetir
+  // "sem base anterior" em cada métrica e deixar a tela negativa à toa.
+  if (valor === null) return null;
 
   const neutro = valor === 0;
   const positivo = valor > 0;
@@ -71,14 +70,55 @@ function VariacaoBadge({ valor, sufixo }: { valor: number | null; sufixo: string
 
   return (
     <span
-      className={`tabular inline-flex items-center gap-1 text-[11px] font-semibold ${
-        neutro ? "text-white/40" : positivo ? "text-[#a4edaf]" : "text-[#ff9a9a]"
-      }`}
+      className={cn(
+        "tabular inline-flex items-center gap-0.5 text-[12px] font-medium",
+        neutro ? "text-panel-muted" : positivo ? "text-ok" : "text-danger",
+      )}
     >
-      <Icone className="h-3 w-3" aria-hidden="true" />
+      <Icone className="h-3.5 w-3.5" aria-hidden="true" />
       {formatarVariacao(valor)}
       {sufixo}
     </span>
+  );
+}
+
+function Metrica({
+  rotulo,
+  valor,
+  casas = 0,
+  sufixoValor = "",
+  variacao,
+  sufixo,
+  nota,
+  className,
+  indice,
+}: {
+  rotulo: string;
+  valor: number;
+  /** Casas decimais do valor principal. */
+  casas?: number;
+  /** Sufixo do valor principal (ex.: "%"). */
+  sufixoValor?: string;
+  variacao: number | null;
+  sufixo: string;
+  nota: string;
+  className?: string;
+  indice: number;
+}) {
+  return (
+    <div
+      className={cn("pl-kpi py-4 sm:py-5", className)}
+      style={{ "--pl-i": indice } as React.CSSProperties}
+    >
+      <dt className="text-[12px] text-panel-muted">{rotulo}</dt>
+      <dd className="mt-1.5 flex flex-wrap items-baseline gap-x-2.5 gap-y-1">
+        <span className="tabular font-display text-[38px] font-medium leading-none tracking-[-0.02em] text-panel-text">
+          <CountUp value={valor} casas={casas} sufixo={sufixoValor} />
+        </span>
+        <Variacao valor={variacao} sufixo={sufixo} />
+      </dd>
+      <p className="mt-2 text-[12px] text-panel-muted">{nota}</p>
+    </div>
   );
 }
 
@@ -140,6 +180,7 @@ export default function EstatisticasPage() {
   return (
     <div>
       <PageHeader
+        label="Resultados"
         title="Estatísticas"
         description="Quanta gente viu sua página e quantas pessoas clicaram para falar com você. Os números vêm só de visitas reais à sua página pública."
         actions={
@@ -147,7 +188,7 @@ export default function EstatisticasPage() {
             <div
               role="group"
               aria-label="Período das estatísticas"
-              className="inline-flex rounded-md border border-panel-line bg-panel-raised p-0.5"
+              className="inline-flex h-8 items-center rounded border border-panel-line bg-panel-raised p-[3px]"
             >
               {PERIODOS_ESTATISTICAS.map((opcao) => (
                 <button
@@ -155,11 +196,12 @@ export default function EstatisticasPage() {
                   type="button"
                   onClick={() => trocarPeriodo(opcao)}
                   aria-pressed={periodo === opcao}
-                  className={`tabular rounded-[5px] px-2.5 py-1 text-[12px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60 ${
+                  className={cn(
+                    "tabular h-full rounded-[3px] px-2.5 text-[12px] font-medium transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60",
                     periodo === opcao
-                      ? "bg-brand text-white"
-                      : "text-white/50 hover:text-white"
-                  }`}
+                      ? "bg-signal text-ink"
+                      : "text-panel-muted hover:text-panel-text",
+                  )}
                 >
                   {opcao} dias
                 </button>
@@ -170,45 +212,59 @@ export default function EstatisticasPage() {
               type="button"
               onClick={handleRefresh}
               disabled={atualizando}
-              className="inline-flex h-8 items-center gap-1.5 rounded-md border border-panel-line bg-panel-raised px-2.5 text-[12px] font-medium text-white/60 transition-colors hover:bg-white/[0.07] hover:text-white disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+              className="inline-flex h-8 items-center gap-1.5 rounded border border-panel-line px-2.5 text-[12px] font-medium text-panel-muted transition-colors hover:border-panel-line-strong hover:text-panel-text disabled:opacity-45 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
             >
               <RefreshCw
-                className={`h-3.5 w-3.5 ${atualizando ? "animate-spin" : ""}`}
+                className={cn("h-3.5 w-3.5", atualizando && "animate-spin")}
                 aria-hidden="true"
               />
-              Atualizar dados
+              {atualizando ? "Atualizando" : "Atualizar dados"}
             </button>
           </>
         }
       />
 
+      {erro && !loading ? (
+        <div
+          role="alert"
+          className="mb-6 flex flex-wrap items-center justify-between gap-3 border-y border-danger/25 py-3 text-[13px] text-danger"
+        >
+          <span>{erro}</span>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            className="inline-flex h-7 items-center rounded border border-danger/40 px-2.5 text-[12px] font-medium transition-colors hover:bg-danger/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-danger/50"
+          >
+            Tentar de novo
+          </button>
+        </div>
+      ) : null}
+
       {loading ? (
-        <div className="flex h-64 items-center justify-center" aria-busy="true">
-          <div
-            className="h-6 w-6 animate-spin rounded-full border-2 border-white/15 border-t-brand"
-            aria-hidden="true"
-          />
+        <div aria-busy="true" aria-label="Carregando estatísticas" className="pl-shimmer space-y-8">
+          <div className="grid gap-px border-y border-panel-line sm:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="py-5">
+                <div className="h-3 w-24 rounded bg-white/[0.06]" />
+                <div className="mt-3 h-9 w-28 rounded bg-white/[0.06]" />
+                <div className="mt-3 h-3 w-36 rounded bg-white/[0.04]" />
+              </div>
+            ))}
+          </div>
+          <div className="h-56 rounded bg-white/[0.03]" />
         </div>
       ) : (
         <div
-          className={`space-y-6 transition-opacity ${
-            atualizando ? "pointer-events-none opacity-50" : "opacity-100"
-          }`}
+          className={cn(
+            "transition-opacity duration-200",
+            atualizando ? "pointer-events-none opacity-50" : "opacity-100",
+          )}
           aria-busy={atualizando}
         >
-          {erro ? (
-            <div
-              role="alert"
-              className="rounded-lg border border-[#ff6b6b]/25 bg-[#ff6b6b]/[0.08] p-3.5 text-[13px] text-[#ff9a9a]"
-            >
-              {erro}
-            </div>
-          ) : null}
-
           {despublicado ? (
             <div
               role="status"
-              className="rounded-lg border border-[#e8c468]/25 bg-[#e8c468]/[0.07] p-3.5 text-[13px] text-[#f0d58e]"
+              className="mb-6 border-y border-warn/25 py-3 text-[13px] text-warn"
             >
               Seu portfólio está despublicado — novos acessos não estão sendo
               contabilizados. Publique no painel para voltar a somar métricas.
@@ -218,7 +274,7 @@ export default function EstatisticasPage() {
           {data?.truncado ? (
             <div
               role="status"
-              className="rounded-lg border border-panel-line bg-panel-raised p-3.5 text-[13px] text-white/55"
+              className="mb-6 border-y border-panel-line py-3 text-[13px] text-panel-muted"
             >
               Volume muito alto de eventos: os números mostram os primeiros 20.000
               registros do período.
@@ -226,175 +282,148 @@ export default function EstatisticasPage() {
           ) : null}
 
           {semDados ? (
-            <section className="rounded-xl border border-panel-line bg-panel-surface px-6 py-12 text-center">
-              <BarChart3
-                className="mx-auto h-6 w-6 text-white/25"
-                aria-hidden="true"
-              />
-              <h2 className="mt-4 font-display text-lg font-semibold tracking-tight text-white">
+            <section aria-label="Sem dados no período" className="border-t border-panel-line pt-10">
+              <h2 className="font-serif font-bold text-[26px] leading-tight text-panel-text">
                 Ainda não há dados neste período
               </h2>
-              <p className="mx-auto mt-2 max-w-md text-[13px] leading-relaxed text-white/50">
+              <p className="mt-3 max-w-[58ch] text-[13px] leading-relaxed text-panel-muted">
                 {despublicado
                   ? "Seu portfólio está despublicado: os acessos só são contados enquanto ele está no ar. Publique para voltar a registrar visualizações e cliques."
                   : "Assim que alguém visitar sua página pública, as visualizações e os cliques aparecem aqui. Divulgue o link oficial para começar."}
               </p>
-              <div className="mt-6 flex flex-wrap items-center justify-center gap-2">
+              <div className="mt-5 flex flex-wrap items-center gap-2">
                 <PublicPageLink
                   username={data?.username}
-                  className="inline-flex h-9 items-center justify-center gap-1.5 rounded-md bg-brand px-4 text-[13px] font-semibold text-white transition-colors hover:bg-brand-hover whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+                  className="inline-flex h-8 items-center rounded bg-signal px-3 text-[12px] font-medium text-ink transition-colors hover:bg-signal-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
                 >
                   Ver meu portfólio
                 </PublicPageLink>
                 <Link
                   href="/painel"
-                  className="inline-flex h-9 items-center justify-center rounded-md border border-panel-line px-4 text-[13px] font-medium text-white/65 transition-colors hover:bg-white/[0.06] hover:text-white whitespace-nowrap"
+                  className="inline-flex h-8 items-center rounded px-3 text-[12px] font-medium text-panel-muted transition-colors hover:bg-white/[0.05] hover:text-panel-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
                 >
                   Voltar ao painel
                 </Link>
               </div>
-              <p className="mx-auto mt-6 max-w-md text-[12px] leading-relaxed text-white/30">
-                Cada visitante conta uma visualização por sessão; cliques repetidos
-                no mesmo link também contam uma única vez.
+              <p className="mt-5 max-w-[58ch] text-[12px] leading-relaxed text-panel-muted">
+                Cada visitante conta uma visualização por sessão; cliques repetidos no
+                mesmo link também contam uma única vez.
               </p>
             </section>
           ) : (
             <>
-              {/* Métricas */}
-              <section
-                aria-label="Resumo do período"
-                className="rounded-xl border border-panel-line bg-panel-surface"
-              >
-                <dl className="grid divide-y divide-panel-line sm:grid-cols-3 sm:divide-x sm:divide-y-0">
-                  <div className="p-5">
-                    <dt className="text-[12px] text-white/45">
-                      Total de Visualizações
-                    </dt>
-                    <dd className="mt-2 flex items-baseline gap-2">
-                      <span className="tabular font-display text-[30px] font-semibold leading-none text-white">
-                        {formatar(data?.totalVisualizacoes ?? 0)}
-                      </span>
-                      <VariacaoBadge
-                        valor={data?.variacoes.visualizacoes ?? null}
-                        sufixo="%"
-                      />
-                    </dd>
-                    <p className="mt-2 text-[12px] text-white/35">
-                      Visitas à sua página nos últimos {periodo} dias
-                    </p>
-                  </div>
-
-                  <div className="p-5">
-                    <dt className="text-[12px] text-white/45">
-                      Cliques em Contato
-                    </dt>
-                    <dd className="mt-2 flex items-baseline gap-2">
-                      <span className="tabular font-display text-[30px] font-semibold leading-none text-white">
-                        {formatar(data?.totalCliques ?? 0)}
-                      </span>
-                      <VariacaoBadge
-                        valor={data?.variacoes.cliques ?? null}
-                        sufixo="%"
-                      />
-                    </dd>
-                    <p className="mt-2 text-[12px] text-white/35">
-                      Interações diretas em WhatsApp e e-mail
-                    </p>
-                  </div>
-
-                  <div className="p-5">
-                    <dt className="text-[12px] text-white/45">
-                      Taxa de Conversão
-                    </dt>
-                    <dd className="mt-2 flex items-baseline gap-2">
-                      <span className="tabular font-display text-[30px] font-semibold leading-none text-white">
-                        {formatar(data?.taxaConversao ?? 0)}%
-                      </span>
-                      <VariacaoBadge
-                        valor={data?.variacoes.conversao ?? null}
-                        sufixo=" p.p."
-                      />
-                    </dd>
-                    <p className="mt-2 text-[12px] text-white/35">
-                      Proporção de visitantes que iniciaram contato
-                    </p>
-                  </div>
+              <section aria-label="Resumo do período">
+                <dl className="pl-stagger grid border-y border-panel-line sm:grid-cols-3 sm:divide-x sm:divide-panel-line">
+                  <Metrica
+                    rotulo="Total de Visualizações"
+                    valor={data?.totalVisualizacoes ?? 0}
+                    indice={0}
+                    variacao={data?.variacoes.visualizacoes ?? null}
+                    sufixo="%"
+                    nota={`Visitas à sua página nos últimos ${periodo} dias`}
+                    className="border-b border-panel-line sm:border-b-0 sm:pr-6"
+                  />
+                  <Metrica
+                    rotulo="Cliques em Contato"
+                    valor={data?.totalCliques ?? 0}
+                    indice={1}
+                    variacao={data?.variacoes.cliques ?? null}
+                    sufixo="%"
+                    nota="Interações diretas em WhatsApp e e-mail"
+                    className="border-b border-panel-line sm:border-b-0 sm:px-6"
+                  />
+                  <Metrica
+                    rotulo="Taxa de Conversão"
+                    valor={data?.taxaConversao ?? 0}
+                    casas={1}
+                    sufixoValor="%"
+                    indice={2}
+                    variacao={data?.variacoes.conversao ?? null}
+                    sufixo=" p.p."
+                    nota="Proporção de visitantes que iniciaram contato"
+                    className="sm:pl-6"
+                  />
                 </dl>
-                <p className="border-t border-panel-line px-5 py-2.5 text-[11px] text-white/30">
+                <p className="mt-2 text-[12px] text-panel-muted">
                   Comparado com os {periodo} dias anteriores ·{" "}
                   {data?.diasComDados ?? 0} de {periodo} dias com atividade
                 </p>
               </section>
 
-              {/* Gráfico */}
-              <section className="rounded-xl border border-panel-line bg-panel-surface">
-                <div className="flex flex-wrap items-center justify-between gap-2 border-b border-panel-line px-5 py-3.5">
-                  <h2 className="font-display text-[15px] font-semibold tracking-tight text-white">
+              <section aria-label="Visualizações e interações por dia" className="mt-10">
+                <div className="flex flex-wrap items-baseline justify-between gap-2 border-b border-panel-line pb-3">
+                  <h2 className="font-display text-[15px] font-medium text-panel-text">
                     Visualizações e interações por dia
                   </h2>
-                  <span className="text-[12px] text-white/35">Últimos {periodo} dias</span>
+                  <span className="text-[12px] text-panel-muted">Últimos {periodo} dias</span>
                 </div>
-                <div className="px-5 py-5">
+                <div className="pt-4">
                   {data ? <GraficoDiario serie={data.serie} periodo={periodo} /> : null}
                 </div>
               </section>
 
-              {/* Canais */}
-              <section className="rounded-xl border border-panel-line bg-panel-surface">
-                <div className="border-b border-panel-line px-5 py-3.5">
-                  <h2 className="font-display text-[15px] font-semibold tracking-tight text-white">
+              <section aria-label="Canais de Conversão" className="mt-10">
+                <div className="flex items-baseline justify-between gap-2 border-b border-panel-line pb-3">
+                  <h2 className="font-display text-[15px] font-medium text-panel-text">
                     Canais de Conversão
                   </h2>
+                  <span className="tabular text-[12px] text-panel-muted">
+                    {formatar(data?.totalCliques ?? 0)} no total
+                  </span>
                 </div>
 
-                <ul className="divide-y divide-panel-line">
-                  <li className="flex items-center justify-between gap-4 px-5 py-4">
-                    <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-panel-line bg-panel-raised text-white/50">
-                        <MessageCircle className="h-4 w-4" aria-hidden="true" />
-                      </span>
+                <ul>
+                  <li className="pl-row flex items-center justify-between gap-4 border-b border-panel-line py-3 pl-3 transition-colors hover:bg-white/[0.02]">
+                    <span className="flex min-w-0 items-center gap-2.5">
+                      <MessageCircle
+                        className="h-4 w-4 shrink-0 text-panel-muted"
+                        aria-hidden="true"
+                      />
                       <span className="min-w-0">
-                        <span className="block text-[13px] font-medium text-white/85">
+                        <span className="block text-[13px] font-medium text-panel-text">
                           WhatsApp Direto
                         </span>
-                        <span className="block text-[12px] text-white/35">
+                        <span className="block text-[12px] text-panel-muted">
                           Cliques para conversa comercial
                         </span>
                       </span>
                     </span>
-                    <span className="tabular font-display text-lg font-semibold text-white">
-                      {formatar(data?.detalhes.whatsapp ?? 0)}
+                    <span className="tabular font-display text-[21px] leading-none text-panel-text">
+                      <CountUp value={data?.detalhes.whatsapp ?? 0} />
                     </span>
                   </li>
 
-                  <li className="flex items-center justify-between gap-4 px-5 py-4">
-                    <span className="flex min-w-0 items-center gap-3">
-                      <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-panel-line bg-panel-raised text-white/50">
-                        <Mail className="h-4 w-4" aria-hidden="true" />
-                      </span>
+                  <li className="flex items-center justify-between gap-4 border-b border-panel-line py-3">
+                    <span className="flex min-w-0 items-center gap-2.5">
+                      <Mail
+                        className="h-4 w-4 shrink-0 text-panel-muted"
+                        aria-hidden="true"
+                      />
                       <span className="min-w-0">
-                        <span className="block text-[13px] font-medium text-white/85">
+                        <span className="block text-[13px] font-medium text-panel-text">
                           E-mail de Booking
                         </span>
-                        <span className="block text-[12px] text-white/35">
+                        <span className="block text-[12px] text-panel-muted">
                           Cliques no botão de e-mail
                         </span>
                       </span>
                     </span>
-                    <span className="tabular font-display text-lg font-semibold text-white">
-                      {formatar(data?.detalhes.email ?? 0)}
+                    <span className="tabular font-display text-[21px] leading-none text-panel-text">
+                      <CountUp value={data?.detalhes.email ?? 0} />
                     </span>
                   </li>
                 </ul>
               </section>
 
-              {/* Divulgação */}
-              <section className="flex flex-col items-start justify-between gap-4 rounded-xl border border-panel-line bg-panel-surface p-5 sm:flex-row sm:items-center">
+              <section
+                aria-label="Divulgação"
+                className="mt-10 flex flex-wrap items-end justify-between gap-4 border-t border-panel-line pt-5"
+              >
                 <div className="min-w-0">
-                  <h2 className="font-display text-[15px] font-semibold tracking-tight text-white">
+                  <h2 className="font-display text-[15px] font-medium text-panel-text">
                     Divulgue seu portfólio para gerar mais estatísticas
                   </h2>
-                  <p className="mt-1 max-w-xl text-[13px] leading-relaxed text-white/45">
+                  <p className="mt-1 max-w-[52ch] text-[13px] leading-relaxed text-panel-muted">
                     Use o link oficial na bio do Instagram, no YouTube e nas propostas
                     enviadas para contratantes.
                   </p>
@@ -402,7 +431,7 @@ export default function EstatisticasPage() {
 
                 <PublicPageLink
                   username={data?.username}
-                  className="inline-flex h-9 shrink-0 items-center justify-center rounded-md border border-panel-line bg-panel-raised px-4 text-[13px] font-medium text-white/75 transition-colors hover:bg-white/[0.08] hover:text-white whitespace-nowrap focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand/60"
+                  className="inline-flex h-8 shrink-0 items-center rounded border border-panel-line px-3 text-[12px] font-medium text-panel-text transition-colors hover:border-panel-line-strong hover:bg-white/[0.04] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
                 >
                   Ver meu portfólio
                 </PublicPageLink>

@@ -2,8 +2,40 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ————— Tokens do PressLink —————
+   Fonte única de cor, raio e movimento. Valores em canais RGB para o Tailwind
+   poder compor opacidade (`bg-signal/10`). O magenta `--pl-signal` foi
+   amostrado do wordmark do logo (#D018F6), não é um roxo escolhido. */
 :root {
-  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
+  --pl-ink: 7 6 11;
+  --pl-surface: 14 12 21;
+  --pl-raised: 21 18 32;
+  --pl-raised-hover: 27 23 40;
+  --pl-line: 255 255 255;
+  --pl-line-alpha: 0.09;
+
+  --pl-text: 246 243 248;
+  --pl-muted: 167 159 173;
+
+  --pl-signal: 208 24 246;
+  --pl-signal-hover: 234 27 255;
+  --pl-signal-press: 185 21 219;
+  --pl-signal-soft: 242 168 255;
+
+  --pl-ok: 164 237 175;
+  --pl-warn: 240 213 142;
+  --pl-danger: 255 154 154;
+
+  --pl-r-xs: 4px;
+  --pl-r-sm: 8px;
+  --pl-md: 12px;
+  --pl-r-card: 14px;
+
+  --pl-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --pl-fast: 150ms;
+  --pl-base: 220ms;
+
+  --ease-out-expo: var(--pl-ease);
 }
 
 * {
@@ -16,8 +48,8 @@ html {
 
 body {
   margin: 0;
-  background: #0a0812;
-  color: #f2f2ef;
+  background: rgb(var(--pl-ink));
+  color: rgb(var(--pl-text));
   -webkit-tap-highlight-color: transparent;
 }
 
@@ -28,15 +60,100 @@ body {
   font-feature-settings: "tnum" 1;
 }
 
-/* Foco único do painel: anel roxo brando, sem sombra colorida. */
+/* Foco único do painel: anel magenta de 2 px, sem sombra colorida. */
 .painel-focus:focus-visible {
-  outline: 2px solid #a78bfa;
+  outline: 2px solid rgb(var(--pl-signal));
   outline-offset: 2px;
 }
 
+/* ————— Superfícies do painel —————
+   Três níveis: fundo, card e card elevado. O card usa borda de 6% + brilho
+   interno de 1 px no topo (luz vindo de cima), sem sombra pesada. O raio de
+   14 px é só de card; controles seguem em 4 px. */
+.pl-card {
+  border-radius: var(--pl-r-card);
+  border: 1px solid rgb(var(--pl-line) / 0.06);
+  background-color: rgb(var(--pl-surface));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.04);
+}
+
+/* Palco do painel: o conteúdo é uma superfície própria, mais clara que o
+   chrome (sidebar/topbar). A divisão é por tom + canto arredondado + glow,
+   nunca por uma régua de 1 px. No desktop ele encosta na sidebar e no topo. */
+.pl-stage {
+  background:
+    radial-gradient(90% 70% at 0% 0%, rgb(var(--pl-signal) / 0.055), transparent 46%),
+    rgb(var(--pl-surface));
+}
+
+@media (min-width: 768px) {
+  .pl-stage {
+    border-top-left-radius: 22px;
+    box-shadow: -28px 0 64px -52px rgb(0 0 0 / 0.95);
+  }
+}
+
+.pl-board-hero {
+  position: relative;
+  isolation: isolate;
+  background-color: rgb(var(--pl-surface));
+}
+
+/* O gradiente vive num pseudo-elemento com máscara: assim ele nasce
+   transparente na borda de cima e "esfumaça" até o magenta, em vez de cortar
+   numa linha dura contra o cabeçalho da página. */
+.pl-board-hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    radial-gradient(120% 150% at 6% 0%, rgb(var(--pl-signal) / 0.16), transparent 58%),
+    radial-gradient(80% 120% at 100% 110%, rgb(var(--pl-signal) / 0.06), transparent 60%);
+  -webkit-mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+  mask-image: linear-gradient(180deg, transparent 0%, #000 30%);
+  pointer-events: none;
+}
+
+.pl-card-hover {
+  transition:
+    background-color var(--pl-base) var(--pl-ease),
+    border-color var(--pl-base) var(--pl-ease),
+    transform var(--pl-base) var(--pl-ease);
+}
+
+.pl-card-hover:hover {
+  background-color: rgb(var(--pl-raised));
+  border-color: rgb(var(--pl-line) / 0.12);
+  transform: translate3d(0, -1px, 0);
+}
+
+/* Glow magenta difuso no card principal, embutido no fundo para não vazar. */
+.pl-card-glow {
+  background:
+    radial-gradient(115% 130% at 8% 0%, rgb(var(--pl-signal) / 0.16), transparent 58%),
+    radial-gradient(90% 110% at 100% 100%, rgb(var(--pl-signal) / 0.07), transparent 62%),
+    rgb(var(--pl-surface));
+}
+
+/* Tecla de atalho (⌘K) — discreta, sem parecer botão. */
+.pl-kbd {
+  display: inline-flex;
+  min-width: 18px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  border: 1px solid rgb(var(--pl-line) / 0.1);
+  background: rgb(var(--pl-line) / 0.04);
+  padding: 1px 4px;
+  font-size: 10px;
+  line-height: 1.4;
+  color: rgb(var(--pl-muted));
+}
+
 ::selection {
-  background: #7c3aed;
-  color: #ffffff;
+  background: rgb(var(--pl-signal));
+  color: rgb(var(--pl-ink));
 }
 
 /* ————— Scroll reveal —————
@@ -89,6 +206,502 @@ body {
   filter: none;
   clip-path: inset(0 0 0 0);
 }
+
+/* ————— Entrada da Visão geral —————
+   Uma única entrada orquestrada na tela inicial do painel: números e listas
+   sobem 8 px enquanto as réguas aparecem. Só transform/opacity, sem repetir
+   em cada seção das outras telas. */
+@keyframes pl-enter {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes pl-grow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.pl-enter {
+  animation: pl-enter 560ms var(--pl-ease) both;
+}
+
+.pl-enter[data-step="2"] {
+  animation-delay: 70ms;
+}
+
+.pl-enter[data-step="3"] {
+  animation-delay: 140ms;
+}
+
+/* Entrada em cascata para os blocos de uma tela (header, faixas do painel).
+   O atraso é aplicado pela classe, não por inline style, para manter o CSS
+   como fonte única do movimento. */
+@keyframes pl-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pl-rise {
+  animation: pl-rise 520ms var(--pl-ease) both;
+}
+
+.pl-rise-1 {
+  animation-delay: 40ms;
+}
+
+.pl-rise-2 {
+  animation-delay: 100ms;
+}
+
+.pl-rise-3 {
+  animation-delay: 160ms;
+}
+
+.pl-rise-4 {
+  animation-delay: 220ms;
+}
+
+/* Clique: o alvo afunda 2%; solta no ease do painel. */
+.pl-press {
+  transition: transform 160ms var(--pl-ease);
+}
+
+.pl-press:active {
+  transform: scale(0.97);
+}
+
+.pl-grow {
+  transform-origin: left;
+  animation: pl-grow 520ms var(--pl-ease) 160ms both;
+}
+
+/* ————— Assinatura (corrente) —————
+   Os elos nascem abertos (a marca fica mais bonita em repouso). No hover eles
+   encostam e voltam a abrir, terminando abertos; se o mouse sair no meio, o
+   estado final é o mesmo. Apenas stroke/transform: nada de layout. */
+@keyframes pl-chain-draw {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.pl-chain {
+  filter: drop-shadow(0 0 5px rgb(208 24 246 / 0.35));
+}
+
+.pl-chain-back rect,
+.pl-chain-front rect {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: pl-chain-draw 620ms var(--pl-ease) both;
+}
+
+.pl-chain-front rect {
+  animation-delay: 90ms;
+}
+
+.pl-chain-back {
+  transform: translate(-1.5px, -1.5px);
+}
+
+.pl-chain-front {
+  transform: translate(1.5px, 1.5px);
+}
+
+@keyframes pl-chain-close-back {
+  0% {
+    transform: translate(-1.5px, -1.5px);
+  }
+  38% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-1.5px, -1.5px);
+  }
+}
+
+@keyframes pl-chain-close-front {
+  0% {
+    transform: translate(1.5px, 1.5px);
+  }
+  38% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(1.5px, 1.5px);
+  }
+}
+
+.group\/brand:hover .pl-chain-back {
+  animation: pl-chain-close-back 620ms var(--pl-ease) both;
+}
+
+.group\/brand:hover .pl-chain-front {
+  animation: pl-chain-close-front 620ms var(--pl-ease) both;
+}
+
+/* ————— Esqueleto de carregamento —————
+   Varredura de brilho de 1,6 s; o `translate` em slider é só paint. */
+@keyframes pl-shimmer {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(100%);
+  }
+}
+
+.pl-shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.pl-shimmer::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 20%,
+    rgb(255 255 255 / 0.055) 45%,
+    rgb(255 255 255 / 0.09) 50%,
+    rgb(255 255 255 / 0.055) 55%,
+    transparent 80%
+  );
+  animation: pl-shimmer 1.6s var(--pl-ease) infinite;
+}
+
+/* ————— Movimento do painel —————
+   Vocabulário único de animação: cascata, elevação, brilho que percorre,
+   barras que crescem e traço que se desenha. Tudo em transform/opacity/filter
+   (nada de layout) e desligado em prefers-reduced-motion. */
+
+/* Cascata: cada filho entra 60 ms depois do anterior. Use --pl-i no item. */
+@keyframes pl-stagger-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.pl-stagger > * {
+  /* `backwards` (não `both`): depois da entrada o elemento volta ao estilo
+     natural, então transforms inline — como o arrastar da galeria — funcionam. */
+  animation: pl-stagger-in 540ms var(--pl-ease) backwards;
+  animation-delay: calc(min(var(--pl-i, 0), 9) * 60ms);
+}
+
+/* Elevação discreta: 2 px e sombra curta, sem crescer o card. */
+.pl-lift {
+  transition:
+    transform 260ms var(--pl-ease),
+    box-shadow 260ms var(--pl-ease),
+    border-color 260ms var(--pl-ease),
+    background-color 260ms var(--pl-ease);
+}
+
+.pl-lift:hover {
+  transform: translate3d(0, -2px, 0);
+  box-shadow: 0 16px 30px -24px rgb(0 0 0 / 0.95);
+}
+
+/* Brilho que percorre o primário no hover (só paint, sem layout). */
+.pl-sheen {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.pl-sheen::after {
+  content: "";
+  position: absolute;
+  inset: -40% -20%;
+  background: linear-gradient(
+    105deg,
+    transparent 38%,
+    rgb(255 255 255 / 0.22) 50%,
+    transparent 62%
+  );
+  transform: translateX(-130%);
+  transition: transform 640ms var(--pl-ease);
+  pointer-events: none;
+}
+
+.pl-sheen:hover::after {
+  transform: translateX(130%);
+}
+
+/* Sublinhado que cresce da esquerda. */
+.pl-sweep {
+  position: relative;
+}
+
+.pl-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 320ms var(--pl-ease);
+}
+
+.pl-sweep:hover::after,
+.pl-sweep:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Barra horizontal que cresce, com atraso por índice. */
+.pl-bar {
+  transform-origin: left center;
+  animation: pl-grow 760ms var(--pl-ease) both;
+  animation-delay: calc(120ms + var(--pl-i, 0) * 90ms);
+}
+
+/* Barra vertical (gráfico diário) que sobe do chão. */
+@keyframes pl-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+}
+
+.pl-bar-y {
+  transform-origin: bottom center;
+  animation: pl-grow-y 700ms var(--pl-ease) both;
+  animation-delay: calc(60ms + var(--pl-i, 0) * 22ms);
+}
+
+/* Anel de progresso: desenha de 0 até o valor declarado. */
+@keyframes pl-ring {
+  from {
+    stroke-dashoffset: 1;
+  }
+}
+
+.pl-ring {
+  animation: pl-ring 1100ms var(--pl-ease) 140ms both;
+}
+
+/* Traço que se desenha: wipe da esquerda para a direita.
+   Dash + pathLength + vector-effect quebra no Chromium (o dash é medido em
+   pixels de tela e o traço some antes do fim), então o desenho usa clip-path,
+   que funciona igual em qualquer escala. */
+@keyframes pl-wipe {
+  from {
+    clip-path: inset(0 100% 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+.pl-draw {
+  animation: pl-wipe 900ms var(--pl-ease) 120ms backwards;
+}
+
+/* Área/chapéu que aparece junto do traço. */
+@keyframes pl-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+.pl-fade {
+  animation: pl-fade 700ms var(--pl-ease) 200ms both;
+}
+
+/* Pop de diálogo/paleta. */
+@keyframes pl-pop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 8px, 0) scale(0.97);
+  }
+}
+
+.pl-pop {
+  animation: pl-pop 260ms var(--pl-ease) both;
+}
+
+.pl-pop-item {
+  animation: pl-pop 240ms var(--pl-ease) backwards;
+  animation-delay: calc(min(var(--pl-i, 0), 9) * 28ms);
+}
+
+/* Selo "No ar": pulso curto de anel, sem piscar o texto. */
+@keyframes pl-live {
+  0% {
+    box-shadow: 0 0 0 0 rgb(216 255 74 / 0.42);
+  }
+  70% {
+    box-shadow: 0 0 0 6px rgb(216 255 74 / 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgb(216 255 74 / 0);
+  }
+}
+
+.pl-live {
+  animation: pl-live 2.6s ease-out infinite;
+}
+
+/* Linha de lista: trilho magenta entra no hover/foco. */
+.pl-row {
+  position: relative;
+}
+
+.pl-row::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 62%;
+  width: 2px;
+  border-radius: 999px;
+  background: rgb(var(--pl-signal) / 0.9);
+  transform: translateY(-50%) scaleY(0);
+  transition: transform 260ms var(--pl-ease);
+}
+
+.pl-row:hover::before,
+.pl-row:focus-visible::before {
+  transform: translateY(-50%) scaleY(1);
+}
+
+/* Célula de KPI: brilho magenta curto no hover, atrás do conteúdo. */
+.pl-kpi {
+  position: relative;
+  isolation: isolate;
+}
+
+.pl-kpi::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(120% 90% at 50% 0%, rgb(var(--pl-signal) / 0.1), transparent 70%);
+  opacity: 0;
+  transition: opacity 260ms var(--pl-ease);
+  pointer-events: none;
+}
+
+.pl-kpi:hover::before {
+  opacity: 1;
+}
+
+/* Fio magenta que percorre o topo da célula no hover. */
+.pl-kpi::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgb(var(--pl-signal) / 0.85),
+    transparent
+  );
+  transform: scaleX(0);
+  transition: transform 460ms var(--pl-ease);
+  pointer-events: none;
+}
+
+.pl-kpi:hover::after {
+  transform: scaleX(1);
+}
+
+/* Aura que respira atrás do painel: transform puro, sem repaint do conteúdo. */
+.pl-aura {
+  position: absolute;
+  top: -34%;
+  left: -6%;
+  width: 78%;
+  height: 74%;
+  border-radius: 999px;
+  background: radial-gradient(
+    closest-side,
+    rgb(var(--pl-signal) / 0.13),
+    transparent 72%
+  );
+  filter: blur(38px);
+  pointer-events: none;
+  will-change: transform;
+  animation: pl-aura 26s ease-in-out infinite alternate;
+}
+
+@keyframes pl-aura {
+  from {
+    transform: translate3d(-4%, -3%, 0) scale(1);
+  }
+  to {
+    transform: translate3d(12%, 8%, 0) scale(1.18);
+  }
+}
+
+/* Equalizador do selo "No ar": três barrinhas que sobem e descem. */
+.pl-eq {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 1.5px;
+  width: 11px;
+  height: 9px;
+}
+
+.pl-eq i {
+  display: block;
+  width: 2px;
+  height: 100%;
+  border-radius: 1px;
+  background: currentColor;
+  transform-origin: bottom center;
+  animation: pl-eq 1.05s ease-in-out infinite;
+}
+
+.pl-eq i:nth-child(2) {
+  animation-delay: -0.35s;
+}
+
+.pl-eq i:nth-child(3) {
+  animation-delay: -0.7s;
+}
+
+@keyframes pl-eq {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
 
 /* ————— Utilitários ————— */
 @keyframes marquee {
@@ -145,6 +758,71 @@ body {
   .animate-pulse-soft {
     animation: none !important;
   }
+
+  .pl-spring,
+  .pl-spring * {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .pl-enter,
+  .pl-grow,
+  .pl-rise {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .group\/brand:hover .pl-chain-back,
+  .group\/brand:hover .pl-chain-front {
+    animation: none !important;
+  }
+
+  .pl-press:active {
+    transform: none !important;
+  }
+
+  .pl-chain-back rect,
+  .pl-chain-front rect,
+  .pl-shimmer::after,
+  .pl-stagger > *,
+  .pl-aura,
+  .pl-eq i,
+  .pl-bar,
+  .pl-bar-y,
+  .pl-ring,
+  .pl-draw,
+  .pl-fade,
+  .pl-pop,
+  .pl-pop-item,
+  .pl-live,
+  .pl-sheen::after {
+    animation: none !important;
+  }
+
+  .pl-lift,
+  .pl-sweep::after,
+  .pl-row::before,
+  .pl-kpi::before,
+  .pl-kpi::after,
+  .pl-sheen::after {
+    transition: none !important;
+  }
+
+  .pl-lift:hover {
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  .pl-chain-back,
+  .pl-chain-front {
+    transition: none !important;
+  }
+
+  .group\/brand:hover .pl-chain-back,
+  .group\/brand:hover .pl-chain-front {
+    transform: none !important;
+  }
 }
 
 /* Letreiro decorativo dos templates (issue #28).
@@ -198,4 +876,18 @@ body {
   .pl-tpl-preview-frame {
     zoom: 0.62;
   }
+}
+
+/* Trilho vertical do item ativo da navegação. */
+@keyframes pl-rail {
+  from {
+    transform: translateY(-50%) scaleY(0);
+  }
+  to {
+    transform: translateY(-50%) scaleY(1);
+  }
+}
+
+.pl-rail {
+  animation: pl-rail 340ms var(--pl-ease) both;
 }

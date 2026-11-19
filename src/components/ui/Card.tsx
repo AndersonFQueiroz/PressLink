@@ -17,8 +17,8 @@ export function Card({
   return (
     <div
       className={cn(
-        "rounded-xl border border-panel-line bg-panel-surface transition-colors duration-150",
-        hoverable && "hover:border-panel-line-strong hover:bg-panel-raised",
+        "rounded-lg border border-panel-line bg-panel-surface transition-colors duration-150",
+        hoverable && "pl-lift hover:border-panel-line-strong hover:bg-panel-raised",
         className,
       )}
       {...props}
@@ -45,7 +45,7 @@ export function CardTitle({
   return (
     <h3
       className={cn(
-        "font-display text-[15px] font-semibold tracking-tight text-panel-text",
+        "font-display text-[15px] font-medium text-panel-text",
         className,
       )}
       {...props}

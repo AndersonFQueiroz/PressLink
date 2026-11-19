@@ -17,7 +17,7 @@ export default function VerificarEmailPage() {
   return (
     <main className="flex min-h-screen items-center justify-center bg-ink px-4 py-10">
       <div className="w-full max-w-md rounded-xl border border-panel-line bg-panel-surface p-6 sm:p-8">
-        <Suspense fallback={<p className="py-6 text-center text-sm text-white/50">Carregando...</p>}>
+        <Suspense fallback={<p className="py-6 text-center text-sm text-panel-muted">Carregando...</p>}>
           <VerificarEmailClient />
         </Suspense>
       </div>

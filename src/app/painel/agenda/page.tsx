@@ -28,6 +28,7 @@ export default async function AgendaPage() {
   return (
     <div>
       <PageHeader
+        label="Conteúdo"
         title="Agenda"
         description="Suas próximas datas. As futuras aparecem em ordem cronológica na página pública."
       />

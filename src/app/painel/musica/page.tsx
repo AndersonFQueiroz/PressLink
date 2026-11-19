@@ -35,10 +35,11 @@ export default async function PainelMusicaPage() {
   return (
     <div>
       <PageHeader
+        label="Conteúdo"
         title="Mídia"
         description="Sets, playlists e vídeos. Os links viram players embarcados na sua página pública."
       />
-      <div className="rounded-xl border border-panel-line bg-panel-surface p-5 sm:p-6">
+      <div className="rounded-lg border border-panel-line bg-panel-surface p-5 sm:p-6">
         <LinksMusicaForm initialLinks={initialLinks} />
       </div>
     </div>
