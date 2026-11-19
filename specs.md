@@ -166,7 +166,7 @@ Registra eventos de interação na página pública: visualizações de página 
 | `/painel/contato`           | Configuração de informações de contato e booking.              |
 | `/painel/template`          | Seleção e pré-visualização de template visual.                 |
 | `/painel/estatisticas`      | Visualização das estatísticas de acesso e cliques.             |
-| `/painel/configuracoes`     | Configurações da conta (alterar e-mail, senha, excluir conta). |
+| `/painel/configuracoes`     | Configurações da conta: dados e exclusão definitiva (LGPD art. 18). |
 
 ### Rotas de API (Route Handlers)
 
@@ -181,6 +181,7 @@ Registra eventos de interação na página pública: visualizações de página 
 | `/api/despublicar`               | POST      | Despublicar a página pública.                      |
 | `/api/estatisticas`              | GET       | Totais, variação e série diária de visualizações e cliques. |
 | `/api/estatisticas/registrar`    | POST      | Registrar um evento (visualização ou clique).      |
+| `/api/conta`                     | DELETE    | Excluir permanentemente a própria conta e os dados (LGPD). |
 
 #### Contrato `GET /api/estatisticas`
 
@@ -205,6 +206,22 @@ em 1.000 (limite do PostgREST) e a resposta usa `Cache-Control: no-store`.
 | `geradoEm`          | `string` | Instante UTC da agregação (ISO 8601).                            |
 
 Erros: `401` sem sessão, `404` sem perfil para o usuário, `500` falha de consulta.
+
+#### Contrato `DELETE /api/conta` (issue #29 — RNF-12, LGPD art. 18)
+
+Requer sessão. Corpo: `{ "senha": "..." }` — a senha atual é revalidada no GoTrue
+(confirmação explícita do critério de aceite; nunca fica registrada). A ordem é
+deliberada: **Storage primeiro** (arquivos de `<user_id>/` nos buckets `avatars` e
+`galeria`, via a sessão do próprio dono), depois a função SQL
+`public.excluir_minha_conta()` (`SECURITY DEFINER`) apaga a linha em `auth.users` e o
+`ON DELETE CASCADE` leva perfil, links, fotos, shows e estatísticas. Se o Storage
+falhar, `500` e a conta **não** é excluída — o usuário tenta de novo e o que já saiu
+do bucket é reprocessado sem erro; nenhum arquivo fica órfão em bucket público com a
+conta apagada.
+Sucesso: `200 { "ok": true, "redirect": "/?conta=excluida" }`, com a sessão encerrada
+e as páginas públicas invalidadas. Erros: `401` sem sessão, `400` senha ausente ou
+incorreta, `500` falha de Storage/RPC (a mensagem de RPC indica quando a migration
+`supabase/migrations/04_exclusao_conta.sql` não foi aplicada).
 
 ---
 
