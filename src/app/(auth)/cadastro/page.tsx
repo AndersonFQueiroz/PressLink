@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CadastroForm } from "@/components/features/auth/CadastroForm";
+import { siteHost } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Cadastro | PressLink",
@@ -19,7 +20,7 @@ export default function CadastroPage() {
           </p>
         </div>
 
-        <CadastroForm />
+        <CadastroForm origem={siteHost()} />
       </div>
 
       <p className="mt-5 text-center text-[12px] leading-relaxed text-panel-muted">

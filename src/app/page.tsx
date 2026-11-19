@@ -5,6 +5,7 @@ import { ArrowRight } from "lucide-react";
 import { ScrollProgress } from "@/components/motion/ScrollProgress";
 import { SplitText } from "@/components/motion/SplitText";
 import { Reveal } from "@/components/motion/Reveal";
+import { siteHost } from "@/lib/site";
 import { Parallax } from "@/components/motion/Parallax";
 import { ContaExcluidaAviso } from "@/components/features/landing/ContaExcluidaAviso";
 
@@ -74,7 +75,7 @@ export default function HomePage() {
           <nav className="flex items-center gap-2">
             <Link
               href="/login"
-              className="pl-press rounded-md px-3 py-2 text-[13px] font-medium text-white/60 transition-colors hover:bg-white/[0.06] hover:text-white"
+              className="pl-press rounded-md px-3 py-2 text-[13px] font-medium text-white/75 transition-colors hover:bg-white/[0.06] hover:text-white"
             >
               Entrar
             </Link>
@@ -105,7 +106,7 @@ export default function HomePage() {
                 stagger={90}
               />
               <Reveal variant="fade" delay={260}>
-                <p className="mt-7 max-w-md text-[15px] leading-relaxed text-white/55">
+                <p className="mt-7 max-w-md text-[15px] leading-relaxed text-white/72">
                   Perfil, fotos, sets e agenda num link só. É o material que o
                   contratante abre quando pergunta pelo seu portfólio.
                 </p>
@@ -127,7 +128,7 @@ export default function HomePage() {
                 </a>
               </Reveal>
 
-              <Reveal as="ul" variant="fade" delay={430} className="mt-10 flex flex-wrap gap-x-7 gap-y-2 text-[12px] text-white/40">
+              <Reveal as="ul" variant="fade" delay={430} className="mt-10 flex flex-wrap gap-x-7 gap-y-2 text-[12px] text-white/62">
                 {["Pronto em minutos", "Um link para tudo", "Feito para celular"].map((item) => (
                   <li key={item} className="inline-flex items-center gap-2">
                     <span className="h-1 w-1 bg-signal-soft" aria-hidden="true" />
@@ -146,7 +147,7 @@ export default function HomePage() {
               <Parallax speed={5} className="w-full">
                 <div className="rounded-sm border border-white/12 bg-[#0f0b1b]">
                 <div className="flex items-center justify-between border-b border-white/10 px-4 py-2.5">
-                  <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/35">
+                  <span className="text-[10px] font-medium uppercase tracking-[0.14em] text-white/58">
                     Press kit / 2026
                   </span>
                   <span className="border border-stage/60 px-1.5 py-0.5 font-poster font-bold text-[11px] uppercase leading-none text-stage">
@@ -160,7 +161,7 @@ export default function HomePage() {
                     <br />
                     artístico
                   </p>
-                  <p className="mt-2 text-[11px] text-white/40">
+                  <p className="mt-2 text-[11px] text-white/62">
                     House / Techno / São Paulo
                   </p>
 
@@ -186,18 +187,18 @@ export default function HomePage() {
                         className="flex items-baseline justify-between border-b border-white/[0.07] py-2 text-[12px]"
                       >
                         <span className="flex items-baseline gap-2">
-                          <span className="font-poster font-bold text-[11px] text-white/30">
+                          <span className="font-poster font-bold text-[11px] text-white/55">
                             {String(i + 1).padStart(2, "0")}
                           </span>
                           <span className="text-white/80">{nome}</span>
                         </span>
-                        <span className="text-[11px] text-white/30">{resumo}</span>
+                        <span className="text-[11px] text-white/55">{resumo}</span>
                       </li>
                     ))}
                   </ul>
 
                   <div className="mt-4 flex items-end justify-between gap-3 border-t border-dashed border-white/20 pt-3">
-                    <span className="text-[10px] text-white/35">presslink.app/seu-nome</span>
+                    <span className="text-[10px] text-white/58">{siteHost()}/seu-nome</span>
                     <span className="flex h-5 items-end gap-[2px]" aria-hidden="true">
                       {[3, 1, 2, 1, 3, 1, 1, 2, 1, 3, 2, 1].map((w, i) => (
                         <span
@@ -211,7 +212,7 @@ export default function HomePage() {
                 </div>
               </div>
               </Parallax>
-              <p className="mt-2 text-[11px] text-white/30">
+              <p className="mt-2 text-[11px] text-white/55">
                 Exemplo de página pública. A sua usa seus dados e o visual que você escolher.
               </p>
             </Reveal>
@@ -261,7 +262,7 @@ export default function HomePage() {
                 <br />
                 em uma tarde
               </h2>
-              <p className="max-w-xs text-[13px] leading-relaxed text-white/45">
+              <p className="max-w-xs text-[13px] leading-relaxed text-white/65">
                 Sem editor de bloco, sem tema quebrado no celular. Você preenche,
                 escolhe o visual e publica.
               </p>
@@ -282,7 +283,7 @@ export default function HomePage() {
                   <h3 className="mt-4 text-[14px] font-medium text-white/90">
                     {passo.titulo}
                   </h3>
-                  <p className="mt-1.5 max-w-[26ch] text-[13px] leading-relaxed text-white/45">
+                  <p className="mt-1.5 max-w-[26ch] text-[13px] leading-relaxed text-white/65">
                     {passo.texto}
                   </p>
                 </Reveal>
@@ -326,7 +327,7 @@ export default function HomePage() {
                 />
                 <div className="flex flex-wrap items-center justify-between gap-2 pt-3 text-[11px] text-ink/60">
                   <span>Admissão imediata</span>
-                  <span>presslink.app/seu-nome</span>
+                  <span>{siteHost()}/seu-nome</span>
                 </div>
               </div>
             </div>
@@ -334,7 +335,7 @@ export default function HomePage() {
           </section>
         </main>
 
-        <footer className="flex flex-col gap-3 border-t border-white/10 py-8 text-[12px] text-white/35 sm:flex-row sm:items-center sm:justify-between">
+        <footer className="flex flex-col gap-3 border-t border-white/10 py-8 text-[12px] text-white/58 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-wrap items-center gap-3">
             <Link
               href="/"

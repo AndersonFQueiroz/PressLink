@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/Button"; // componente UI Button — isL
 
 // CadastroForm — formulário de cadastro com verificação por email (Resend Hook) + merge Luiz
 // RF: Task7 resend-verificacao — banner + reenvio cooldown 60s + check-username + Eye toggle
-export function CadastroForm() {
+export function CadastroForm({ origem }: { origem: string }) {
   const router = useRouter(); // navega para /painel se já logado (session presente) ou /login
   const [formError, setFormError] = useState<string | null>(null); // erro geral do submit (ex: email duplicado)
   const [successMsg, setSuccessMsg] = useState<string | null>(null); // msg sucesso pós-cadastro sem sessão
@@ -163,7 +163,7 @@ export function CadastroForm() {
         label="Username"
         placeholder="seu-username"
         autoComplete="username"
-        helperText="Será sua URL: presslink.app/seu-username"
+        helperText={`Será sua URL: ${origem}/seu-username`}
         error={errors.username?.message}
         {...register("username")}
       />

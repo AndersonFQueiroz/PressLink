@@ -31,6 +31,14 @@ export function siteUrl(): string {
   return FALLBACK;
 }
 
+/**
+ * Host para exibir em texto (sem protocolo): `localhost:3000` em dev,
+ * `presslink.vercel.app` (ou o domínio configurado) em produção.
+ */
+export function siteHost(): string {
+  return siteUrl().replace(/^https?:\/\//i, "").replace(/\/+$/, "");
+}
+
 /** Caminho absoluto de um perfil: `https://.../dj-presslink`. */
 export function publicProfileUrl(username: string): string {
   return `${siteUrl()}/${encodeURIComponent(username)}`;

@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
  * (`pointer-events-none`), para ninguém achar que está na página real.
  */
 export function PreviewCelular({
+  origem,
   nome,
   username,
   fotoUrl,
@@ -18,6 +19,8 @@ export function PreviewCelular({
   email,
   className,
 }: {
+  /** Host real do site (ex.: `localhost:3000`), sem protocolo. */
+  origem: string;
   nome?: string;
   username?: string;
   fotoUrl?: string;
@@ -52,9 +55,8 @@ export function PreviewCelular({
     <div className={cn("mx-auto w-full max-w-[288px]", className)}>
       <div className="mb-2 flex items-center justify-between px-0.5">
         <span className="text-[10px] font-medium text-panel-muted">Prévia da página</span>
-        <span className="inline-flex items-center gap-1 text-[10px] text-panel-muted/80">
-          <span className="h-1 w-1 rounded-full bg-acid" aria-hidden="true" />
-          ao vivo
+        <span className="rounded border border-panel-line px-1 py-[1px] font-mono text-[8px] uppercase tracking-[0.12em] text-panel-muted">
+          exemplo
         </span>
       </div>
 
@@ -72,7 +74,7 @@ export function PreviewCelular({
               <div className="absolute inset-0 bg-[radial-gradient(120%_120%_at_20%_0%,rgba(208,24,246,0.35),transparent_60%),radial-gradient(90%_90%_at_90%_100%,rgba(216,255,74,0.12),transparent_55%)]" />
             )}
             <div className="absolute inset-0 bg-gradient-to-t from-[#08050c] via-[#08050c]/20 to-transparent" />
-            <span className="absolute left-3 top-3 rounded-sm border border-white/15 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em] text-white/60">
+            <span className="absolute left-3 top-3 rounded-sm border border-white/15 px-1.5 py-0.5 font-mono text-[8px] uppercase tracking-[0.16em] text-white/75">
               EPK
             </span>
           </div>
@@ -90,9 +92,9 @@ export function PreviewCelular({
             <p className="mt-2 truncate font-display text-[16px] font-bold leading-tight tracking-[-0.02em] text-white">
               {nomeExibido}
             </p>
-            <p className="mt-0.5 truncate font-mono text-[9px] text-white/40">{handle}</p>
+            <p className="mt-0.5 truncate font-mono text-[9px] text-white/62">{handle}</p>
 
-            <p className="mt-2.5 line-clamp-3 text-[10px] leading-relaxed text-white/55">
+            <p className="mt-2.5 line-clamp-3 text-[10px] leading-relaxed text-white/72">
               {bioExibida}
             </p>
 
@@ -102,7 +104,7 @@ export function PreviewCelular({
                   <span
                     key={rede.chave}
                     aria-label={rede.label}
-                    className="flex h-5 w-5 items-center justify-center rounded-full border border-white/15 font-mono text-[7px] leading-none tracking-tight text-white/60"
+                    className="flex h-5 w-5 items-center justify-center rounded-full border border-white/15 font-mono text-[7px] leading-none tracking-tight text-white/75"
                   >
                     {rede.sigla}
                   </span>
@@ -116,7 +118,7 @@ export function PreviewCelular({
                   "flex h-7 items-center justify-center gap-1.5 rounded text-[9px] font-semibold",
                   whatsapp?.trim()
                     ? "bg-signal text-ink"
-                    : "border border-dashed border-white/15 text-white/35",
+                    : "border border-dashed border-white/15 text-white/58",
                 )}
               >
                 <MessageCircle className="h-3 w-3" aria-hidden="true" />
@@ -127,7 +129,7 @@ export function PreviewCelular({
                   "flex h-7 items-center justify-center gap-1.5 rounded border text-[9px] font-medium",
                   email?.trim()
                     ? "border-white/20 text-white/80"
-                    : "border-dashed border-white/15 text-white/35",
+                    : "border-dashed border-white/15 text-white/58",
                 )}
               >
                 <Mail className="h-3 w-3" aria-hidden="true" />
@@ -135,15 +137,15 @@ export function PreviewCelular({
               </span>
             </div>
 
-            <p className="mt-3 truncate border-t border-white/[0.07] pt-2 text-center font-mono text-[8px] text-white/30">
-              presslink.app/{username?.trim() || "seu-username"}
+            <p className="mt-3 truncate border-t border-white/[0.07] pt-2 text-center font-mono text-[8px] text-white/55">
+              {origem}/{username?.trim() || "seu-username"}
             </p>
           </div>
         </div>
       </div>
 
       <p className="mt-2 px-0.5 text-[10px] leading-relaxed text-panel-muted/80">
-        Ilustração do topo da página. O tema escolhido muda o visual final.
+        Exemplo do topo da página, atualizado enquanto você digita. O tema escolhido muda o visual final.
       </p>
     </div>
   );

@@ -1,6 +1,7 @@
 import { createClient } from "@/lib/supabase/server";
 import { PerfilForm } from "@/components/features/painel/PerfilForm";
 import { PageHeader } from "@/components/features/painel/PageHeader";
+import { siteHost } from "@/lib/site";
 
 export default async function PerfilPage() {
   const supabase = await createClient();
@@ -34,7 +35,7 @@ export default async function PerfilPage() {
         description="Seu nome, seu endereço e o texto que apresenta você. Tudo aqui aparece na página pública."
       />
       <div className="rounded-lg border border-panel-line bg-panel-surface p-5 sm:p-6">
-        <PerfilForm defaultValues={defaultValues} />
+        <PerfilForm defaultValues={defaultValues} origem={siteHost()} />
       </div>
     </div>
   );

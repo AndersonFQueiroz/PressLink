@@ -126,7 +126,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
             <span className="flex h-8 w-8 items-center justify-center rounded-full border border-acid/50 text-acid transition group-hover:bg-acid group-hover:text-black">
               <Disc3 className="h-4 w-4" />
             </span>
-            <span className="font-mono text-[10px] uppercase leading-tight tracking-[0.28em] text-white/60">
+            <span className="font-mono text-[10px] uppercase leading-tight tracking-[0.28em] text-white/75">
               Electronic
               <br />
               Press Kit
@@ -138,7 +138,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className="group flex items-baseline gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/50 transition hover:text-white"
+                className="group flex items-baseline gap-1.5 font-mono text-[11px] uppercase tracking-[0.2em] text-white/70 transition hover:text-white"
               >
                 <span className="text-acid/70">{item.index}</span>
                 {item.label}
@@ -169,7 +169,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
       {menuOpen && (
         <div className="fixed inset-0 z-[100] flex flex-col bg-[#070708]/98 px-5 py-5 backdrop-blur-2xl sm:px-8">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/40">
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-white/62">
               Menu
             </span>
             <button
@@ -192,7 +192,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 <span className="font-display text-4xl font-medium tracking-tight text-white/85 transition group-hover:text-acid">
                   {item.label}
                 </span>
-                <span className="font-mono text-xs text-white/50">{item.index}</span>
+                <span className="font-mono text-xs text-white/70">{item.index}</span>
               </a>
             ))}
           </nav>
@@ -205,13 +205,13 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/60"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/75"
                 >
                   <SocialIcon name={social.key} className="h-4 w-4" />
                 </a>
               ))}
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/70">
               {new Date().getFullYear()} ©
             </span>
           </div>
@@ -254,7 +254,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-acid" />
                 {lang === "pt" ? "Disponível para booking" : "Available for booking"}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/45">
+              <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-white/65">
                 Electronic Press Kit — {new Date().getFullYear()}
               </span>
             </Reveal>
@@ -268,11 +268,11 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
 
             <div className="mt-8 flex flex-col gap-6 border-t border-white/15 pt-6 sm:mt-12 sm:flex-row sm:items-end sm:justify-between">
               <Reveal variant="up" delay={650} className="flex flex-wrap items-center gap-x-8 gap-y-3">
-                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/60">
+                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/75">
                   DJ / Producer
                 </span>
                 <span className="hidden h-3 w-px bg-white/20 sm:block" />
-                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/60">
+                <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-white/75">
                   {next
                     ? `${lang === "pt" ? "Próxima data" : "Next date"} — ${formatShowDate(next.data, lang).day}.${formatShowDate(next.data, lang).monthShort}`
                     : lang === "pt"
@@ -360,7 +360,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                   {stats.map((stat) => (
                     <div key={stat.label}>
                       <span className="font-display text-2xl font-medium text-white sm:text-3xl">{stat.value}</span>
-                      <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-white/40">
+                      <span className="mt-1 block font-mono text-[10px] uppercase tracking-[0.2em] text-white/62">
                         {stat.label}
                       </span>
                     </div>
@@ -382,7 +382,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                         "rounded-full border px-3 py-1 font-mono text-[10px] uppercase tracking-[0.2em] transition",
                         lang === code
                           ? "border-acid bg-acid text-black"
-                          : "border-white/15 text-white/45 hover:border-white/40 hover:text-white",
+                          : "border-white/15 text-white/65 hover:border-white/40 hover:text-white",
                       )}
                     >
                       {code === "pt" ? "Português" : "English"}
@@ -399,7 +399,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                         "max-w-4xl tracking-[-0.01em] text-[#d8d5cb]",
                         index === 0
                           ? "text-[clamp(1.35rem,2.6vw,2.35rem)] font-light leading-[1.45]"
-                          : "mt-6 text-base leading-relaxed text-white/55 sm:text-lg",
+                          : "mt-6 text-base leading-relaxed text-white/72 sm:text-lg",
                       )}
                     >
                       {paragraph}
@@ -407,7 +407,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                   </Reveal>
                 ))
               ) : (
-                <p className="text-lg text-white/50">
+                <p className="text-lg text-white/70">
                   {lang === "pt" ? "Biografia em breve." : "Biography coming soon."}
                 </p>
               )}
@@ -420,7 +420,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 transition hover:border-acid hover:text-acid"
+                      className="group inline-flex items-center gap-2 rounded-full border border-white/15 px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/75 transition hover:border-acid hover:text-acid"
                     >
                       <SocialIcon name={social.key} className="h-3.5 w-3.5" />
                       {social.label}
@@ -462,7 +462,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                       "rounded-full border px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] transition",
                       filter === item
                         ? "border-white bg-white text-black"
-                        : "border-white/15 text-white/45 hover:border-white/40 hover:text-white",
+                        : "border-white/15 text-white/65 hover:border-white/40 hover:text-white",
                     )}
                   >
                     {item === "all" ? (lang === "pt" ? "Tudo" : "All") : providerLabel(item)}
@@ -476,11 +476,11 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 filteredMedia.map((media, index) => (
                   <div key={media.id} className="border-t border-white/10 py-6 last:border-b sm:py-7">
                     <div className="grid grid-cols-[2.2rem_1fr] items-center gap-3 sm:grid-cols-[3.5rem_1fr_10rem] sm:gap-5">
-                      <span className="font-mono text-[11px] text-white/50">{trackNumber(index)}</span>
+                      <span className="font-mono text-[11px] text-white/70">{trackNumber(index)}</span>
                       <span className="font-display text-lg font-medium leading-tight tracking-tight text-[#e9e7df] sm:text-2xl lg:text-3xl">
                         {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
                       </span>
-                      <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 sm:block">
+                      <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/75 sm:block">
                         {providerLabel(media.tipo)}
                       </span>
                     </div>
@@ -495,8 +495,8 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 ))
               ) : (
                 <div className="flex flex-col items-center gap-3 border-y border-white/10 py-16 text-center">
-                  <Disc3 className="h-8 w-8 text-white/25" />
-                  <p className="text-white/50">
+                  <Disc3 className="h-8 w-8 text-white/50" />
+                  <p className="text-white/70">
                     {lang === "pt" ? "Nenhuma faixa neste filtro." : "No tracks in this filter."}
                   </p>
                 </div>
@@ -518,14 +518,14 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
               </h2>
             </Reveal>
             <Reveal variant="fade" delay={100} className="flex items-center gap-2">
-              <span className="mr-2 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 sm:block">
+              <span className="mr-2 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/70 sm:block">
                 {lang === "pt" ? "Arraste ou use as setas" : "Drag or use arrows"}
               </span>
               <button
                 type="button"
                 onClick={() => scrollStrip(-1)}
                 aria-label="Fotos anteriores"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/60 transition hover:border-acid hover:text-acid"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:border-acid hover:text-acid"
               >
                 <ChevronLeft className="h-5 w-5" />
               </button>
@@ -533,7 +533,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 type="button"
                 onClick={() => scrollStrip(1)}
                 aria-label="Próximas fotos"
-                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/60 transition hover:border-acid hover:text-acid"
+                className="flex h-11 w-11 items-center justify-center rounded-full border border-white/15 text-white/75 transition hover:border-acid hover:text-acid"
               >
                 <ChevronRight className="h-5 w-5" />
               </button>
@@ -573,7 +573,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                     </span>
                   </button>
                   {photo.alt_text && (
-                    <p className="mt-3 max-w-[30vw] truncate font-mono text-[10px] uppercase tracking-[0.16em] text-white/60">
+                    <p className="mt-3 max-w-[30vw] truncate font-mono text-[10px] uppercase tracking-[0.16em] text-white/75">
                       {photo.alt_text}
                     </p>
                   )}
@@ -583,8 +583,8 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
             </Reveal>
           ) : (
             <div className="mx-5 mt-10 flex flex-col items-center gap-3 border border-white/10 py-16 text-center sm:mx-8 lg:mx-12">
-              <Disc3 className="h-8 w-8 text-white/25" />
-              <p className="text-white/50">
+              <Disc3 className="h-8 w-8 text-white/50" />
+              <p className="text-white/70">
                 {lang === "pt" ? "Galeria em breve." : "Gallery coming soon."}
               </p>
             </div>
@@ -611,7 +611,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
               <Reveal variant="fade" delay={100}>
                 <a
                   href="#booking"
-                  className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 transition hover:text-acid"
+                  className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 transition hover:text-acid"
                 >
                   <Calendar className="h-4 w-4" />
                   {lang === "pt" ? "Contratar uma data" : "Book a date"}
@@ -637,7 +637,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                           <span className="font-display text-2xl font-medium tracking-tight sm:text-4xl">
                             {date.day}
                           </span>
-                          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/40">
+                          <span className="font-mono text-[10px] uppercase tracking-[0.15em] text-white/62">
                             {date.monthShort}
                           </span>
                         </div>
@@ -645,12 +645,12 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                           <p className="truncate font-display text-base font-medium text-[#e9e7df] transition group-hover:text-acid sm:text-xl">
                             {show.nome_evento}
                           </p>
-                          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/60">
+                          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/75">
                             {date.weekday} · {date.year}
                           </p>
                         </div>
-                        <p className="hidden truncate text-sm text-white/50 sm:block">{show.local || "—"}</p>
-                        <p className="hidden truncate font-mono text-[11px] uppercase tracking-[0.16em] text-white/40 sm:block">
+                        <p className="hidden truncate text-sm text-white/70 sm:block">{show.local || "—"}</p>
+                        <p className="hidden truncate font-mono text-[11px] uppercase tracking-[0.16em] text-white/62 sm:block">
                           {show.cidade || "—"}
                         </p>
                         <div className="flex items-center gap-3">
@@ -659,11 +659,11 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                               {lang === "pt" ? "Próximo" : "Next"}
                             </span>
                           ) : (
-                            <span className="hidden font-mono text-[10px] text-white/20 sm:block">
+                            <span className="hidden font-mono text-[10px] text-white/62 sm:block">
                               {String(index + 1).padStart(2, "0")}
                             </span>
                           )}
-                          <ArrowUpRight className="h-4 w-4 text-white/25 transition group-hover:text-acid" />
+                          <ArrowUpRight className="h-4 w-4 text-white/50 transition group-hover:text-acid" />
                         </div>
                       </div>
                     </Reveal>
@@ -671,8 +671,8 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 })
               ) : (
                 <div className="flex flex-col items-center gap-3 border-y border-white/10 py-16 text-center">
-                  <Calendar className="h-8 w-8 text-white/25" />
-                  <p className="text-white/50">
+                  <Calendar className="h-8 w-8 text-white/50" />
+                  <p className="text-white/70">
                     {lang === "pt"
                       ? "Novas datas de turnê em breve."
                       : "New tour dates coming soon."}
@@ -708,13 +708,13 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                     className="group flex items-center justify-between gap-4 border-t border-white/15 py-7 transition hover:border-acid sm:py-9"
                   >
                     <span className="flex items-center gap-4 sm:gap-6">
-                      <SocialIcon name="whatsapp" className="h-6 w-6 text-white/45 transition group-hover:text-acid sm:h-8 sm:w-8" />
+                      <SocialIcon name="whatsapp" className="h-6 w-6 text-white/65 transition group-hover:text-acid sm:h-8 sm:w-8" />
                       <span className="font-display text-2xl font-medium uppercase tracking-tight transition group-hover:text-acid sm:text-4xl">
                         WhatsApp
                       </span>
-                      <span className="hidden font-mono text-[11px] text-white/60 sm:block">{perfil.whatsapp}</span>
+                      <span className="hidden font-mono text-[11px] text-white/75 sm:block">{perfil.whatsapp}</span>
                     </span>
-                    <ArrowUpRight className="h-6 w-6 shrink-0 text-white/30 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-acid sm:h-8 sm:w-8" />
+                    <ArrowUpRight className="h-6 w-6 shrink-0 text-white/55 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-acid sm:h-8 sm:w-8" />
                   </a>
                 </Reveal>
               )}
@@ -726,23 +726,23 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                     className="group flex items-center justify-between gap-4 border-t border-white/15 py-7 transition hover:border-acid sm:py-9"
                   >
                     <span className="flex min-w-0 items-center gap-4 sm:gap-6">
-                      <Mail className="h-6 w-6 shrink-0 text-white/45 transition group-hover:text-acid sm:h-8 sm:w-8" />
+                      <Mail className="h-6 w-6 shrink-0 text-white/65 transition group-hover:text-acid sm:h-8 sm:w-8" />
                       <span className="min-w-0">
                         <span className="block font-display text-2xl font-medium uppercase tracking-tight transition group-hover:text-acid sm:text-4xl">
                           E-mail
                         </span>
-                        <span className="mt-1 block truncate font-mono text-[11px] text-white/60">
+                        <span className="mt-1 block truncate font-mono text-[11px] text-white/75">
                           {perfil.email_booking}
                         </span>
                       </span>
                     </span>
-                    <ArrowUpRight className="h-6 w-6 shrink-0 text-white/30 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-acid sm:h-8 sm:w-8" />
+                    <ArrowUpRight className="h-6 w-6 shrink-0 text-white/55 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-acid sm:h-8 sm:w-8" />
                   </a>
                 </Reveal>
               )}
 
               {!waUrl && !perfil.email_booking && (
-                <p className="border-t border-white/15 py-10 text-white/50">
+                <p className="border-t border-white/15 py-10 text-white/70">
                   {lang === "pt"
                     ? "Informações de contato serão disponibilizadas em breve."
                     : "Contact information coming soon."}
@@ -753,16 +753,16 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
 
             <Reveal variant="fade" className="mt-12 flex flex-col gap-4 border border-white/10 p-5 sm:flex-row sm:items-center sm:justify-between sm:p-6">
               <div>
-                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/40">
+                <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/62">
                   Technical specs / rider
                 </p>
-                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/55">
+                <p className="mt-2 max-w-2xl text-sm leading-relaxed text-white/72">
                   {lang === "pt"
                     ? "2–3x Pioneer CDJ-3000 / DJM-V10 ou Allen & Heath Xone:96 + monitoração estéreo de alta pressão."
                     : "2–3x Pioneer CDJ-3000 / DJM-V10 or Allen & Heath Xone:96 + high-pressure stereo monitoring."}
                 </p>
               </div>
-              <span className="shrink-0 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white/40">
+              <span className="shrink-0 rounded-full border border-white/15 px-3.5 py-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-white/62">
                 {lang === "pt" ? "Rider sob demanda" : "Rider on request"}
               </span>
             </Reveal>
@@ -776,7 +776,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
               <p className="font-display text-lg font-medium uppercase tracking-tight">
                 {artistName}
               </p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/70">
                 © {new Date().getFullYear()} — {lang === "pt" ? "Todos os direitos reservados" : "All rights reserved"}
               </p>
             </div>
@@ -788,7 +788,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/50 transition hover:border-acid hover:text-acid"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/70 transition hover:border-acid hover:text-acid"
                 >
                   <SocialIcon name={social.key} className="h-4 w-4" />
                 </a>
@@ -796,7 +796,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
             </div>
             <Link
               href="/"
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/50 transition hover:text-acid"
+              className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/70 transition hover:text-acid"
             >
               Made with press<span className="text-acid">link</span>
             </Link>

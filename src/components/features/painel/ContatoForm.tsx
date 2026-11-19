@@ -25,9 +25,11 @@ type ContatoFormProps = {
     fotoUrl?: string;
     bio?: string;
   };
+  /** Host real do site (ex.: `localhost:3000`), sem protocolo. */
+  origem: string;
 };
 
-export function ContatoForm({ defaultValues, preview }: ContatoFormProps) {
+export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps) {
   const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
   const initialWhatsApp = defaultValues?.whatsapp ? formatWhatsApp(defaultValues.whatsapp) : "";
@@ -201,6 +203,7 @@ export function ContatoForm({ defaultValues, preview }: ContatoFormProps) {
         <aside className="hidden lg:block lg:border-l lg:border-white/[0.06] lg:pl-7">
           <div className="sticky top-20">
             <PreviewCelular
+              origem={origem}
               nome={preview?.nome}
               username={preview?.username}
               fotoUrl={preview?.fotoUrl}

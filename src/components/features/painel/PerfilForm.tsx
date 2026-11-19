@@ -14,9 +14,11 @@ import { cn } from "@/lib/utils";
 
 type PerfilFormProps = {
   defaultValues?: Partial<PerfilFormData>;
+  /** Host real do site (ex.: `localhost:3000`), sem protocolo. */
+  origem: string;
 };
 
-export function PerfilForm({ defaultValues }: PerfilFormProps) {
+export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
   const router = useRouter();
   const [bioTab, setBioTab] = useState<"pt" | "en">("pt");
   const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
@@ -47,6 +49,7 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
   });
 
   const valores = watch();
+  const linkPrevia = `${origem}/${valores.username?.trim().toLowerCase() || "seu-username"}`;
 
   const checkUsername = async () => {
     const username = getValues("username")?.toLowerCase().trim();
@@ -110,7 +113,7 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
               <Input
                 label="Username"
                 placeholder="dj-example"
-                helperText="presslink.app/seu-username"
+                helperText={linkPrevia}
                 error={errors.username?.message}
                 {...register("username")}
                 onBlur={checkUsername}
@@ -246,6 +249,7 @@ export function PerfilForm({ defaultValues }: PerfilFormProps) {
         <aside className="hidden lg:block lg:border-l lg:border-white/[0.06] lg:pl-7">
           <div className="sticky top-20">
             <PreviewCelular
+              origem={origem}
               nome={valores.nome_artistico}
               username={valores.username}
               fotoUrl={fotoUrl}

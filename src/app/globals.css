@@ -15,7 +15,9 @@
   --pl-line-alpha: 0.09;
 
   --pl-text: 246 243 248;
-  --pl-muted: 167 159 173;
+  /* Texto de apoio mais claro para baixa visão: 9,6:1 no fundo do painel
+     (AAA), mantendo hierarquia abaixo do texto principal (17,6:1). */
+  --pl-muted: 185 180 193;
 
   --pl-signal: 208 24 246;
   --pl-signal-hover: 234 27 255;

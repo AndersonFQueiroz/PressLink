@@ -2,6 +2,7 @@ import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ContatoForm } from "@/components/features/painel/ContatoForm";
 import { PageHeader } from "@/components/features/painel/PageHeader";
+import { siteHost } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contato e Booking | Painel PressLink",
@@ -45,7 +46,7 @@ export default async function ContatoPage() {
         description="Por onde produtores e contratantes falam com você. Esses botões ficam visíveis na página pública."
       />
       <div className="rounded-lg border border-panel-line bg-panel-surface p-5 sm:p-6">
-        <ContatoForm defaultValues={defaultValues} preview={preview} />
+        <ContatoForm defaultValues={defaultValues} preview={preview} origem={siteHost()} />
       </div>
     </div>
   );

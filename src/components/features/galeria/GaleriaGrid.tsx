@@ -86,7 +86,7 @@ function SortableFoto({
         type="button"
         onClick={() => onDelete(foto)}
         aria-label={`Excluir foto ${posicao}`}
-        className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-black/55 text-white/65 opacity-0 backdrop-blur-sm transition-[opacity,color] hover:text-danger focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/70 group-hover:opacity-100 group-focus-within:opacity-100 max-sm:opacity-100"
+        className="absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-md border border-white/10 bg-black/55 text-white/78 opacity-0 backdrop-blur-sm transition-[opacity,color] hover:text-danger focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/70 group-hover:opacity-100 group-focus-within:opacity-100 max-sm:opacity-100"
       >
         <Trash2 className="h-3.5 w-3.5" aria-hidden="true" />
       </button>
