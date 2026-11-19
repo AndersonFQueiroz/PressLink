@@ -9,6 +9,7 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { PublicacaoManager } from "@/components/features/painel/PublicacaoManager";
+import { createClient } from "@/lib/supabase/server";
 // O painel utiliza PublicPageLink integrado em PublicacaoManager
 
 export const metadata = {
@@ -61,7 +62,24 @@ const modules = [
   },
 ];
 
-export default function PainelPage() {
+export default async function PainelPage() {
+  // Estado inicial vindo do servidor: sem isso o cartão mostra "Rascunho"
+  // por um instante para um DJ já publicado, até o fetch do cliente responder.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let perfilInicial: { username: string | null; publicado: boolean | null } | null = null;
+  if (user) {
+    const { data } = await supabase
+      .from("perfil")
+      .select("username, publicado")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+    perfilInicial = data;
+  }
+
   return (
     <div className="relative min-h-screen bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
       {/* Ambient background glow matching landing page */}
@@ -77,7 +95,10 @@ export default function PainelPage() {
       {/* Main Content */}
       <main className="relative z-10 mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 lg:px-16">
         {/* Hero & Publicação Manager Section */}
-        <PublicacaoManager />
+        <PublicacaoManager
+          initialPublicado={Boolean(perfilInicial?.publicado)}
+          initialUsername={perfilInicial?.username ?? ""}
+        />
 
         {/* Management Modules Grid */}
         <section>
