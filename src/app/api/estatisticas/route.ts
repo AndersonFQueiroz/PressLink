@@ -4,55 +4,8 @@ import {
   agregarEventos,
   intervaloEstatisticas,
   normalizarPeriodo,
-  type EventoEstatistica,
 } from "@/lib/estatisticas";
-
-const TAMANHO_PAGINA = 1000;
-/** Teto de segurança para não varrer uma base gigante em uma única requisição. */
-const MAXIMO_EVENTOS = 20_000;
-
-type ClienteSupabase = Awaited<ReturnType<typeof createClient>>;
-
-type ResultadoEventos = {
-  eventos: EventoEstatistica[];
-  erro: string | null;
-  truncado: boolean;
-};
-
-/**
- * Lê os eventos do período atual + anterior. O PostgREST limita cada resposta a
- * 1000 linhas, por isso a leitura pagina até acabar (ou até o teto).
- */
-async function carregarEventos(
-  supabase: ClienteSupabase,
-  perfilId: string,
-  desde: Date,
-): Promise<ResultadoEventos> {
-  const eventos: EventoEstatistica[] = [];
-
-  for (let inicio = 0; inicio < MAXIMO_EVENTOS; inicio += TAMANHO_PAGINA) {
-    const { data, error } = await supabase
-      .from("visualizacao_de_pagina")
-      .select("tipo, created_at")
-      .eq("perfil_id", perfilId)
-      .gte("created_at", desde.toISOString())
-      .order("created_at", { ascending: true })
-      .range(inicio, inicio + TAMANHO_PAGINA - 1);
-
-    if (error) {
-      return { eventos, erro: error.message, truncado: false };
-    }
-
-    const lote = (data ?? []) as EventoEstatistica[];
-    eventos.push(...lote);
-
-    if (lote.length < TAMANHO_PAGINA) {
-      return { eventos, erro: null, truncado: false };
-    }
-  }
-
-  return { eventos, erro: null, truncado: true };
-}
+import { carregarEventos } from "@/lib/estatisticas-servidor";
 
 export async function GET(request: Request) {
   const supabase = await createClient();

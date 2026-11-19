@@ -119,12 +119,12 @@ export function LazyMediaEmbed({
           <span
             className={cn(
               "flex animate-pulse flex-col items-center gap-2",
-              ytId ? "text-white/90" : "text-white/30"
+              ytId ? "text-panel-text" : "text-panel-muted"
             )}
           >
             {ytId ? (
               // Glifo de play sobre a thumbnail (YouTube)
-              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/50 backdrop-blur-sm">
+              <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/40 bg-black/50 ">
                 <Play className="ml-0.5 h-5 w-5 fill-current" />
               </span>
             ) : (

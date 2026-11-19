@@ -9,19 +9,49 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#17131f",
-        plum: "#6d28d9",
-        blush: "#f7e8ff",
-        paper: "#f4efe6",
+        // Fonte única: canais em `--pl-*` (src/app/globals.css). Os templates
+        // públicos continuam com `pl-tpl--*` e com o token `acid`, que é a cor
+        // própria do DarkMinimal/Vibrant.
+        ink: "rgb(var(--pl-ink) / <alpha-value>)",
+        panel: {
+          bg: "rgb(var(--pl-ink) / <alpha-value>)",
+          surface: "rgb(var(--pl-surface) / <alpha-value>)",
+          raised: "rgb(var(--pl-raised) / <alpha-value>)",
+          "raised-hover": "rgb(var(--pl-raised-hover) / <alpha-value>)",
+          line: "rgb(var(--pl-line) / var(--pl-line-alpha))",
+          "line-strong": "rgb(var(--pl-line) / 0.16)",
+          text: "rgb(var(--pl-text) / <alpha-value>)",
+          muted: "rgb(var(--pl-muted) / <alpha-value>)",
+        },
+        // Magenta do logo. Preenchimento magenta leva texto `ink` (4,9:1);
+        // branco sobre magenta reprova AA (4,08:1).
+        signal: {
+          DEFAULT: "rgb(var(--pl-signal) / <alpha-value>)",
+          hover: "rgb(var(--pl-signal-hover) / <alpha-value>)",
+          press: "rgb(var(--pl-signal-press) / <alpha-value>)",
+          soft: "rgb(var(--pl-signal-soft) / <alpha-value>)",
+        },
+        ok: "rgb(var(--pl-ok) / <alpha-value>)",
+        warn: "rgb(var(--pl-warn) / <alpha-value>)",
+        danger: "rgb(var(--pl-danger) / <alpha-value>)",
         acid: "#d8ff4a",
         stage: "#ff3d8b",
+        paper: "#f4efe6",
         vermilion: "#b8472b",
+        // Paleta editorial da landing pública (fora do painel): mantida para
+        // não quebrar `src/app/page.tsx`.
+        lilac: "#efe8fb",
+        graphite: "#2a2333",
+        plum: "#6d28d9",
+        blush: "#f7e8ff",
       },
       fontFamily: {
-        sans: ["ui-sans-serif", "system-ui", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji"],
-        display: ["var(--font-space-grotesk)", "sans-serif"],
-        poster: ["var(--font-anton)", "Impact", "sans-serif"],
-        serif: ["var(--font-instrument-serif)", "Georgia", "serif"],
+        sans: ["var(--font-space-grotesk)", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Títulos, wordmark e poster usam a fonte do logo (Poppins).
+        display: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        poster: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        serif: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
+        brand: ["var(--font-poppins)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       keyframes: {
         marquee: {

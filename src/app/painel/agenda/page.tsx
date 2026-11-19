@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { AgendaClient } from "./agenda-client";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 
 export default async function AgendaPage() {
   const supabase = await createClient();
@@ -25,11 +26,12 @@ export default async function AgendaPage() {
   }
 
   return (
-    <div className="mx-auto max-w-4xl p-4 sm:p-6">
-      <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-white">Agenda</h1>
-        <p className="text-sm text-white/60">Cadastre suas próximas apresentações — serão exibidas em ordem cronológica.</p>
-      </div>
+    <div>
+      <PageHeader
+        label="Conteúdo"
+        title="Agenda"
+        description="Suas próximas datas. As futuras aparecem em ordem cronológica na página pública."
+      />
       <AgendaClient initialShows={shows as never[]} />
     </div>
   );

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useCallback } from "react";
+import React, { useCallback, useEffect, useId, useRef } from "react";
 import { X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -34,10 +34,31 @@ export function Modal({
   size = "md",
   className,
 }: ModalProps) {
+  const titleId = useId();
+  const panelRef = useRef<HTMLDivElement>(null);
+  const previousFocus = useRef<HTMLElement | null>(null);
+
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         onClose();
+        return;
+      }
+
+      // Mantém o foco dentro do diálogo (o menu do painel tem muitos links).
+      if (e.key !== "Tab" || !panelRef.current) return;
+      const focusable = panelRef.current.querySelectorAll<HTMLElement>(
+        'a[href], button:not([disabled]), input:not([disabled]), textarea:not([disabled]), select:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey && document.activeElement === first) {
+        e.preventDefault();
+        last.focus();
+      } else if (!e.shiftKey && document.activeElement === last) {
+        e.preventDefault();
+        first.focus();
       }
     },
     [onClose],
@@ -45,8 +66,16 @@ export function Modal({
 
   useEffect(() => {
     if (isOpen) {
+      previousFocus.current = document.activeElement as HTMLElement | null;
       document.body.style.overflow = "hidden";
       window.addEventListener("keydown", handleKeyDown);
+      // Foco inicial: primeiro campo/botão do diálogo, nunca no body.
+      requestAnimationFrame(() => {
+        const target = panelRef.current?.querySelector<HTMLElement>(
+          'input:not([disabled]), textarea:not([disabled]), button:not([disabled]), a[href]',
+        );
+        target?.focus();
+      });
     } else {
       document.body.style.overflow = "unset";
     }
@@ -54,61 +83,59 @@ export function Modal({
     return () => {
       document.body.style.overflow = "unset";
       window.removeEventListener("keydown", handleKeyDown);
+      previousFocus.current?.focus?.();
     };
   }, [isOpen, handleKeyDown]);
 
   if (!isOpen) return null;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6"
-      role="dialog"
-      aria-modal="true"
-    >
-      {/* Backdrop */}
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div
-        className="fixed inset-0 bg-black/75 backdrop-blur-sm transition-opacity animate-in fade-in"
+        className="pl-fade fixed inset-0 bg-black/70"
         onClick={onClose}
         aria-hidden="true"
       />
 
-      {/* Modal Card */}
       <div
+        ref={panelRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={title ? titleId : undefined}
         className={cn(
-          "relative w-full rounded-2xl bg-[#1c1827] border border-white/10 shadow-2xl p-6 z-10",
-          "animate-in zoom-in-95 duration-150 ease-out",
+          "pl-pop relative z-10 w-full rounded-xl border border-panel-line bg-panel-raised p-6 shadow-2xl shadow-black/60",
           sizeStyles[size],
           className,
         )}
       >
-        {/* Header */}
-        <div className="flex items-start justify-between pb-4 border-b border-white/5">
+        <div className="flex items-start justify-between gap-4 pb-4">
           <div className="space-y-1">
             {title && (
-              <h2 className="font-display text-xl font-bold tracking-tight text-white">
+              <h2
+                id={titleId}
+                className="font-serif text-[22px] leading-tight text-panel-text"
+              >
                 {title}
               </h2>
             )}
             {description && (
-              <p className="text-sm text-white/60">{description}</p>
+              <p className="text-[13px] leading-relaxed text-panel-muted">{description}</p>
             )}
           </div>
           <button
             onClick={onClose}
             type="button"
-            className="rounded-lg p-1.5 text-white/50 hover:text-white hover:bg-white/10 transition-colors"
+            className="rounded p-1.5 text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
             aria-label="Fechar modal"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        {/* Content */}
-        <div className="py-4 text-sm text-white/80">{children}</div>
+        <div className="text-[13px] text-panel-text">{children}</div>
 
-        {/* Footer */}
         {footer && (
-          <div className="flex flex-wrap items-center justify-end gap-3 pt-4 border-t border-white/5">
+          <div className="mt-6 flex flex-wrap items-center justify-end gap-2 border-t border-panel-line pt-4">
             {footer}
           </div>
         )}

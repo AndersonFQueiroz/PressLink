@@ -118,7 +118,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
               <a
                 key={item.id}
                 href={`#${item.id}`}
-                className="rounded-full px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 transition hover:bg-white/10 hover:text-white"
+                className="rounded-full px-4 py-2 font-mono text-[10px] uppercase tracking-[0.18em] text-white/75 transition hover:bg-white/10 hover:text-white"
               >
                 {item.label}
               </a>
@@ -213,7 +213,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   <Sparkles className="h-3.5 w-3.5" />
                   {lang === "pt" ? "Disponível para booking" : "Available for booking"}
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/65">
+                <span className="inline-flex items-center gap-2 rounded-full border border-white/20 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-white/78">
                   <MapPin className="h-3.5 w-3.5 text-[#ff3d8b]" />
                   {lang === "pt" ? "Datas em 2026" : "2026 dates"}
                 </span>
@@ -241,7 +241,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                 </span>
                 <a
                   href="#bio"
-                  className="group ml-auto flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/45 transition hover:text-[#d8ff4a]"
+                  className="group ml-auto flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-white/65 transition hover:text-[#d8ff4a]"
                 >
                   Scroll
                   <ArrowDown className="h-4 w-4 transition group-hover:translate-y-1" />
@@ -349,7 +349,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                         aria-pressed={lang === code}
                         className={cn(
                           "rounded-full px-4 py-1.5 font-mono text-[10px] font-bold uppercase tracking-[0.16em] transition",
-                          lang === code ? "bg-[#d8ff4a] text-[#0b0614]" : "text-[#fff6e9]/60 hover:text-[#fff6e9]",
+                          lang === code ? "bg-[#d8ff4a] text-[#0b0614]" : "text-[#fff6e9]/75 hover:text-[#fff6e9]",
                         )}
                       >
                         {code}
@@ -443,7 +443,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                       "rounded-full border-2 border-[#0b0614] px-4 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.14em] transition",
                       filter === item
                         ? "bg-[#0b0614] text-[#fff6e9]"
-                        : "bg-transparent text-[#0b0614]/55 hover:bg-[#0b0614]/[0.06]",
+                        : "bg-transparent text-[#0b0614]/72 hover:bg-[#0b0614]/[0.06]",
                     )}
                   >
                     {item === "all" ? (lang === "pt" ? "Tudo" : "All") : providerLabel(item)}
@@ -484,8 +484,8 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
               </div>
             ) : (
               <div className="mt-10 rounded-3xl border-2 border-dashed border-[#0b0614]/30 py-16 text-center">
-                <Disc3 className="mx-auto h-9 w-9 text-[#0b0614]/30" />
-                <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-[#0b0614]/50">
+                <Disc3 className="mx-auto h-9 w-9 text-[#0b0614]/55" />
+                <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-[#0b0614]/70">
                   {lang === "pt" ? "Nenhuma faixa neste filtro" : "No tracks in this filter"}
                 </p>
               </div>
@@ -506,7 +506,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   {lang === "pt" ? "Caos bonito" : "Beautiful chaos"}
                 </h2>
               </Reveal>
-              <Reveal variant="fade" delay={100} className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
+              <Reveal variant="fade" delay={100} className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/75">
                 {lang === "pt" ? "Clique para ampliar" : "Click to enlarge"}
               </Reveal>
             </div>
@@ -556,7 +556,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                           {String(index + 1).padStart(2, "0")}
                         </span>
                         {photo.alt_text && (
-                          <span className="absolute bottom-3 right-3 hidden max-w-[45%] truncate font-mono text-[9px] uppercase tracking-[0.14em] text-white/55 sm:block">
+                          <span className="absolute bottom-3 right-3 hidden max-w-[45%] truncate font-mono text-[9px] uppercase tracking-[0.14em] text-white/72 sm:block">
                             {photo.alt_text}
                           </span>
                         )}
@@ -567,8 +567,8 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
               </div>
             ) : (
               <div className="mt-10 rounded-3xl border-2 border-dashed border-white/15 py-16 text-center">
-                <Disc3 className="mx-auto h-9 w-9 text-white/25" />
-                <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-white/40">
+                <Disc3 className="mx-auto h-9 w-9 text-white/50" />
+                <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-white/62">
                   {lang === "pt" ? "Galeria em breve" : "Gallery coming soon"}
                 </p>
               </div>
@@ -581,7 +581,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
           <div className="mx-auto max-w-[1500px]">
             <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
               <Reveal variant="up">
-                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0b0614]/55">
+                <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0b0614]/72">
                   04 / {lang === "pt" ? "Datas" : "Dates"}
                 </p>
                 <h2 id="agenda-title" className="mt-3 font-poster text-5xl uppercase leading-[0.85] tracking-[-0.01em] sm:text-8xl">
@@ -595,7 +595,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                     show={next}
                     className="flex gap-2"
                     tileClassName="flex min-w-[3.4rem] flex-col items-center rounded-xl border-2 border-[#0b0614] bg-[#0b0614] px-2 py-2 text-[#d8ff4a]"
-                    labelClassName="font-mono text-[8px] uppercase tracking-[0.14em] text-[#d8ff4a]/60"
+                    labelClassName="font-mono text-[8px] uppercase tracking-[0.14em] text-[#d8ff4a]/75"
                   />
                 </Reveal>
               )}
@@ -645,7 +645,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                               </span>
                             )}
                           </div>
-                          <div className="mt-3 flex flex-col gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#0b0614]/60">
+                          <div className="mt-3 flex flex-col gap-1.5 font-mono text-[10px] uppercase tracking-[0.12em] text-[#0b0614]/75">
                             <span className="flex items-center gap-1.5">
                               <MapPin className="h-3.5 w-3.5" />
                               {show.local || "—"}
@@ -663,8 +663,8 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                 })
               ) : (
                 <div className="col-span-full rounded-3xl border-2 border-dashed border-[#0b0614]/30 py-16 text-center">
-                  <Ticket className="mx-auto h-9 w-9 text-[#0b0614]/30" />
-                  <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-[#0b0614]/55">
+                  <Ticket className="mx-auto h-9 w-9 text-[#0b0614]/55" />
+                  <p className="mt-3 font-mono text-xs uppercase tracking-[0.16em] text-[#0b0614]/72">
                     {lang === "pt" ? "Novas datas em breve" : "New dates coming soon"}
                   </p>
                 </div>
@@ -682,7 +682,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
           />
           <div className="relative mx-auto max-w-[1500px]">
             <Reveal variant="up">
-              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0b0614]/55">
+              <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0b0614]/72">
                 05 / Booking
               </p>
               <h2
@@ -704,11 +704,11 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   >
                     <div className="flex items-start justify-between">
                       <SocialIcon name="whatsapp" className="h-9 w-9 text-[#d8ff4a]" />
-                      <ArrowUpRight className="h-6 w-6 text-white/40 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#d8ff4a]" />
+                      <ArrowUpRight className="h-6 w-6 text-white/62 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#d8ff4a]" />
                     </div>
                     <div className="mt-10">
                       <p className="font-poster text-3xl uppercase leading-none">WhatsApp</p>
-                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/50">
+                      <p className="mt-2 font-mono text-[10px] uppercase tracking-[0.16em] text-white/70">
                         {perfil.whatsapp} · {lang === "pt" ? "resposta rápida" : "fast reply"}
                       </p>
                     </div>
@@ -724,11 +724,11 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   >
                     <div className="flex items-start justify-between">
                       <Mail className="h-9 w-9 text-[#ff3d8b]" />
-                      <ArrowUpRight className="h-6 w-6 text-[#0b0614]/40 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#ff3d8b]" />
+                      <ArrowUpRight className="h-6 w-6 text-[#0b0614]/62 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-[#ff3d8b]" />
                     </div>
                     <div className="mt-10">
                       <p className="font-poster text-3xl uppercase leading-none">E-mail</p>
-                      <p className="mt-2 break-all font-mono text-[10px] uppercase tracking-[0.12em] text-[#0b0614]/55">
+                      <p className="mt-2 break-all font-mono text-[10px] uppercase tracking-[0.12em] text-[#0b0614]/72">
                         {perfil.email_booking}
                       </p>
                     </div>
@@ -738,7 +738,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
             </div>
 
             {!waUrl && !perfil.email_booking && (
-              <p className="mt-10 font-mono text-xs uppercase tracking-[0.16em] text-[#0b0614]/55">
+              <p className="mt-10 font-mono text-xs uppercase tracking-[0.16em] text-[#0b0614]/72">
                 {lang === "pt" ? "Contato em breve" : "Contact coming soon"}
               </p>
             )}
@@ -758,7 +758,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   </a>
                 ))}
               </div>
-              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#0b0614]/55">
+              <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-[#0b0614]/72">
                 {lang === "pt" ? "Rider técnico sob demanda" : "Technical rider on request"}
               </p>
             </Reveal>
@@ -768,10 +768,10 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
         <footer className="bg-[#0b0614] px-4 py-8 sm:px-8">
           <div className="mx-auto flex max-w-[1500px] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="font-poster text-lg uppercase tracking-[0.04em]">{artistName}</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/75">
               © {new Date().getFullYear()} · {lang === "pt" ? "Todos os direitos reservados" : "All rights reserved"}
             </p>
-            <Link href="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 transition hover:text-[#d8ff4a]">
+            <Link href="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/75 transition hover:text-[#d8ff4a]">
               Made with press<span className="text-[#ff3d8b]">link</span>
             </Link>
           </div>

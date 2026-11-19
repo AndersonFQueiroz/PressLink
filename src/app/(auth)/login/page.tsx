@@ -5,18 +5,10 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Mail,
-  Lock,
-  Eye,
-  EyeOff,
-  Loader2,
-  AlertCircle,
-  CheckCircle2,
-  ArrowRight,
-} from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertCircle, CheckCircle2 } from "lucide-react";
 import { loginSchema, type LoginFormData } from "@/lib/validators/auth";
 import { loginAction } from "@/lib/auth/actions";
+import { Input } from "@/components/ui/Input";
 
 /**
  * Só esta parte depende de `useSearchParams` (mensagens vindas por querystring).
@@ -35,38 +27,38 @@ function MensagensDaUrl() {
   }
 
   return (
-    <>
+    <div className="mb-6 space-y-2">
       {callbackFailed && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+          className="flex items-start gap-2.5 rounded-lg border border-danger/25 bg-danger/[0.08] p-3 text-[13px] text-danger"
         >
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-400" />
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>O link de autenticação expirou ou é inválido. Tente novamente.</span>
         </div>
       )}
 
       {resetSuccess && (
-        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
-          <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" />
+        <div className="flex items-start gap-2.5 rounded-lg border border-ok/25 bg-ok/[0.08] p-3 text-[13px] text-ok">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>Sua senha foi redefinida com sucesso! Faça login com a nova senha.</span>
         </div>
       )}
 
       {registeredSuccess && (
-        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
-          <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-emerald-400" />
+        <div className="flex items-start gap-2.5 rounded-lg border border-ok/25 bg-ok/[0.08] p-3 text-[13px] text-ok">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>Conta criada com sucesso! Faça login para começar a montar seu portfólio.</span>
         </div>
       )}
 
       {confirmPending && (
-        <div className="mb-6 flex items-start gap-3 rounded-2xl border border-fuchsia-500/30 bg-fuchsia-500/10 p-4 text-sm text-fuchsia-200">
-          <CheckCircle2 className="w-5 h-5 shrink-0 mt-0.5 text-fuchsia-300" />
+        <div className="flex items-start gap-2.5 rounded-lg border border-panel-line bg-white/[0.04] p-3 text-[13px] text-panel-text">
+          <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-signal-soft" aria-hidden="true" />
           <span>Conta criada! Verifique seu e-mail para confirmar o cadastro e depois faça login.</span>
         </div>
       )}
-    </>
+    </div>
   );
 }
 
@@ -107,117 +99,71 @@ function LoginForm() {
       {errorMessage && (
         <div
           role="alert"
-          className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+          className="mb-5 flex items-start gap-2.5 rounded-lg border border-danger/25 bg-danger/[0.08] p-3 text-[13px] text-danger"
         >
-          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-400" />
+          <AlertCircle className="mt-0.5 h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{errorMessage}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
-        {/* Email Field */}
-        <div>
-          <label
-            htmlFor="email"
-            className="block text-xs font-semibold uppercase tracking-[0.18em] text-white/70 mb-2"
-          >
-            E-mail
-          </label>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-white/40">
-              <Mail className="w-4 h-4" />
-            </div>
-            <input
-              id="email"
-              type="email"
-              autoComplete="email"
-              disabled={isPending}
-              placeholder="dj@exemplo.com"
-              {...register("email")}
-              className={`w-full rounded-2xl bg-white/[0.04] border pl-11 pr-4 py-3 text-sm text-white placeholder-white/25 transition focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 ${
-                errors.email
-                  ? "border-rose-500/70 focus:border-rose-500"
-                  : "border-white/10 hover:border-white/20 focus:border-fuchsia-400"
-              }`}
-            />
-          </div>
-          {errors.email && (
-            <p className="mt-1.5 text-xs text-rose-400 font-medium">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" noValidate>
+        <Input
+          label="E-mail"
+          id="email"
+          type="email"
+          autoComplete="email"
+          disabled={isPending}
+          placeholder="dj@exemplo.com"
+          error={errors.email?.message}
+          {...register("email")}
+        />
 
-        {/* Password Field */}
         <div>
-          <div className="flex items-center justify-between mb-2">
-            <label
-              htmlFor="password"
-              className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70"
-            >
+          <div className="mb-1.5 flex items-center justify-between">
+            <label htmlFor="password" className="text-xs font-medium text-panel-muted">
               Senha
             </label>
             <Link
               href="/recuperar-senha"
-              className="text-xs font-medium text-fuchsia-400 hover:text-fuchsia-300 transition"
+              className="text-[12px] font-medium text-panel-muted underline-offset-4 transition-colors hover:text-panel-text hover:underline"
             >
               Esqueceu a senha?
             </Link>
           </div>
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 text-white/40">
-              <Lock className="w-4 h-4" />
-            </div>
-            <input
-              id="password"
-              type={showPassword ? "text" : "password"}
-              autoComplete="current-password"
-              disabled={isPending}
-              placeholder="••••••••"
-              {...register("password")}
-              className={`w-full rounded-2xl bg-white/[0.04] border pl-11 pr-12 py-3 text-sm text-white placeholder-white/25 transition focus:outline-none focus:ring-2 focus:ring-fuchsia-500/20 ${
-                errors.password
-                  ? "border-rose-500/70 focus:border-rose-500"
-                  : "border-white/10 hover:border-white/20 focus:border-fuchsia-400"
-              }`}
-            />
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              tabIndex={-1}
-              aria-label={showPassword ? "Ocultar senha" : "Ver senha"}
-              className="absolute inset-y-0 right-0 flex items-center pr-4 text-white/40 hover:text-white transition focus:outline-none"
-            >
-              {showPassword ? (
-                <EyeOff className="w-4 h-4" />
-              ) : (
-                <Eye className="w-4 h-4" />
-              )}
-            </button>
-          </div>
-          {errors.password && (
-            <p className="mt-1.5 text-xs text-rose-400 font-medium">
-              {errors.password.message}
-            </p>
-          )}
+          <Input
+            id="password"
+            type={showPassword ? "text" : "password"}
+            autoComplete="current-password"
+            disabled={isPending}
+            placeholder="••••••••"
+            error={errors.password?.message}
+            rightIcon={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                tabIndex={-1}
+                aria-label={showPassword ? "Ocultar senha" : "Ver senha"}
+                className="rounded text-panel-muted transition-colors hover:text-panel-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
+              >
+                {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              </button>
+            }
+            {...register("password")}
+          />
         </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
           disabled={isPending}
-          className="w-full group relative flex items-center justify-center gap-2 rounded-full bg-fuchsia-600 py-3.5 px-6 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-500 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-ink"
+          className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-lg bg-signal px-5 text-sm font-semibold text-ink transition-colors hover:bg-signal-hover disabled:cursor-not-allowed disabled:opacity-60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/40 focus-visible:ring-offset-2 focus-visible:ring-offset-ink"
         >
           {isPending ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin" />
+              <Loader2 className="h-4 w-4 animate-spin" aria-hidden="true" />
               <span>Entrando...</span>
             </>
           ) : (
-            <>
-              <span>Entrar no Painel</span>
-              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-0.5" />
-            </>
+            <span>Entrar no painel</span>
           )}
         </button>
       </form>
@@ -227,17 +173,13 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
-      <div className="text-center mb-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
-          Acesso ao Painel
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
-          A pista é sua.<br />
-          <span className="text-fuchsia-400">Entre na sua conta.</span>
+    <div className="rounded-lg border border-panel-line bg-panel-surface p-6 sm:p-8">
+      <div className="mb-6">
+        <h1 className="font-serif font-bold text-[30px] leading-tight text-panel-text">
+          Entrar na sua conta
         </h1>
-        <p className="mt-3 text-sm text-white/65 leading-relaxed">
-          Gerencie seu portfólio, links e shows em um só lugar.
+        <p className="mt-1.5 text-[13px] leading-relaxed text-panel-muted">
+          Seu portfólio, links e shows continuam onde você deixou.
         </p>
       </div>
 
@@ -247,21 +189,14 @@ export default function LoginPage() {
 
       <LoginForm />
 
-      {/* Footer link to register */}
-      <div className="mt-8 pt-6 border-t border-white/10 text-center">
-        <p className="text-sm text-white/60 mb-3">Ainda não tem uma conta?</p>
+      <div className="mt-6 flex items-center justify-between border-t border-panel-line pt-5 text-[13px]">
+        <span className="text-panel-muted">Ainda não tem conta?</span>
         <Link
           href="/cadastro"
-          className="inline-flex items-center justify-center rounded-full border border-white/20 px-6 py-2.5 text-sm font-semibold text-white transition hover:border-white/50"
+          className="font-medium text-panel-text underline-offset-4 transition-colors hover:text-panel-text hover:underline"
         >
-          Criar Conta
+          Criar conta
         </Link>
-      </div>
-
-      {/* Highlights */}
-      <div className="mt-6 flex items-center justify-center gap-4 text-xs text-white/60">
-        <span>✦ Portfólio em minutos</span>
-        <span>✦ Links e agenda</span>
       </div>
     </div>
   );

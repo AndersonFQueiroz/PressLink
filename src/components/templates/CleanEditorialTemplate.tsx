@@ -103,7 +103,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
             <span className="font-serif text-xl leading-none tracking-tight sm:text-2xl">
               Press<span className="italic text-[#b8472b]">link</span>
             </span>
-            <span className="hidden font-mono text-[9px] uppercase tracking-[0.24em] text-[#1a1712]/45 sm:inline">
+            <span className="hidden font-mono text-[9px] uppercase tracking-[0.24em] text-[#1a1712]/65 sm:inline">
               The artist issue
             </span>
           </Link>
@@ -113,7 +113,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
               <a
                 key={chapter.id}
                 href={`#${chapter.id}`}
-                className="group flex items-baseline gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/55 transition hover:text-[#1a1712]"
+                className="group flex items-baseline gap-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/72 transition hover:text-[#1a1712]"
               >
                 <span className="text-[#b8472b]">{chapter.numeral}</span>
                 {chapter.label}
@@ -122,7 +122,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
           </nav>
 
           <div className="flex items-center gap-3">
-            <span className="hidden font-mono text-[9px] uppercase tracking-[0.22em] text-[#1a1712]/40 md:inline">
+            <span className="hidden font-mono text-[9px] uppercase tracking-[0.22em] text-[#1a1712]/62 md:inline">
               Issue 01 / {new Date().getFullYear()}
             </span>
             <a
@@ -148,7 +148,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
       {menuOpen && (
         <div className="fixed inset-0 z-[110] flex flex-col bg-[#f4efe6] px-5 py-5">
           <div className="flex items-center justify-between border-b border-[#1a1712]/20 pb-4">
-            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#1a1712]/50">
+            <span className="font-mono text-[10px] uppercase tracking-[0.24em] text-[#1a1712]/70">
               Index
             </span>
             <button
@@ -175,7 +175,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
               </a>
             ))}
           </nav>
-          <p className="border-t border-[#1a1712]/20 pt-4 font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/45">
+          <p className="border-t border-[#1a1712]/20 pt-4 font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/65">
             {perfil.username} — electronic press kit
           </p>
         </div>
@@ -185,10 +185,10 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
         {/* HERO */}
         <section className="relative mx-auto max-w-[1600px] px-4 pt-8 sm:px-8 sm:pt-12 lg:px-12">
           <div className="flex items-center justify-between border-b border-[#1a1712]/20 pb-3">
-            <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#1a1712]/50">
+            <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#1a1712]/70">
               Electronic Press Kit
             </p>
-            <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#1a1712]/50">
+            <p className="font-mono text-[9px] uppercase tracking-[0.24em] text-[#1a1712]/70">
               {lang === "pt" ? "Edição" : "Edition"} 01 — {new Date().getFullYear()}
             </p>
           </div>
@@ -201,7 +201,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                   {lang === "pt" ? "Disponível para booking" : "Available for booking"}
                 </span>
                 {next && (
-                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/50">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/70">
                     {lang === "pt" ? "Próxima data" : "Next date"}: {formatShowDate(next.data, lang).day}—
                     {formatShowDate(next.data, lang).monthShort}
                   </span>
@@ -216,11 +216,11 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
               />
 
               <Reveal variant="up" delay={520} className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-[#1a1712]/20 pt-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1a1712]/60">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1a1712]/75">
                   DJ / Producer
                 </span>
                 <span className="h-3 w-px bg-[#1a1712]/20" />
-                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1a1712]/60">
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#1a1712]/75">
                   {perfil.username}
                 </span>
               </Reveal>
@@ -258,11 +258,11 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                     </Parallax>
                   ) : (
                     <div className="flex h-full items-center justify-center bg-[#e6ded1]">
-                      <Disc3 className="h-20 w-20 text-[#1a1712]/20" />
+                      <Disc3 className="h-20 w-20 text-[#1a1712]/45" />
                     </div>
                   )}
                 </div>
-                <div className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/45">
+                <div className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/65">
                   <span>
                     {lang === "pt" ? "Retrato" : "Portrait"} — {artistName}
                   </span>
@@ -274,19 +274,19 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
 
           <div className="mt-10 flex items-center justify-between gap-4 border-y border-[#1a1712]/20 py-4">
             <div className="flex flex-wrap items-center gap-x-8 gap-y-2">
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/50">
+              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/70">
                 {String(sortedPhotos.length).padStart(2, "0")} {lang === "pt" ? "fotos" : "photos"}
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/50">
+              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/70">
                 {String(midias.length).padStart(2, "0")} tracks
               </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/50">
+              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/70">
                 {String(sortedShows.length).padStart(2, "0")} {lang === "pt" ? "datas" : "dates"}
               </span>
             </div>
             <a
               href="#bio"
-              className="group flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/45 transition hover:text-[#b8472b]"
+              className="group flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.2em] text-[#1a1712]/65 transition hover:text-[#b8472b]"
             >
               {lang === "pt" ? "Folhear" : "Browse"}
               <ArrowDown className="h-3.5 w-3.5 transition group-hover:translate-y-1" />
@@ -316,7 +316,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                           "border-b pb-1 transition",
                           lang === code
                             ? "border-[#b8472b] text-[#b8472b]"
-                            : "border-transparent text-[#1a1712]/40 hover:text-[#1a1712]",
+                            : "border-transparent text-[#1a1712]/62 hover:text-[#1a1712]",
                         )}
                       >
                         {code === "pt" ? "Português" : "English"}
@@ -345,7 +345,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                   ))}
                 </div>
               ) : (
-                <p className="text-base text-[#1a1712]/60">
+                <p className="text-base text-[#1a1712]/75">
                   {lang === "pt" ? "Biografia em breve." : "Biography coming soon."}
                 </p>
               )}
@@ -358,7 +358,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/55 transition hover:text-[#b8472b]"
+                      className="group inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/72 transition hover:text-[#b8472b]"
                     >
                       <SocialIcon name={social.key} className="h-3.5 w-3.5" />
                       {social.label}
@@ -393,7 +393,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                   </span>
                 </span>
               </button>
-              <figcaption className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/45">
+              <figcaption className="mt-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/65">
                 Fig. 02 — {sortedPhotos[0].alt_text || artistName}
               </figcaption>
             </figure>
@@ -421,7 +421,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                       "border px-3 py-1.5 font-mono text-[9px] uppercase tracking-[0.16em] transition",
                       filter === item
                         ? "border-[#1a1712] bg-[#1a1712] text-[#f4efe6]"
-                        : "border-[#1a1712]/20 text-[#1a1712]/50 hover:border-[#1a1712]/50 hover:text-[#1a1712]",
+                        : "border-[#1a1712]/20 text-[#1a1712]/70 hover:border-[#1a1712]/50 hover:text-[#1a1712]",
                     )}
                   >
                     {item === "all" ? (lang === "pt" ? "Tudo" : "All") : providerLabel(item)}
@@ -435,11 +435,11 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                 filteredMedia.map((media, index) => (
                   <div key={media.id} className="border-t border-[#1a1712]/20 py-6 last:border-b sm:py-7">
                     <div className="grid grid-cols-[2rem_1fr] items-baseline gap-3 sm:grid-cols-[3rem_1fr_12rem] sm:items-center sm:gap-5">
-                      <span className="font-mono text-[10px] text-[#1a1712]/35">{trackNumber(index)}</span>
+                      <span className="font-mono text-[10px] text-[#1a1712]/58">{trackNumber(index)}</span>
                       <span className="font-serif text-2xl leading-none tracking-tight sm:text-4xl">
                         {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
                       </span>
-                      <span className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/40 sm:block">
+                      <span className="hidden font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/62 sm:block">
                         {providerLabel(media.tipo)}
                       </span>
                     </div>
@@ -454,8 +454,8 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                 ))
               ) : (
                 <div className="border-y border-[#1a1712]/20 py-14 text-center">
-                  <Disc3 className="mx-auto h-8 w-8 text-[#1a1712]/25" />
-                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/45">
+                  <Disc3 className="mx-auto h-8 w-8 text-[#1a1712]/50" />
+                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/65">
                     {lang === "pt" ? "Nenhuma faixa neste filtro" : "No tracks in this filter"}
                   </p>
                 </div>
@@ -473,7 +473,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                 {lang === "pt" ? "Lookbook" : "The lookbook"}
               </h2>
             </Reveal>
-            <Reveal variant="fade" delay={100} className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/40">
+            <Reveal variant="fade" delay={100} className="font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/62">
               {lang === "pt" ? "Clique para ampliar" : "Click to enlarge"}
             </Reveal>
           </div>
@@ -516,7 +516,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                         <Plus className="h-4 w-4" />
                       </span>
                     </button>
-                    <p className="mt-2 truncate font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/40">
+                    <p className="mt-2 truncate font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/62">
                       Fig. {String(index + 3).padStart(2, "0")} — {photo.alt_text || artistName}
                     </p>
                   </div>
@@ -525,8 +525,8 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
             </div>
           ) : (
             <div className="mt-8 border border-dashed border-[#1a1712]/25 py-16 text-center">
-              <Disc3 className="mx-auto h-8 w-8 text-[#1a1712]/25" />
-              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/45">
+              <Disc3 className="mx-auto h-8 w-8 text-[#1a1712]/50" />
+              <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/65">
                 {lang === "pt" ? "Galeria em breve" : "Gallery coming soon"}
               </p>
             </div>
@@ -543,14 +543,14 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                   {lang === "pt" ? "Calendário" : "The calendar"}
                 </h2>
               </Reveal>
-              <Reveal variant="fade" delay={100} className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/45">
+              <Reveal variant="fade" delay={100} className="flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/65">
                 <Calendar className="h-3.5 w-3.5" />
                 {lang === "pt" ? "Próximas apresentações" : "Upcoming performances"}
               </Reveal>
             </div>
 
             <div className="mt-8">
-              <div className="grid grid-cols-[3.2rem_1fr_auto] gap-3 border-b border-[#1a1712]/30 pb-2 font-mono text-[8px] uppercase tracking-[0.2em] text-[#1a1712]/40 sm:grid-cols-[6rem_1.4fr_1fr_0.8fr_3rem] sm:gap-4">
+              <div className="grid grid-cols-[3.2rem_1fr_auto] gap-3 border-b border-[#1a1712]/30 pb-2 font-mono text-[8px] uppercase tracking-[0.2em] text-[#1a1712]/62 sm:grid-cols-[6rem_1.4fr_1fr_0.8fr_3rem] sm:gap-4">
                 <span>Date</span>
                 <span>Event</span>
                 <span className="hidden sm:block">Venue</span>
@@ -572,10 +572,10 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                       >
                         <div className="flex items-baseline gap-1.5 sm:block">
                           <span className="font-serif text-2xl leading-none tracking-tight sm:text-3xl">{date.day}</span>
-                          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/50 sm:ml-1">
+                          <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/70 sm:ml-1">
                             {date.monthShort}
                           </span>
-                          <span className="hidden font-mono text-[8px] uppercase tracking-[0.14em] text-[#1a1712]/35 sm:mt-1 sm:block">
+                          <span className="hidden font-mono text-[8px] uppercase tracking-[0.14em] text-[#1a1712]/58 sm:mt-1 sm:block">
                             {date.weekday} · {date.year}
                           </span>
                         </div>
@@ -583,7 +583,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                           <p className="truncate font-serif text-lg leading-tight tracking-tight transition group-hover:italic group-hover:text-[#b8472b] sm:text-2xl">
                             {show.nome_evento}
                           </p>
-                          <p className="mt-0.5 truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[#1a1712]/40 sm:hidden">
+                          <p className="mt-0.5 truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[#1a1712]/62 sm:hidden">
                             {show.local || "—"} · {show.cidade || "—"}
                           </p>
                           {isNext && (
@@ -593,12 +593,12 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                             </span>
                           )}
                         </div>
-                        <p className="hidden truncate text-sm text-[#1a1712]/60 sm:block">{show.local || "—"}</p>
-                        <p className="hidden truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[#1a1712]/45 sm:block">
+                        <p className="hidden truncate text-sm text-[#1a1712]/75 sm:block">{show.local || "—"}</p>
+                        <p className="hidden truncate font-mono text-[9px] uppercase tracking-[0.14em] text-[#1a1712]/65 sm:block">
                           {show.cidade || "—"}
                         </p>
                         <span className="flex justify-end">
-                          <ArrowUpRight className="h-4 w-4 text-[#1a1712]/25 transition group-hover:text-[#b8472b]" />
+                          <ArrowUpRight className="h-4 w-4 text-[#1a1712]/50 transition group-hover:text-[#b8472b]" />
                         </span>
                       </div>
                     </Reveal>
@@ -606,8 +606,8 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                 })
               ) : (
                 <div className="border-b border-[#1a1712]/15 py-14 text-center">
-                  <Calendar className="mx-auto h-8 w-8 text-[#1a1712]/20" />
-                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/45">
+                  <Calendar className="mx-auto h-8 w-8 text-[#1a1712]/45" />
+                  <p className="mt-3 font-mono text-[10px] uppercase tracking-[0.18em] text-[#1a1712]/65">
                     {lang === "pt" ? "Novas datas em breve" : "New dates coming soon"}
                   </p>
                 </div>
@@ -615,7 +615,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
             </div>
 
             {next && (
-              <Reveal variant="fade" className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[9px] uppercase tracking-[0.15em] text-[#1a1712]/40">
+              <Reveal variant="fade" className="mt-4 flex flex-wrap items-center gap-x-6 gap-y-2 font-mono text-[9px] uppercase tracking-[0.15em] text-[#1a1712]/62">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="h-3 w-3" />
                   {next.local || next.cidade}
@@ -667,7 +667,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                           {perfil.email_booking}
                         </span>
                       </span>
-                      <ArrowUpRight className="h-5 w-5 shrink-0 text-[#1a1712]/30 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#b8472b]" />
+                      <ArrowUpRight className="h-5 w-5 shrink-0 text-[#1a1712]/55 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#b8472b]" />
                     </a>
                   </Reveal>
                 )}
@@ -686,13 +686,13 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                           WhatsApp — {perfil.whatsapp}
                         </span>
                       </span>
-                      <ArrowUpRight className="h-5 w-5 shrink-0 text-[#1a1712]/30 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#b8472b]" />
+                      <ArrowUpRight className="h-5 w-5 shrink-0 text-[#1a1712]/55 transition group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[#b8472b]" />
                     </a>
                   </Reveal>
                 )}
 
                 {!waUrl && !perfil.email_booking && (
-                  <p className="border-y border-[#1a1712]/20 py-8 text-[#1a1712]/55">
+                  <p className="border-y border-[#1a1712]/20 py-8 text-[#1a1712]/72">
                     {lang === "pt" ? "Informações de contato em breve." : "Contact information coming soon."}
                   </p>
                 )}
@@ -706,7 +706,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                       href={social.href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/55 transition hover:text-[#b8472b]"
+                      className="group inline-flex items-center gap-2 font-mono text-[9px] uppercase tracking-[0.18em] text-[#1a1712]/72 transition hover:text-[#b8472b]"
                     >
                       <SocialIcon name={social.key} className="h-3.5 w-3.5" />
                       {social.label}
@@ -717,7 +717,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
               )}
 
               <Reveal variant="fade" delay={160} className="mt-8 border-t border-[#1a1712]/15 pt-4">
-                <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/40">
+                <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/62">
                   {lang === "pt" ? "Rider técnico disponível sob demanda" : "Technical rider available on request"}
                 </p>
               </Reveal>
@@ -731,7 +731,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
             {[artistName, "Electronic Press Kit", lang === "pt" ? "Disponível para booking" : "Available for booking", "Presslink"].map(
               (item, index) => (
                 <span key={`${item}-${index}`} className="flex items-center gap-6 sm:gap-10">
-                  <span className="font-serif text-lg italic tracking-tight text-[#1a1712]/55 sm:text-xl">{item}</span>
+                  <span className="font-serif text-lg italic tracking-tight text-[#1a1712]/72 sm:text-xl">{item}</span>
                   <span className="h-1 w-1 rounded-full bg-[#b8472b]" />
                 </span>
               ),
@@ -745,22 +745,22 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
               <p className="font-serif text-lg tracking-tight">
                 Press<span className="italic text-[#b8472b]">link</span>
               </p>
-              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/40">
+              <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/62">
                 {lang === "pt" ? "O portfólio do artista" : "The artist portfolio"}
               </p>
             </div>
-            <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/40">
+            <div className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/62">
               <p>Issue 01 — {new Date().getFullYear()}</p>
               <p className="mt-1">{perfil.username}</p>
             </div>
             <div className="flex items-center justify-between gap-3 sm:justify-end">
-              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/40">
+              <p className="font-mono text-[9px] uppercase tracking-[0.16em] text-[#1a1712]/62">
                 © {new Date().getFullYear()} {artistName}
               </p>
               <Link
                 href="#top"
                 aria-label="Voltar ao topo"
-                className="flex h-8 w-8 items-center justify-center border border-[#1a1712]/20 text-[#1a1712]/50 transition hover:border-[#b8472b] hover:text-[#b8472b]"
+                className="flex h-8 w-8 items-center justify-center border border-[#1a1712]/20 text-[#1a1712]/70 transition hover:border-[#b8472b] hover:text-[#b8472b]"
               >
                 <ChevronLeft className="h-4 w-4 rotate-90" />
               </Link>

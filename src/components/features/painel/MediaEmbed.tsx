@@ -53,8 +53,8 @@ export function getMediaEmbedDimensions(
 export function ProviderBadge({ tipo }: { tipo: TipoMidia }) {
   if (tipo === "spotify") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#1DB954]/15 text-[#1ed760] border border-[#1DB954]/30">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#1ed760]" />
+      <span className="inline-flex items-center gap-1.5 rounded border border-[#1DB954]/25 bg-[#1DB954]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-[#1ed760]">
+        <span className="h-1.5 w-1.5 rounded-full bg-[#1ed760]" aria-hidden="true" />
         Spotify
       </span>
     );
@@ -62,16 +62,16 @@ export function ProviderBadge({ tipo }: { tipo: TipoMidia }) {
 
   if (tipo === "youtube") {
     return (
-      <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FF0000]/15 text-[#ff4e4e] border border-[#FF0000]/30">
-        <span className="h-1.5 w-1.5 rounded-full bg-[#ff4e4e]" />
+      <span className="inline-flex items-center gap-1.5 rounded border border-[#FF0000]/25 bg-[#FF0000]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-danger">
+        <span className="h-1.5 w-1.5 rounded-full bg-danger" aria-hidden="true" />
         YouTube
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-[#FF5500]/15 text-[#ff7733] border border-[#FF5500]/30">
-      <span className="h-1.5 w-1.5 rounded-full bg-[#ff7733]" />
+    <span className="inline-flex items-center gap-1.5 rounded border border-[#FF5500]/25 bg-[#FF5500]/[0.08] px-1.5 py-0.5 text-[11px] font-medium text-[#ff8a55]">
+      <span className="h-1.5 w-1.5 rounded-full bg-[#ff8a55]" aria-hidden="true" />
       SoundCloud
     </span>
   );
@@ -93,19 +93,19 @@ export function MediaEmbed({
     return (
       <div
         className={cn(
-          "w-full rounded-xl border border-white/10 bg-white/[0.02] p-4 flex flex-col items-center justify-center text-center text-white/60 gap-2",
+          "w-full rounded-xl border border-panel-line bg-white/[0.02] p-4 flex flex-col items-center justify-center text-center text-panel-muted gap-2",
           className
         )}
       >
         <AlertTriangle className="h-5 w-5 text-amber-400/80" />
-        <p className="text-xs text-white/70">
+        <p className="text-xs text-panel-text">
           Não foi possível carregar a prévia do player para esta URL.
         </p>
         <a
           href={url}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-xs text-fuchsia-400 hover:underline flex items-center gap-1"
+          className="text-xs text-signal-soft hover:underline flex items-center gap-1"
         >
           <Play className="h-3 w-3" /> Abrir no {tipo}
         </a>
@@ -173,7 +173,7 @@ export function MediaEmbed({
   }
 
   return (
-    <div className="flex items-center gap-2 text-sm text-white/60 p-3 bg-white/[0.02] rounded-xl border border-white/10">
+    <div className="flex items-center gap-2 text-sm text-panel-muted p-3 bg-white/[0.02] rounded-xl border border-panel-line">
       <Music className="h-4 w-4" />
       <span>{titulo || url}</span>
     </div>

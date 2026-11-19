@@ -18,17 +18,17 @@ const TONE_CLASSES: Record<
   { label: string; ring: string; button: string }
 > = {
   dark: {
-    label: "text-white/45",
+    label: "text-white/65",
     ring: "border-acid/25",
     button: "border-acid/45 bg-black/40 text-acid",
   },
   festival: {
-    label: "text-[#fff6e9]/60",
+    label: "text-[#fff6e9]/75",
     ring: "border-[#ff3d8b]/50",
-    button: "border-[#fff6e9]/45 bg-[#0b0614]/55 text-[#d8ff4a]",
+    button: "border-[#fff6e9]/45 bg-[#0b0614]/55 text-[#fff6e9]",
   },
   light: {
-    label: "text-[#1a1712]/50",
+    label: "text-[#1a1712]/70",
     ring: "border-[#b8472b]/25",
     button: "border-[#1a1712]/25 bg-[#f4efe6]/85 text-[#b8472b]",
   },

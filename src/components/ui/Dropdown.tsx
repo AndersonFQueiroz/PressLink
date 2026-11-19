@@ -64,14 +64,14 @@ export function Dropdown({
           role="menu"
           aria-orientation="vertical"
           className={cn(
-            "absolute z-40 mt-2 min-w-[12rem] rounded-xl bg-[#1c1827] border border-white/10 p-1.5 shadow-xl",
-            "animate-in fade-in zoom-in-95 duration-100 ease-out backdrop-blur-md",
+            "absolute z-40 mt-2 min-w-[12rem] rounded-lg border border-panel-line bg-panel-raised p-1 shadow-xl shadow-black/50",
+            "pl-pop",
             align === "right" ? "right-0" : "left-0",
           )}
         >
           {items.map((item) => (
             <React.Fragment key={item.id}>
-              {item.divider && <div className="my-1 border-t border-white/10" />}
+              {item.divider && <div className="my-1 border-t border-panel-line" />}
               <button
                 type="button"
                 role="menuitem"
@@ -83,11 +83,11 @@ export function Dropdown({
                   }
                 }}
                 className={cn(
-                  "w-full flex items-center gap-2.5 px-3 py-2 text-sm rounded-lg text-left transition-colors cursor-pointer",
-                  "hover:bg-white/10 focus:bg-white/10 focus:outline-none",
+                  "w-full flex items-center gap-2.5 px-2.5 py-2 text-[13px] rounded-md text-left transition-colors cursor-pointer",
+                  "hover:bg-white/[0.06] focus:bg-white/[0.06] focus:outline-none",
                   item.variant === "danger"
-                    ? "text-rose-400 hover:text-rose-300 hover:bg-rose-500/10"
-                    : "text-white/80 hover:text-white",
+                    ? "text-danger hover:text-[#ffb4b4] hover:bg-danger/10"
+                    : "text-panel-text hover:text-panel-text",
                   item.disabled && "opacity-40 cursor-not-allowed pointer-events-none",
                 )}
               >

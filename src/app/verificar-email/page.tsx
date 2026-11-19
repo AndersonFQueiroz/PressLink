@@ -13,13 +13,11 @@ export const metadata: Metadata = { title: "Verificar email | PressLink" };
 
 // Page server — não lê cookies, apenas renderiza shell + delega ao client
 export default function VerificarEmailPage() {
-  // Main com bg ink — replica cadastro/page.tsx:12 (dark glass)
+  // Main com bg ink — mesma linguagem visual do login/cadastro
   return (
-    <main className="min-h-screen bg-ink flex items-center justify-center px-4 py-10">
-      {/* Card glass — borda sutil + backdrop-blur, max-w-md centralizado */}
-      <div className="w-full max-w-md rounded-2xl border border-white/10 bg-white/[0.04] backdrop-blur p-6 sm:p-8 shadow-xl">
-        {/* Suspense — fallback enquanto client hidrata e lê searchParams */}
-        <Suspense fallback={<p className="text-white text-center text-sm">Carregando...</p>}>
+    <main className="flex min-h-screen items-center justify-center bg-ink px-4 py-10">
+      <div className="w-full max-w-md rounded-xl border border-panel-line bg-panel-surface p-6 sm:p-8">
+        <Suspense fallback={<p className="py-6 text-center text-sm text-panel-muted">Carregando...</p>}>
           <VerificarEmailClient />
         </Suspense>
       </div>

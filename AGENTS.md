@@ -62,17 +62,21 @@ O **PressLink** é uma plataforma SaaS que permite a DJs freelancers criarem por
 | Front-end | React + Next.js (App Router) |
 | Estilização | Tailwind CSS |
 | Formulários | React Hook Form + Zod |
-| Back-end / API | Next.js API Routes |
-| Banco de dados | PostgreSQL via Supabase |
+| Back-end / API | Next.js Route Handlers |
+| Banco de dados | PostgreSQL via Supabase (RLS) |
 | Armazenamento | Supabase Storage |
 | Autenticação | Supabase Auth |
-| Hospedagem | Vercel |
+| E-mail transacional | Resend + hook do Supabase (fallback SMTP) |
+| Hospedagem | Vercel (ISR) |
+| Testes | Vitest (unit/API) + Playwright (E2E) |
 
 ## 7. Fontes de Verdade
 
 Antes de implementar qualquer funcionalidade nova, **consulte obrigatoriamente**:
 - **`requirements.md`** — Requisitos funcionais/não funcionais do MVP.
-- **`specs.md`** — Arquitetura, modelo de dados, rotas e fluxos.
+- **`PRODUCT.md`** — Público, capacidades e limites do produto.
+- **`DESIGN.md`** — Tokens, tipografia, layout e regras de movimento.
+- **`tests/`** — Contratos cobertos por unit/API/E2E.
 
 ### Cérebro (vault Obsidian)
 
@@ -92,18 +96,27 @@ src/
 │   ├── (auth)/
 │   ├── painel/
 │   │   ├── perfil/
+│   │   ├── contato/
 │   │   ├── agenda/
 │   │   ├── musica/
 │   │   ├── galeria/
 │   │   ├── template/
-│   │   └── estatisticas/
+│   │   ├── estatisticas/
+│   │   └── configuracoes/
 │   ├── [username]/
 │   ├── api/
+│   ├── termos/
+│   ├── privacidade/
 │   ├── layout.tsx
 │   └── page.tsx
 ├── components/
-│   ├── ui/
-│   └── features/
+│   ├── brand/
+│   ├── features/
+│   ├── legal/
+│   ├── motion/
+│   ├── templates/
+│   └── ui/
+├── emails/
 ├── lib/
 │   ├── supabase/
 │   ├── validators/
@@ -127,7 +140,7 @@ src/
 ### ✅ O que o agente DEVE fazer
 1. Sempre criar branch: `feature/nome`, `fix/nome`, `docs/descricao`, `refactor/descricao`
 2. Seguir Conventional Commits: `feat(escopo):`, `fix(escopo):`, `docs:`, `chore:`, `refactor(escopo):`
-3. Consultar `requirements.md` e `specs.md` antes de nova funcionalidade
+3. Consultar `requirements.md`, `PRODUCT.md` e `DESIGN.md` antes de nova funcionalidade
 4. Rodar `npm run lint` antes de finalizar
 5. Usar TypeScript estrito — evitar `any`
 6. Validar formulários com Zod + React Hook Form
@@ -146,7 +159,7 @@ src/
 
 ## 10. Fluxo de Trabalho Esperado
 
-1. Receba a tarefa 2. Leia `requirements.md` e `specs.md` 3. Crie branch descritiva 4. Implemente seguindo convenções 5. Checklist 100% da issue + validação do dono em `npm run dev` se visualmente testável + `npm run lint` 6. Commit(s) Conventional Commits 7. Push da branch e PR se solicitado
+1. Receba a tarefa 2. Leia `requirements.md`, `PRODUCT.md` e `DESIGN.md` 3. Crie branch descritiva 4. Implemente seguindo convenções 5. Checklist 100% da issue + validação do dono em `npm run dev` se visualmente testável + `npm run lint` 6. Commit(s) Conventional Commits 7. Push da branch e PR se solicitado
 
 ## 11. Modo Econômico de Tokens
 

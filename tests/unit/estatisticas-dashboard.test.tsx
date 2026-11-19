@@ -48,6 +48,20 @@ describe("Página /painel/estatisticas", () => {
   const fetchOriginal = global.fetch;
 
   beforeEach(() => {
+    // O CountUp anima com requestAnimationFrame; no jsdom o timestamp do frame
+    // não avança de forma confiável, então simulamos "prefers-reduced-motion"
+    // para o contador cair direto no valor final.
+    vi.stubGlobal("matchMedia", (query: string) => ({
+      matches: true,
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    }));
+
     global.fetch = vi.fn(async (entrada: any) => {
       const url = String(entrada);
       const periodo: PeriodoEstatisticas = url.includes("periodo=7") ? 7 : 30;
@@ -57,6 +71,7 @@ describe("Página /painel/estatisticas", () => {
 
   afterEach(() => {
     cleanup();
+    vi.unstubAllGlobals();
     global.fetch = fetchOriginal;
     vi.restoreAllMocks();
   });
@@ -86,7 +101,9 @@ describe("Página /painel/estatisticas", () => {
     await waitFor(() =>
       expect(global.fetch).toHaveBeenCalledWith("/api/estatisticas?periodo=7"),
     );
-    expect(await screen.findByText("77")).toBeInTheDocument();
+    // O CountUp anima 1.200 → 77 em 900 ms; em máquina de CI o polling padrão
+    // de 1 s fica no limite, então damos folga para o valor final aparecer.
+    expect(await screen.findByText("77", {}, { timeout: 3000 })).toBeInTheDocument();
     expect(screen.getByRole("img", { name: /Gráfico dos últimos 7 dias/ })).toBeInTheDocument();
   });
 

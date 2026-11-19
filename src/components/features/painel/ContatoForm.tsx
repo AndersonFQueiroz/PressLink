@@ -14,12 +14,22 @@ import {
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { PreviewCelular } from "@/components/features/painel/PreviewCelular";
 
 type ContatoFormProps = {
   defaultValues?: Partial<ContatoFormData>;
+  /** Dados do perfil usados só na prévia ao lado do formulário. */
+  preview?: {
+    nome?: string;
+    username?: string;
+    fotoUrl?: string;
+    bio?: string;
+  };
+  /** Host real do site (ex.: `localhost:3000`), sem protocolo. */
+  origem: string;
 };
 
-export function ContatoForm({ defaultValues }: ContatoFormProps) {
+export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps) {
   const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
 
   const initialWhatsApp = defaultValues?.whatsapp ? formatWhatsApp(defaultValues.whatsapp) : "";
@@ -39,6 +49,7 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
     },
   });
 
+  const valores = watch();
   const whatsappValue = watch("whatsapp") || "";
   const cleanDigits = getCleanWhatsAppDigits(whatsappValue);
   const isWhatsAppFilled = whatsappValue.trim().length > 0;
@@ -77,130 +88,131 @@ export function ContatoForm({ defaultValues }: ContatoFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} noValidate className="flex flex-col gap-6">
+    <form onSubmit={handleSubmit(onSubmit)} noValidate>
+      <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_272px]">
+        <div className="flex min-w-0 flex-col gap-8">
       {/* Seção WhatsApp */}
-      <div className="rounded-xl border border-white/5 bg-white/[0.02] p-5">
-        <div className="mb-4">
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <MessageCircle className="h-5 w-5 text-emerald-400" />
-            WhatsApp Comercial
-          </h2>
-          <p className="mt-0.5 text-xs text-white/60">
-            Canal direto para orçamentos, produtores de eventos e contratantes.
-          </p>
-        </div>
+      <section>
+        <h2 className="flex items-center gap-2 text-[13px] font-medium text-panel-text">
+          <MessageCircle className="h-4 w-4 text-panel-muted" aria-hidden="true" />
+          WhatsApp comercial
+        </h2>
+        <p className="mt-0.5 text-[12px] text-panel-muted">
+          Canal direto para orçamentos, produtores e contratantes.
+        </p>
 
-        <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 items-start">
-          <div>
-            <Input
-              label="Número do WhatsApp"
-              placeholder="(11) 99999-9999 ou +1 555 123-4567"
-              error={errors.whatsapp?.message}
-              helperText="Formato nacional com DDD ou internacional iniciando com +"
-              leftIcon={<MessageCircle className="h-4 w-4 text-emerald-400/80" />}
-              {...register("whatsapp")}
-              onChange={handleWhatsAppChange}
-            />
-          </div>
+        <div className="mt-4 grid gap-5 md:grid-cols-2 md:items-start">
+          <Input
+            label="Número do WhatsApp"
+            placeholder="(11) 99999-9999 ou +1 555 123-4567"
+            error={errors.whatsapp?.message}
+            helperText="Formato nacional com DDD ou internacional iniciando com +"
+            leftIcon={<MessageCircle className="h-4 w-4" aria-hidden="true" />}
+            {...register("whatsapp")}
+            onChange={handleWhatsAppChange}
+          />
 
-          <div className="flex flex-col gap-2 pt-0 md:pt-6">
-            <label className="text-xs font-semibold uppercase tracking-wider text-white/50">
-              Link Direto (wa.me)
-            </label>
-            <div className="flex items-center gap-3">
-              {waTestUrl ? (
-                <a
-                  href={waTestUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-emerald-500/40 bg-emerald-500/10 px-4 text-sm font-medium text-emerald-300 transition-colors hover:bg-emerald-500/20 active:bg-emerald-500/30"
-                >
-                  <ExternalLink className="h-4 w-4 text-emerald-400 shrink-0" />
-                  <span>Testar link no WhatsApp</span>
-                </a>
-              ) : (
-                <button
-                  type="button"
-                  disabled
-                  className="inline-flex h-11 items-center gap-2 rounded-xl border border-white/10 bg-white/[0.03] px-4 text-sm font-medium text-white/30 cursor-not-allowed"
-                >
-                  <ExternalLink className="h-4 w-4 text-white/20 shrink-0" />
-                  <span>Testar link no WhatsApp</span>
-                </button>
-              )}
-            </div>
+          <div className="flex flex-col gap-2">
+            <span className="text-[12px] font-medium text-panel-muted">
+              Link direto (wa.me)
+            </span>
             {waTestUrl ? (
-              <p className="text-xs text-white/40 break-all">
-                URL gerada: <span className="text-emerald-400 font-mono">{waTestUrl}</span>
+              <a
+                href={waTestUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex h-10 w-fit items-center gap-2 rounded-lg border border-panel-line px-4 text-[13px] font-medium text-panel-text transition-colors hover:bg-white/[0.05] hover:text-panel-text"
+              >
+                <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>Testar link no WhatsApp</span>
+              </a>
+            ) : (
+              <span className="inline-flex h-10 w-fit items-center gap-2 rounded-lg border border-panel-line px-4 text-[13px] font-medium text-panel-muted">
+                <ExternalLink className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span>Testar link no WhatsApp</span>
+              </span>
+            )}
+            {waTestUrl ? (
+              <p className="break-all text-[12px] text-panel-muted">
+                URL gerada: <span className="tabular text-panel-muted">{waTestUrl}</span>
               </p>
             ) : isWhatsAppFilled ? (
-              <p className="text-xs text-amber-400/80">
+              <p className="text-[12px] text-warn">
                 Complete o número com DDD válido para habilitar o teste do link.
               </p>
             ) : (
-              <p className="text-xs text-white/40">
-                O link <span className="font-mono">https://wa.me/...</span> será disponibilizado para teste assim que preenchido.
+              <p className="text-[12px] text-panel-muted">
+                O link <span className="tabular">https://wa.me/...</span> fica disponível para teste assim que você preencher o número.
               </p>
             )}
           </div>
         </div>
-      </div>
+      </section>
 
       {/* Seção E-mail de Booking */}
-      <div className="rounded-xl border border-white/5 bg-white/[0.02] p-5">
-        <div className="mb-4">
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <Mail className="h-5 w-5 text-fuchsia-400" />
-            E-mail para Booking
-          </h2>
-          <p className="mt-0.5 text-xs text-white/60">
-            Endereço oficial para envio de contratos, propostas detalhadas e datas de shows.
-          </p>
-        </div>
+      <section className="border-t border-panel-line pt-7">
+        <h2 className="flex items-center gap-2 text-[13px] font-medium text-panel-text">
+          <Mail className="h-4 w-4 text-panel-muted" aria-hidden="true" />
+          E-mail para booking
+        </h2>
+        <p className="mt-0.5 text-[12px] text-panel-muted">
+          Endereço oficial para contratos, propostas detalhadas e datas de shows.
+        </p>
 
-        <div className="max-w-xl">
+        <div className="mt-4 max-w-xl">
           <Input
             type="email"
-            label="E-mail de Booking"
+            label="E-mail de booking"
             placeholder="booking@seudominio.com"
             error={errors.email_booking?.message}
-            helperText="Validação estrita de formato corporativo/pessoal para propostas comerciais."
-            leftIcon={<Mail className="h-4 w-4 text-fuchsia-400/80" />}
+            helperText="Apenas o endereço, sem texto extra."
+            leftIcon={<Mail className="h-4 w-4" aria-hidden="true" />}
             {...register("email_booking")}
           />
         </div>
-      </div>
+      </section>
 
       {/* Feedback Toast */}
       {toast && (
         <div
           role="status"
           className={cn(
-            "flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm transition-all",
+            "flex items-center gap-2.5 rounded-lg border px-3.5 py-2.5 text-[13px]",
             toast.type === "success"
-              ? "border-emerald-500/40 bg-emerald-950/40 text-emerald-200"
-              : "border-rose-500/40 bg-rose-950/40 text-rose-200",
+              ? "border-ok/25 bg-ok/[0.08] text-ok"
+              : "border-danger/25 bg-danger/[0.08] text-danger",
           )}
         >
           {toast.type === "success" ? (
-            <CheckCircle2 className="h-5 w-5 text-emerald-400 shrink-0" />
+            <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           ) : (
-            <AlertCircle className="h-5 w-5 text-rose-400 shrink-0" />
+            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
           )}
           <span>{toast.msg}</span>
         </div>
       )}
 
       {/* Botão de Salvar */}
-      <div className="flex items-center justify-start pt-2">
-        <Button
-          type="submit"
-          size="lg"
-          isLoading={isSubmitting}
-          className="w-full sm:w-auto"
-        >
+      <div className="flex items-center justify-end border-t border-panel-line pt-5">
+        <Button type="submit" size="lg" isLoading={isSubmitting}>
           Salvar canais de contato
         </Button>
+      </div>
+        </div>
+
+        <aside className="hidden lg:block lg:border-l lg:border-white/[0.06] lg:pl-7">
+          <div className="sticky top-20">
+            <PreviewCelular
+              origem={origem}
+              nome={preview?.nome}
+              username={preview?.username}
+              fotoUrl={preview?.fotoUrl}
+              bio={preview?.bio}
+              whatsapp={valores.whatsapp}
+              email={valores.email_booking}
+            />
+          </div>
+        </aside>
       </div>
     </form>
   );

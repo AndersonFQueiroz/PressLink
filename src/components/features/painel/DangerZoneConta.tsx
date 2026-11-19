@@ -76,19 +76,19 @@ export function DangerZoneConta({ email }: DangerZoneContaProps) {
     <>
       <section
         aria-labelledby="zona-de-perigo-titulo"
-        className="rounded-2xl border border-rose-500/30 bg-rose-500/[0.06] p-6 sm:p-8"
+        className="border-t border-panel-line pt-5"
       >
         <div className="flex items-start gap-3">
-          <AlertTriangle className="mt-0.5 h-5 w-5 shrink-0 text-rose-400" aria-hidden="true" />
+          <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0 text-danger" aria-hidden="true" />
           <div>
             <h2
               id="zona-de-perigo-titulo"
-              className="font-display text-lg font-bold tracking-tight text-rose-100"
+              className="text-[13px] font-medium text-panel-text"
             >
               Zona de perigo
             </h2>
-            <p className="mt-1.5 max-w-2xl text-sm leading-relaxed text-rose-100/70">
-              Excluir a conta apaga <strong className="font-semibold text-rose-100">definitivamente</strong> o
+            <p className="mt-1 max-w-2xl text-[13px] leading-relaxed text-panel-muted">
+              Excluir a conta apaga <strong className="font-medium text-panel-text">definitivamente</strong> o
               seu perfil público, as fotos, os links, a música, a agenda e as estatísticas.
               Não há como desfazer e o mesmo nome de usuário pode ser usado por outra pessoa
               depois.
@@ -96,7 +96,7 @@ export function DangerZoneConta({ email }: DangerZoneContaProps) {
           </div>
         </div>
 
-        <div className="mt-5 border-t border-rose-500/20 pt-5">
+        <div className="mt-5 flex flex-wrap items-center gap-3 border-t border-panel-line pt-5">
           <Button
             type="button"
             variant="danger"
@@ -105,7 +105,7 @@ export function DangerZoneConta({ email }: DangerZoneContaProps) {
           >
             Excluir minha conta
           </Button>
-          <p className="mt-3 text-xs text-rose-100/60">
+          <p className="text-[12px] text-panel-muted">
             Direito ao esquecimento — LGPD, art. 18, VI.
           </p>
         </div>
@@ -119,8 +119,8 @@ export function DangerZoneConta({ email }: DangerZoneContaProps) {
         size="md"
       >
         <form onSubmit={confirmar} className="space-y-4" noValidate>
-          <div className="rounded-xl border border-rose-500/20 bg-rose-500/[0.08] p-4 text-sm text-rose-100/85">
-            <p className="font-semibold text-rose-100">Serão apagados agora:</p>
+          <div className="rounded-lg border border-danger/20 bg-danger/[0.06] p-4 text-[13px] text-panel-text">
+            <p className="font-medium text-danger">Serão apagados agora:</p>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               <li>o perfil público e o endereço que você divulgou;</li>
               <li>todas as fotos dos buckets <span className="font-mono text-xs">avatars</span> e{" "}
@@ -131,8 +131,8 @@ export function DangerZoneConta({ email }: DangerZoneContaProps) {
           </div>
 
           {email && (
-            <p className="text-xs text-white/50">
-              Conta: <span className="font-medium text-white/70">{email}</span>
+            <p className="text-xs text-panel-muted">
+              Conta: <span className="font-medium text-panel-text">{email}</span>
             </p>
           )}
 

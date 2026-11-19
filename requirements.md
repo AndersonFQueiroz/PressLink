@@ -128,6 +128,27 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 
 ---
 
+### Situação da implementação (auditoria de 19/11/2026)
+
+Todos os requisitos funcionais (RF-01 a RF-30) estão implementados. Nos não
+funcionais:
+
+| RNF | Situação |
+| --- | --- |
+| RNF-04 | **Atendido** — relatórios mobile/desktop em `docs/lighthouse/` (mobile 98). |
+| RNF-06 | **Parcial** — a entrega é otimizada por `next/image` (AVIF/WebP) e o upload limita a 5 MB e 10 fotos, mas o arquivo original é guardado sem recompressão no Storage. |
+| RNF-10 | **Parcial** — há rate limit em memória no reenvio de e-mail (5/dia + cooldown de 60 s). As demais rotas contam apenas com os limites da Vercel/Supabase; a migração para Upstash Redis está no roadmap. |
+| RNF-11 | **Atendido** — checkbox de aceite no cadastro e documentos publicados em `/termos` e `/privacidade`. |
+| RNF-12 | **Atendido** — exclusão definitiva da conta em Configurações → Conta. |
+| RNF-16 | **Atendido** — ISR de 5 minutos + revalidação imediata ao salvar no painel. |
+
+**Observabilidade** (fora dos RNF originais): erros de servidor são registrados
+como JSON de uma linha por `src/instrumentation.ts` (`onRequestError`), visíveis
+no log da Vercel. Não há coletor externo (Sentry) nem alerta automático — é o
+mínimo para diagnosticar falha em produção sem reproduzir localmente.
+
+---
+
 ## Fora de Escopo do MVP
 
 As funcionalidades abaixo **não fazem parte do MVP** e estão planejadas como trabalho futuro para versões posteriores da plataforma:

@@ -131,12 +131,12 @@ export function AvatarUpload({ initialUrl, onUploaded }: AvatarUploadProps) {
           if (file) void handleFile(file);
         }}
         className={cn(
-          "flex items-center gap-4 rounded-2xl border border-dashed p-4 transition-colors cursor-pointer",
-          "bg-white/[0.04] hover:bg-white/[0.06]",
-          dragOver ? "border-fuchsia-500 bg-fuchsia-600/10" : "border-white/15",
+          "flex items-center gap-4 rounded-lg border border-dashed p-3.5 transition-colors cursor-pointer",
+          "bg-white/[0.02] hover:bg-white/[0.04]",
+          dragOver ? "border-signal/60 bg-signal/[0.06]" : "border-panel-line",
         )}
       >
-        <div className="relative flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full bg-fuchsia-600/20 text-fuchsia-200">
+        <div className="relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/[0.06] text-panel-muted">
           {preview ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={preview} alt="Foto de perfil" className="h-full w-full object-cover" />
@@ -145,14 +145,14 @@ export function AvatarUpload({ initialUrl, onUploaded }: AvatarUploadProps) {
           )}
           {uploading && (
             <div className="absolute inset-0 flex items-center justify-center bg-black/60">
-              <Loader2 className="h-5 w-5 animate-spin text-white" />
+              <Loader2 className="h-5 w-5 animate-spin text-panel-text" />
             </div>
           )}
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-medium text-white">Foto de perfil</p>
-          <p className="text-xs text-white/50">Clique ou arraste JPG, PNG ou WebP até 5MB</p>
-          {error && <p className="mt-1 text-xs text-rose-400">{error}</p>}
+          <p className="text-[13px] font-medium text-panel-text">Foto de perfil</p>
+          <p className="text-[12px] text-panel-muted">Clique ou arraste JPG, PNG ou WebP até 5MB</p>
+          {error && <p className="mt-1 text-xs text-danger">{error}</p>}
         </div>
         {preview && !uploading && (
           <button
@@ -162,7 +162,7 @@ export function AvatarUpload({ initialUrl, onUploaded }: AvatarUploadProps) {
               e.stopPropagation();
               handleRemove();
             }}
-            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-white/50 hover:bg-white/10 hover:text-white"
+            className="inline-flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-panel-muted hover:bg-white/10 hover:text-panel-text"
           >
             <Trash2 className="h-4 w-4" />
           </button>

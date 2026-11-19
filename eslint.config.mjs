@@ -8,7 +8,18 @@ const __dirname = dirname(__filename);
 const compat = new FlatCompat({ baseDirectory: __dirname });
 
 const eslintConfig = [
-  globalIgnores([".next/**", "node_modules/**", "out/**", "next-env.d.ts"]),
+  globalIgnores([
+    ".next/**",
+    ".next-build/**",
+    ".next-dev/**",
+    "node_modules/**",
+    "out/**",
+    "next-env.d.ts",
+    // Ferramentas de design instaladas no projeto (skills): scripts empacotados
+    // e minificados, não fazem parte do código do produto.
+    ".opencode/**",
+    ".agents/**",
+  ]),
   ...compat.extends("next/core-web-vitals", "next/typescript"),
   {
     files: ["tests/**/*", "src/lib/test-utils/**/*", "config/**/*", "vitest.*"],

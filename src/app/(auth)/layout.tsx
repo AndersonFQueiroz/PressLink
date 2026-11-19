@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { PressLinkLogo } from "@/components/brand/PressLinkLogo";
 
 export const metadata: Metadata = {
-  title: "Entrar | presslink",
-  description: "Acesse sua conta para gerenciar seu portfólio digital no presslink.",
+  title: "Entrar | PressLink",
+  description: "Acesse sua conta para gerenciar seu portfólio digital na PressLink.",
 };
 
 export default function AuthLayout({
@@ -13,42 +14,30 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="relative min-h-screen flex flex-col justify-between bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
-      {/* Background radial glow accents matching landing page */}
-      <div
-        className="pointer-events-none absolute -right-36 top-1/4 h-[36rem] w-[36rem] -translate-y-1/2 rounded-full bg-fuchsia-600/20 blur-3xl"
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute -left-36 bottom-10 h-[30rem] w-[30rem] rounded-full bg-fuchsia-700/15 blur-3xl"
-        aria-hidden="true"
-      />
-
-      {/* Top Navbar */}
-      <header className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:px-10 lg:px-16 flex items-center justify-between">
+    <div className="flex min-h-screen flex-col bg-ink text-panel-text selection:bg-signal selection:text-ink">
+      <header className="mx-auto flex h-20 w-full max-w-6xl items-center justify-between border-b border-panel-line px-6 sm:px-8 lg:px-10">
         <Link
           href="/"
-          className="font-display text-2xl font-bold tracking-tight transition hover:opacity-90"
+          aria-label="PressLink — início"
+          className="rounded-sm transition-opacity hover:opacity-80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
         >
-          press<span className="text-fuchsia-400">link</span>
+          <PressLinkLogo size={22} />
         </Link>
         <Link
           href="/"
-          className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2 text-sm font-medium text-white/90 transition hover:border-white/50 hover:text-white"
+          className="inline-flex h-8 items-center gap-1.5 rounded-md px-2.5 text-[13px] font-medium text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text"
         >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Voltar ao início</span>
+          <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+          Voltar ao início
         </Link>
       </header>
 
-      {/* Content Area */}
-      <main className="relative z-10 flex-1 flex items-center justify-center px-4 py-8 sm:px-6">
-        <div className="w-full max-w-md">{children}</div>
+      <main className="flex flex-1 items-center justify-center px-4 py-10 sm:px-6">
+        <div className="w-full max-w-[400px]">{children}</div>
       </main>
 
-      {/* Footer */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:px-10 lg:px-16 text-center text-xs text-white/60">
-        <p>© {new Date().getFullYear()} presslink — A pista é sua. O palco também.</p>
+      <footer className="mx-auto w-full max-w-6xl px-6 py-8 text-center text-[12px] text-panel-muted sm:px-8 lg:px-10">
+        <p>© {new Date().getFullYear()} PressLink · A pista é sua. O palco também.</p>
       </footer>
     </div>
   );

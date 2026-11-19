@@ -1,6 +1,8 @@
 import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
 import { ContatoForm } from "@/components/features/painel/ContatoForm";
+import { PageHeader } from "@/components/features/painel/PageHeader";
+import { siteHost } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contato e Booking | Painel PressLink",
@@ -14,10 +16,11 @@ export default async function ContatoPage() {
   } = await supabase.auth.getUser();
 
   let defaultValues = undefined;
+  let preview = undefined;
   if (user) {
     const { data } = await supabase
       .from("perfil")
-      .select("whatsapp, email_booking")
+      .select("whatsapp, email_booking, nome_artistico, username, foto_url, biografia_pt")
       .eq("usuario_id", user.id)
       .maybeSingle();
 
@@ -26,23 +29,24 @@ export default async function ContatoPage() {
         whatsapp: data.whatsapp ?? "",
         email_booking: data.email_booking ?? "",
       };
+      preview = {
+        nome: data.nome_artistico ?? "",
+        username: data.username ?? "",
+        fotoUrl: data.foto_url ?? "",
+        bio: data.biografia_pt ?? "",
+      };
     }
   }
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-      <div className="border-b border-white/10 pb-6 mb-6">
-        <h1 className="text-2xl font-bold tracking-tight text-white font-display">
-          Contato Comercial e Booking
-        </h1>
-        <p className="mt-1.5 text-sm text-white/60 max-w-2xl leading-relaxed">
-          Configure os canais diretos para contratação de apresentações e shows. Esses canais serão exibidos
-          no seu Electronic Press Kit (EPK) público para produtores de eventos e contratantes.
-        </p>
-      </div>
-
-      <div>
-        <ContatoForm defaultValues={defaultValues} />
+    <div>
+      <PageHeader
+        label="Página"
+        title="Contato público"
+        description="Por onde produtores e contratantes falam com você. Esses botões ficam visíveis na página pública."
+      />
+      <div className="rounded-lg border border-panel-line bg-panel-surface p-5 sm:p-6">
+        <ContatoForm defaultValues={defaultValues} preview={preview} origem={siteHost()} />
       </div>
     </div>
   );

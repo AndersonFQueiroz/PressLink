@@ -33,33 +33,45 @@ O PressLink opera com um modelo **freemium por assinatura**:
 ## Funcionalidades do MVP
 
 ### Painel do DJ (área logada)
-- ✅ Cadastro e login com autenticação segura
-- ✅ Edição de perfil: nome artístico, foto, biografia (com suporte multi-idioma) e redes sociais
-- ✅ Galeria de fotos
-- ✅ Links de música (Spotify, SoundCloud) e vídeos (YouTube)
-- ✅ Agenda de próximas datas de shows
-- ✅ Informações de contato e booking (WhatsApp, e-mail, formulário)
-- ✅ Seleção de template visual (2–3 opções)
+
+- ✅ Cadastro, login e logout; verificação de e-mail e recuperação/redefinição de senha
+- ✅ Perfil: nome artístico, foto, biografia em PT/EN, redes sociais e `@username` único
+- ✅ Galeria: até 10 fotos de 5 MB, reordenação por arrastar e exclusão
+- ✅ Mídia: Spotify, SoundCloud e YouTube com player embutido, ordem, edição e exclusão
+- ✅ Agenda: shows com data, horário, local e cidade (datas passadas somem da página)
+- ✅ Contato e booking: WhatsApp (link `wa.me`), e-mail e redes sociais
+- ✅ Aparência: 3 templates (Dark Minimal, Vibrant Festival, Clean Editorial) com prévia real antes de aplicar
+- ✅ Publicação: checagem de pendências, publicar/despublicar e status ao vivo no painel
+- ✅ Estatísticas: visualizações e cliques de contato em janelas de 7 e 30 dias, canais e gráfico diário
+- ✅ Exclusão definitiva da conta e dos dados associados (LGPD)
 
 ### Página pública gerada automaticamente
-- ✅ Layout totalmente responsivo (mobile e desktop)
-- ✅ URL personalizada no formato `presslink.app/nomedodj`
-- ✅ Estatísticas simples de visualizações e cliques em contato
+
+- ✅ Layout responsivo a partir de 320 px, com metadados, Open Graph e card de compartilhamento
+- ✅ URL personalizada no formato `https://<domínio>/nomedodj`
+- ✅ Renderização estática com ISR (revalida a cada 5 min e na hora ao salvar no painel)
+- ✅ Telemetria anônima de visualizações e cliques (IP em hash SHA-256, sem cookies de rastreio)
+- ✅ Acessibilidade: foco visível, contraste AA e `prefers-reduced-motion` respeitado
 
 ---
 
 ## Tecnologias Utilizadas
 
-| Camada               | Tecnologia                        |
-| -------------------- | --------------------------------- |
-| Front-end            | React + Next.js (App Router)      |
-| Estilização          | Tailwind CSS                      |
-| Formulários          | React Hook Form + Zod             |
-| Back-end / API       | Next.js API Routes                |
-| Banco de dados       | PostgreSQL via Supabase            |
-| Armazenamento        | Supabase Storage                  |
-| Autenticação         | Supabase Auth                     |
-| Hospedagem           | Vercel                            |
+| Camada               | Tecnologia                                        |
+| -------------------- | ------------------------------------------------- |
+| Front-end            | React 19 + Next.js 15 (App Router)                |
+| Estilização          | Tailwind CSS                                      |
+| Formulários          | React Hook Form + Zod                             |
+| Back-end / API       | Next.js Route Handlers                            |
+| Banco de dados       | PostgreSQL via Supabase (RLS em todas as tabelas) |
+| Armazenamento        | Supabase Storage                                  |
+| Autenticação         | Supabase Auth                                     |
+| E-mail transacional  | Resend + hook do Supabase (fallback SMTP)         |
+| Arrastar e soltar    | @dnd-kit                                          |
+| Gráficos             | SVG próprio (área, barras e sparkline)            |
+| Hospedagem           | Vercel (ISR + CDN)                                |
+| Testes               | Vitest (unit/API) + Playwright (E2E)              |
+| CI                   | GitHub Actions                                    |
 
 ---
 
@@ -88,14 +100,22 @@ cp .env.example .env.local
 Preencha o arquivo `.env.local` com as credenciais do seu projeto Supabase:
 
 ```env
-# Supabase
+# Supabase — valores públicos (a service role não é usada pelo app)
 NEXT_PUBLIC_SUPABASE_URL=sua_url_do_supabase
 NEXT_PUBLIC_SUPABASE_ANON_KEY=sua_chave_anonima_do_supabase
-SUPABASE_SERVICE_ROLE_KEY=sua_chave_de_servico_do_supabase
 
-# Aplicação
+# Aplicação — URL canônica (OG, sitemap e links de exemplo)
 NEXT_PUBLIC_APP_URL=http://localhost:3000
+
+# Resend (opcional) — verificação de e-mail via hook do Supabase
+RESEND_API_KEY=re_xxx
+RESEND_FROM="PressLink <onboarding@resend.dev>"
+SUPABASE_HOOK_SECRET=seu-hook-secret-aleatorio
 ```
+
+> Em produção, aponte `NEXT_PUBLIC_APP_URL` para o domínio real e verifique o
+> domínio no Resend (o remetente `onboarding@resend.dev` só entrega para o dono
+> da conta). Sem `RESEND_*`, o Supabase usa o SMTP padrão dele.
 
 ```bash
 # 4. Inicie o servidor de desenvolvimento
@@ -106,21 +126,38 @@ Acesse [http://localhost:3000](http://localhost:3000) no navegador.
 
 ### Testes & SUT
 
-Pirâmide: `unit` (Zod) → `api` (Route Handlers mock) → `e2e` (Playwright webServer).
-SUT = Next `localhost:3000` via `playwright.config.ts:21` + `config/test.ts:1` `baseUrl`.
-Offline: `npm run test:unit && npm run test:api` não exige Supabase real (mocks em `src/lib/test-utils/supabase-mock.ts:1`).
-E2E completo: defina `PLAYWRIGHT_TEST_EMAIL/PASSWORD` e rode `npm run test:e2e`. Sem creds, E2E valida redirects 401 (sempre verde).
+Pirâmide: `unit` (validators, componentes e contratos de arquivo) → `api`
+(Route Handlers com Supabase mockado) → `e2e` (Playwright com `webServer`).
+
+- SUT: `next dev` em `localhost:3000` (config em `playwright.config.ts` e `config/test.ts`).
+- Offline: `npm run test:unit && npm run test:api` não exige Supabase real
+  (mocks em `src/lib/test-utils/supabase-mock.ts`).
+- E2E completo: defina `PLAYWRIGHT_TEST_EMAIL`/`PLAYWRIGHT_TEST_PASSWORD`; sem
+  credenciais, os testes de redirect 401 continuam rodando.
 
 ```bash
-npm run test:unit      # 27 tests validators
-npm run test:api       # 19 tests Route Handlers mockados
+npm run test:unit      # validators, componentes e contratos
+npm run test:api       # Route Handlers com Supabase mockado
 npm run test:ci        # unit + api
-npm run test:e2e       # 12 tests Playwright (10 passam sem creds, 2 skip)
+npm run test:e2e       # Playwright (com creds roda o fluxo completo)
+npm run test:verify    # typecheck + build + test:ci + lista de specs
 PLAYWRIGHT_BASE_URL=https://presslink.vercel.app npm run test:e2e  # SUT contra produção
-npm run typecheck && npm run build  # test-compile
 ```
 
 Veja `.env.test.example` para SUT local sem Supabase real.
+
+---
+
+## Documentação
+
+| Documento          | Conteúdo                                                      |
+| ------------------ | ------------------------------------------------------------- |
+| `PRODUCT.md`       | problema, público, capacidades e limites do produto           |
+| `requirements.md`  | requisitos funcionais (RF) e não funcionais (RNF) do MVP      |
+| `DESIGN.md`        | tokens, tipografia, layout do painel, movimento e checklist   |
+| `CONTRIBUTING.md`  | fluxo de branches, padrão de commits e estrutura de pastas    |
+| `AGENTS.md`        | instruções para agentes de IA que trabalham no repositório    |
+| `docs/lighthouse/` | relatórios de performance mobile/desktop (Lighthouse)         |
 
 ---
 
@@ -140,7 +177,8 @@ Este projeto é desenvolvido como Trabalho de Conclusão de Curso (TCC) pelos se
 
 ## Status do Projeto
 
-🚧 **Em desenvolvimento** — O projeto está na fase inicial de construção do MVP.
+🚧 **MVP em produção na Vercel**, em evolução. Todas as funções descritas acima
+estão implementadas; o que ainda falta está listado em `requirements.md`.
 
 ---
 

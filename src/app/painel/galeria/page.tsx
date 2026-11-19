@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { GaleriaClient } from "./galeria-client";
+import { PageHeader } from "@/components/features/painel/PageHeader";
 
 export default async function GaleriaPage() {
   const supabase = await createClient();
@@ -20,11 +21,12 @@ export default async function GaleriaPage() {
   }
 
   return (
-    <div className="mx-auto max-w-6xl p-4 sm:p-6">
-      <div className="mb-6">
-        <h1 className="font-display text-2xl font-bold tracking-tight text-white">Galeria</h1>
-        <p className="text-sm text-white/60">Envie várias fotos promocionais, visualize em grade e exclua quando precisar.</p>
-      </div>
+    <div>
+      <PageHeader
+        label="Conteúdo"
+        title="Galeria"
+        description="Fotos de festa, estúdio e bastidores. Arraste para enviar, reordene e exclua o que não quiser mostrar."
+      />
       <GaleriaClient initialFotos={fotos as never[]} />
     </div>
   );

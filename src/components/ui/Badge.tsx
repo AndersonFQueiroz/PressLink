@@ -11,24 +11,24 @@ export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
 }
 
 const variantStyles: Record<BadgeVariant, string> = {
-  default: "bg-fuchsia-500/15 text-fuchsia-300 border-fuchsia-500/30",
-  success: "bg-emerald-500/15 text-emerald-300 border-emerald-500/30",
-  warning: "bg-amber-500/15 text-amber-300 border-amber-500/30",
-  danger: "bg-rose-500/15 text-rose-300 border-rose-500/30",
-  outline: "bg-transparent text-white/80 border-white/20",
+  default: "bg-white/[0.06] text-panel-muted border-panel-line",
+  success: "bg-ok/10 text-ok border-ok/25",
+  warning: "bg-warn/10 text-warn border-warn/25",
+  danger: "bg-danger/10 text-danger border-danger/25",
+  outline: "bg-transparent text-panel-muted border-panel-line-strong",
 };
 
 const dotColors: Record<BadgeVariant, string> = {
-  default: "bg-fuchsia-400",
-  success: "bg-emerald-400",
-  warning: "bg-amber-400",
-  danger: "bg-rose-400",
-  outline: "bg-white/60",
+  default: "bg-panel-muted",
+  success: "bg-ok",
+  warning: "bg-warn",
+  danger: "bg-danger",
+  outline: "bg-panel-muted",
 };
 
 const sizeStyles: Record<BadgeSize, string> = {
-  sm: "text-[11px] px-2 py-0.5 gap-1.5",
-  md: "text-xs px-2.5 py-1 gap-2",
+  sm: "text-[10px] px-1.5 py-0.5 gap-1.5",
+  md: "text-[11px] px-2 py-0.5 gap-1.5",
 };
 
 export function Badge({
@@ -42,7 +42,7 @@ export function Badge({
   return (
     <span
       className={cn(
-        "inline-flex items-center font-medium rounded-full border tracking-wide uppercase",
+        "inline-flex items-center font-medium rounded border",
         variantStyles[variant],
         sizeStyles[size],
         className,

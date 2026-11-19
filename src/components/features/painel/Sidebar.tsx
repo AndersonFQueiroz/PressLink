@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import Link from "next/link";
+import { PressLinkLogo } from "@/components/brand/PressLinkLogo";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -14,88 +16,85 @@ import {
   BarChart3,
   Settings,
   X,
-  Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { createClient } from "@/lib/supabase/client";
+import { isNavActive } from "@/lib/nav";
 import { LogoutButton } from "@/components/features/auth/LogoutButton";
 import { AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
-import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
+
+export type PainelPerfil = {
+  nome: string;
+  username: string | null;
+  fotoUrl: string | null;
+  email: string | null;
+};
 
 export type SidebarProps = {
   open: boolean;
   onClose: () => void;
+  perfil: PainelPerfil;
 };
 
-const navItems = [
-  { href: "/painel", label: "Dashboard", icon: LayoutDashboard, exact: true },
-  { href: "/painel/perfil", label: "Perfil", icon: User },
-  { href: "/painel/galeria", label: "Galeria", icon: Images },
-  { href: "/painel/musica", label: "Música", icon: Music },
-  { href: "/painel/agenda", label: "Agenda", icon: Calendar },
-  { href: "/painel/contato", label: "Contato", icon: Mail },
-  { href: "/painel/template", label: "Template", icon: Palette },
-  { href: "/painel/estatisticas", label: "Estatísticas", icon: BarChart3 },
-  { href: "/painel/configuracoes", label: "Configurações", icon: Settings },
+type NavItem = {
+  href: string;
+  label: string;
+  icon: typeof LayoutDashboard;
+  exact?: boolean;
+};
+
+type NavGroup = {
+  label: string | null;
+  items: NavItem[];
+};
+
+// Três grupos em vez de nove itens soltos: o DJ pensa em "o que o público vê"
+// (Conteúdo/Página) e "o que eu ganho com isso" (Resultados).
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: null,
+    items: [{ href: "/painel", label: "Visão geral", icon: LayoutDashboard, exact: true }],
+  },
+  {
+    label: "Conteúdo",
+    items: [
+      { href: "/painel/perfil", label: "Perfil", icon: User },
+      { href: "/painel/galeria", label: "Galeria", icon: Images },
+      { href: "/painel/musica", label: "Mídia", icon: Music },
+      { href: "/painel/agenda", label: "Agenda", icon: Calendar },
+    ],
+  },
+  {
+    label: "Página",
+    items: [
+      { href: "/painel/template", label: "Aparência", icon: Palette },
+      { href: "/painel/contato", label: "Contato público", icon: Mail },
+    ],
+  },
+  {
+    label: "Resultados",
+    items: [{ href: "/painel/estatisticas", label: "Estatísticas", icon: BarChart3 }],
+  },
 ];
 
-export function Sidebar({ open, onClose }: SidebarProps) {
+export function Sidebar({ open, onClose, perfil }: SidebarProps) {
   const pathname = usePathname();
-  const [displayName, setDisplayName] = useState("Visitante");
-  const [subtitle, setSubtitle] = useState<string | null>(null);
-  const [fotoUrl, setFotoUrl] = useState<string | null>(null);
-  const [username, setUsername] = useState<string | null>(null);
+  const [fotoUrl, setFotoUrl] = useState<string | null>(perfil.fotoUrl);
 
   useEffect(() => {
-    let active = true;
-    (async () => {
-      try {
-        const supabase = createClient();
-        const { data } = await supabase.auth.getUser();
-        const user = data.user;
-        if (!active || !user) return;
-        const meta = user.user_metadata as Record<string, unknown> | undefined;
-        const metaName =
-          (typeof meta?.full_name === "string" && meta.full_name) ||
-          (typeof meta?.name === "string" && meta.name) ||
-          (typeof meta?.display_name === "string" && meta.display_name) ||
-          "";
-        const fallback = user.email?.split("@")[0] ?? "Visitante";
-        setDisplayName(metaName.trim() !== "" ? metaName.trim() : fallback);
-        setSubtitle(user.email ?? null);
-        const res = await fetch("/api/perfil");
-        if (res.ok) {
-          const json = await res.json();
-          if (active && json.perfil) {
-            if (json.perfil.foto_url) setFotoUrl(json.perfil.foto_url);
-            if (json.perfil.nome_artistico) setDisplayName(json.perfil.nome_artistico);
-            if (json.perfil.username) {
-              setUsername(json.perfil.username);
-              setSubtitle(`@${json.perfil.username}`);
-            }
-          }
-        }
-      } catch {
-        // Sem Supabase configurado ou deslogado: mantém "Visitante"
-      }
-    })();
+    setFotoUrl(perfil.fotoUrl);
+  }, [perfil.fotoUrl]);
+
+  useEffect(() => {
     const onAvatar = (e: Event) => {
       const detail = (e as CustomEvent<{ foto_url: string }>).detail;
-      if (active) setFotoUrl(detail?.foto_url || null);
+      setFotoUrl(detail?.foto_url || null);
     };
     window.addEventListener(AVATAR_UPDATED_EVENT, onAvatar);
-    return () => {
-      active = false;
-      window.removeEventListener(AVATAR_UPDATED_EVENT, onAvatar);
-    };
-  }, [pathname]);
+    return () => window.removeEventListener(AVATAR_UPDATED_EVENT, onAvatar);
+  }, []);
 
-  const initials = displayName.slice(0, 2).toUpperCase();
-
-  const isActive = (href: string, exact?: boolean) => {
-    if (exact) return pathname === href;
-    return pathname === href || pathname.startsWith(href + "/");
-  };
+  const initials = (perfil.nome || perfil.email || "P").slice(0, 2).toUpperCase();
+  const subtitle = perfil.username ? `@${perfil.username}` : perfil.email ?? "Sem @username";
 
   return (
     <>
@@ -103,83 +102,118 @@ export function Sidebar({ open, onClose }: SidebarProps) {
         <button
           aria-label="Fechar menu"
           onClick={onClose}
-          className="fixed inset-0 z-30 bg-black/60 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-30 bg-black/60 md:hidden"
         />
       )}
 
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col border-r border-white/10 bg-[#0a0a0f] transition-transform duration-200 md:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-[248px] flex-col bg-panel-bg transition-transform duration-200 md:translate-x-0",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
-        <div className="flex h-16 items-center justify-between border-b border-white/10 px-5">
-          <Link href="/painel" className="text-lg font-bold tracking-tight" onClick={onClose}>
-            <span className="text-white">Press</span>
-            <span className="text-fuchsia-400">Link</span>
+        <div className="flex h-14 shrink-0 items-center justify-between px-4">
+          <Link
+            href="/painel"
+            onClick={onClose}
+            aria-label="PressLink — Visão geral"
+            className="rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60 focus-visible:ring-offset-4 focus-visible:ring-offset-panel-bg"
+          >
+            <PressLinkLogo size={21} />
           </Link>
           <button
             onClick={onClose}
-            className="inline-flex h-8 w-8 items-center justify-center rounded-lg text-white/60 hover:bg-white/10 hover:text-white md:hidden"
+            className="inline-flex h-8 w-8 items-center justify-center rounded text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text md:hidden"
             aria-label="Fechar menu"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4 w-4" />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto px-3 py-4">
-          <ul className="flex flex-col gap-1">
-            {navItems.map((item) => {
-              const active = isActive(item.href, item.exact);
-              const Icon = item.icon;
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={onClose}
-                    className={cn(
-                      "flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium transition-colors",
-                      active
-                        ? "bg-fuchsia-600/20 text-fuchsia-200 border border-fuchsia-500/30"
-                        : "text-white/70 hover:bg-white/[0.06] hover:text-white border border-transparent",
-                    )}
-                  >
-                    <Icon className={cn("h-5 w-5 shrink-0", active ? "text-fuchsia-300" : "text-white/50")} />
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
+        <nav className="flex-1 overflow-y-auto px-2 py-4" aria-label="Navegação do painel">
+          {NAV_GROUPS.map((grupo, indice) => (
+            <div key={grupo.label ?? `grupo-${indice}`} className={cn(indice > 0 && "mt-5")}>
+              {grupo.label && (
+                <p className="px-2.5 pb-1.5 text-[11px] font-normal text-panel-muted">
+                  {grupo.label}
+                </p>
+              )}
+              <ul className="pl-stagger flex flex-col gap-0.5">
+                {grupo.items.map((item, indiceItem) => {
+                  const active = isNavActive(pathname, item.href, item.exact);
+                  const Icon = item.icon;
+                  return (
+                    <li key={item.href} style={{ "--pl-i": indiceItem } as CSSProperties}>
+                      <Link
+                        href={item.href}
+                        onClick={onClose}
+                        aria-current={active ? "page" : undefined}
+                        className={cn(
+                          "group relative flex items-center gap-2.5 rounded px-2.5 py-[7px] text-[13px] font-medium transition-colors duration-150",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60",
+                          active
+                            ? "bg-white/[0.05] text-panel-text"
+                            : "text-panel-muted hover:bg-white/[0.03] hover:text-panel-text",
+                        )}
+                      >
+                        {active && (
+                          <span
+                            aria-hidden="true"
+                            className="pl-rail absolute left-0 top-1/2 h-4 w-[2px] rounded-r bg-signal"
+                          />
+                        )}
+                        <Icon
+                          className={cn(
+                            "h-4 w-4 shrink-0 transition-[color,transform] duration-200 group-hover:translate-x-0.5 group-hover:scale-110",
+                            active
+                              ? "text-panel-text"
+                              : "text-panel-muted/80 group-hover:text-panel-text",
+                          )}
+                          strokeWidth={1.75}
+                          aria-hidden="true"
+                        />
+                        <span className="truncate transition-transform duration-200 group-hover:translate-x-0.5">
+                          {item.label}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
         </nav>
 
-        <div className="border-t border-white/10 p-4 flex flex-col gap-3">
-          <PublicPageLink
-            username={username}
-            onClick={onClose}
-            className="flex items-center justify-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5 text-xs font-semibold text-white/80 transition-colors hover:bg-white/10 hover:text-white"
-          >
-            <Eye className="h-4 w-4 text-fuchsia-300" />
-            Ver página
-          </PublicPageLink>
-
-          <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2.5">
-            <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-fuchsia-600 text-xs font-bold text-white">
-              {fotoUrl ? (
-                // eslint-disable-next-line @next/next/no-img-element
-                <img src={fotoUrl} alt="Foto de perfil" className="h-full w-full object-cover" />
-              ) : (
-                initials
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-white">{displayName}</p>
-              <p className="truncate text-xs text-white/50">{subtitle ?? "Acesso demonstração"}</p>
-            </div>
-            <LogoutButton variant="ghost" showText={false} className="h-8 w-8 shrink-0 rounded-lg px-0" />
+        <div className="shrink-0 border-t border-panel-line p-2">
+          <div className="flex items-center gap-2">
+            <Link
+              href="/painel/configuracoes"
+              onClick={onClose}
+              className="flex min-w-0 flex-1 items-center gap-2.5 rounded p-1.5 transition-colors hover:bg-white/[0.05] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-signal/60"
+              title="Conta e configurações"
+            >
+              <span className="flex h-7 w-7 shrink-0 items-center justify-center overflow-hidden rounded-full border border-panel-line bg-panel-raised text-[10px] font-semibold text-panel-text">
+                {fotoUrl ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={fotoUrl} alt="" className="h-full w-full object-cover" />
+                ) : (
+                  initials
+                )}
+              </span>
+              <span className="min-w-0 flex-1">
+                <span className="block truncate text-[12px] font-medium text-panel-text">
+                  {perfil.nome || "Sua conta"}
+                </span>
+                <span className="block truncate text-[11px] text-panel-muted">{subtitle}</span>
+              </span>
+              <Settings className="h-3.5 w-3.5 shrink-0 text-panel-muted/70" aria-hidden="true" />
+            </Link>
+            <LogoutButton
+              variant="ghost"
+              showText={false}
+              className="h-7 w-7 shrink-0 rounded px-0 text-panel-muted hover:text-panel-text"
+            />
           </div>
-
-          <p className="text-xs text-white/40">PressLink • Painel</p>
         </div>
       </aside>
     </>

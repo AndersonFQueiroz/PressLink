@@ -8,7 +8,7 @@ import {
   Trash2,
   Edit2,
   ExternalLink,
-  Music,
+
   CheckCircle2,
   AlertCircle,
   Eye,
@@ -204,42 +204,39 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
     <div className="space-y-8">
       {/* Mensagens de Sucesso ou Erro Globais */}
       {successMsg && (
-        <div className="flex items-center gap-2 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-3 text-sm text-emerald-300">
-          <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-400" />
+        <div className="flex items-center gap-2 rounded-lg border border-ok/25 bg-ok/[0.08] p-3 text-[13px] text-ok">
+          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{successMsg}</span>
         </div>
       )}
 
       {errorMsg && (
-        <div className="flex items-center gap-2 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 text-sm text-rose-300">
-          <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+        <div className="flex items-center gap-2 rounded-lg border border-danger/25 bg-danger/[0.08] p-3 text-[13px] text-danger">
+          <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{errorMsg}</span>
         </div>
       )}
 
       {/* Seção 1: Formulário de Cadastro de Novo Link */}
-      <div className="rounded-2xl border border-white/10 bg-white/[0.02] p-5 sm:p-6 space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <Plus className="h-4 w-4 text-fuchsia-400" />
-            Adicionar Nova Música ou Vídeo
-          </h2>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="text-[13px] font-medium text-panel-text">Adicionar música ou vídeo</h2>
           {detectedTipo && <ProviderBadge tipo={detectedTipo} />}
         </div>
 
         <form onSubmit={handleAddLink} className="space-y-4">
-          <div className="space-y-3">
+          <div className="grid gap-4 sm:grid-cols-2">
             <Input
-              label="URL da Faixa, Álbum ou Vídeo"
-              placeholder="https://open.spotify.com/track/... ou https://youtube.com/watch?v=..."
+              label="URL da faixa, álbum ou vídeo"
+              placeholder="https://open.spotify.com/track/..."
               value={newUrl}
               onChange={(e) => setNewUrl(e.target.value)}
               disabled={isSubmitting}
-              helperText="Suporta links públicos de músicas ou playlists do Spotify, faixas do SoundCloud e vídeos do YouTube."
+              helperText="Spotify, SoundCloud e YouTube."
             />
 
             <Input
-              label="Título Personalizado (Opcional)"
+              label="Título (opcional)"
               placeholder="Ex.: Track Oficial (Remix 2026)"
               value={newTitulo}
               onChange={(e) => setNewTitulo(e.target.value)}
@@ -249,73 +246,72 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
 
           {/* Pré-visualização do Embed antes de adicionar */}
           {detectedTipo && newUrl.trim() && (
-            <div className="rounded-xl border border-fuchsia-500/20 bg-fuchsia-500/[0.03] p-4 space-y-2">
-              <div className="flex items-center justify-between text-xs text-fuchsia-300 font-medium">
-                <span>Pré-visualização do Player Embed:</span>
+            <div className="space-y-2 rounded-lg border border-panel-line bg-white/[0.02] p-4">
+              <div className="flex items-center justify-between text-[11px] text-panel-muted">
+                <span>Pré-visualização do player</span>
                 <ProviderBadge tipo={detectedTipo} />
               </div>
               <MediaEmbed tipo={detectedTipo} url={newUrl} titulo={newTitulo} />
             </div>
           )}
 
-          <div className="flex justify-end pt-2">
+          <div className="flex justify-end">
             <Button
               type="submit"
               variant="primary"
               isLoading={isSubmitting}
               leftIcon={<Plus className="h-4 w-4" />}
             >
-              Adicionar à Lista
+              Adicionar à lista
             </Button>
           </div>
         </form>
       </div>
 
       {/* Seção 2: Lista de Links Cadastrados e Reordenação */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-white flex items-center gap-2">
-            <Music className="h-4 w-4 text-fuchsia-400" />
-            Músicas e Vídeos Cadastrados ({links.length})
+      <div className="space-y-3 border-t border-panel-line pt-7">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <h2 className="text-[13px] font-medium text-panel-text">
+            Na sua página ({links.length})
           </h2>
-          <span className="text-xs text-white/50">
-            Use as setas para definir a ordem na sua página pública
-          </span>
+          {links.length > 1 && (
+            <span className="text-[12px] text-panel-muted">
+              Use as setas para definir a ordem
+            </span>
+          )}
         </div>
 
         {links.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-white/10 bg-white/[0.01] p-10 text-center flex flex-col items-center justify-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-white/[0.04] flex items-center justify-center text-white/40">
-              <Music className="h-6 w-6" />
-            </div>
-            <p className="text-sm font-medium text-white/70">
+          <div className="border-t border-panel-line pt-4">
+            <p className="text-[13px] font-medium text-panel-text">
               Nenhuma música ou vídeo cadastrado ainda.
             </p>
-            <p className="text-xs text-white/40 max-w-sm">
-              Adicione links de suas faixas favoritas no Spotify, SoundCloud ou clipes no YouTube para compor o seu Press Kit.
+            <p className="mt-1 max-w-[52ch] text-[12px] leading-relaxed text-panel-muted">
+              Cole um link do Spotify, SoundCloud ou YouTube para montar o player
+              do seu press kit.
             </p>
           </div>
         ) : (
-          <div className="space-y-3">
+          <ul className="space-y-2">
             {links.map((link, index) => {
               const isFirst = index === 0;
               const isLast = index === links.length - 1;
               const isPreviewOpen = expandedPreviews[link.id] ?? false;
 
               return (
-                <div
+                <li
                   key={link.id}
-                  className="rounded-xl border border-white/10 bg-white/[0.03] p-4 transition-all hover:border-white/20 space-y-3"
+                  className="space-y-3 rounded-lg border border-panel-line bg-panel-surface p-3.5 transition-colors hover:border-panel-line-strong"
                 >
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                    <div className="flex items-start sm:items-center gap-3 min-w-0">
-                      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-white/[0.06] text-xs font-bold text-white/70">
+                  <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
+                    <div className="flex min-w-0 items-start gap-3 sm:items-center">
+                      <span className="tabular flex h-6 w-6 shrink-0 items-center justify-center rounded bg-white/[0.05] text-[11px] font-semibold text-panel-muted">
                         {index + 1}
                       </span>
                       <div className="min-w-0 flex-1 space-y-1">
-                        <div className="flex items-center gap-2 flex-wrap">
+                        <div className="flex flex-wrap items-center gap-2">
                           <ProviderBadge tipo={link.tipo} />
-                          <h3 className="text-sm font-semibold text-white truncate">
+                          <h3 className="truncate text-[13px] font-medium text-panel-text">
                             {link.titulo || "Sem título informado"}
                           </h3>
                         </div>
@@ -323,23 +319,23 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
                           href={link.url}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-xs text-white/50 hover:text-fuchsia-300 truncate flex items-center gap-1 group"
+                          className="group flex items-center gap-1 truncate text-[12px] text-panel-muted transition-colors hover:text-panel-text"
                         >
                           <span className="truncate">{link.url}</span>
-                          <ExternalLink className="h-3 w-3 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
+                          <ExternalLink className="h-3 w-3 shrink-0 opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true" />
                         </a>
                       </div>
                     </div>
 
                     {/* Ações: Reordenar, Preview, Editar, Excluir */}
-                    <div className="flex items-center gap-1.5 self-end sm:self-center shrink-0">
+                    <div className="flex shrink-0 items-center gap-0.5 self-end sm:self-center">
                       {/* Subir */}
                       <button
                         onClick={() => handleMove(index, "up")}
                         disabled={isFirst}
                         type="button"
                         aria-label="Mover para cima"
-                        className="rounded-lg p-2 text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="rounded-md p-1.5 text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text disabled:cursor-not-allowed disabled:opacity-25"
                       >
                         <ArrowUp className="h-4 w-4" />
                       </button>
@@ -350,7 +346,7 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
                         disabled={isLast}
                         type="button"
                         aria-label="Mover para baixo"
-                        className="rounded-lg p-2 text-white/60 hover:text-white hover:bg-white/10 disabled:opacity-30 disabled:cursor-not-allowed transition-colors"
+                        className="rounded-md p-1.5 text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text disabled:cursor-not-allowed disabled:opacity-25"
                       >
                         <ArrowDown className="h-4 w-4" />
                       </button>
@@ -361,7 +357,7 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
                         type="button"
                         aria-label={isPreviewOpen ? "Ocultar player" : "Ver player"}
                         title={isPreviewOpen ? "Ocultar player" : "Ver player"}
-                        className="rounded-lg p-2 text-white/60 hover:text-fuchsia-300 hover:bg-white/10 transition-colors"
+                        className="rounded-md p-1.5 text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text"
                       >
                         {isPreviewOpen ? (
                           <EyeOff className="h-4 w-4" />
@@ -375,7 +371,7 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
                         onClick={() => handleOpenEdit(link)}
                         type="button"
                         aria-label="Editar título"
-                        className="rounded-lg p-2 text-white/60 hover:text-white hover:bg-white/10 transition-colors"
+                        className="rounded-md p-1.5 text-panel-muted transition-colors hover:bg-white/[0.06] hover:text-panel-text"
                       >
                         <Edit2 className="h-4 w-4" />
                       </button>
@@ -385,7 +381,7 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
                         onClick={() => setDeletingLink(link)}
                         type="button"
                         aria-label="Excluir música"
-                        className="rounded-lg p-2 text-rose-400/80 hover:text-rose-300 hover:bg-rose-500/10 transition-colors"
+                        className="rounded-md p-1.5 text-panel-muted transition-colors hover:bg-danger/10 hover:text-danger"
                       >
                         <Trash2 className="h-4 w-4" />
                       </button>
@@ -394,14 +390,14 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
 
                   {/* Player Embed Expandido */}
                   {isPreviewOpen && (
-                    <div className="pt-2 border-t border-white/5 animate-in fade-in duration-200">
+                    <div className="pl-fade border-t border-panel-line pt-3">
                       <MediaEmbed tipo={link.tipo} url={link.url} titulo={link.titulo} />
                     </div>
                   )}
-                </div>
+                </li>
               );
             })}
-          </div>
+          </ul>
         )}
       </div>
 
@@ -438,7 +434,7 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
             placeholder="Ex.: Track Oficial (Remix)"
           />
           {editingLink && (
-            <p className="text-xs text-white/50 truncate">
+            <p className="text-xs text-panel-muted truncate">
               URL: {editingLink.url}
             </p>
           )}
@@ -470,9 +466,9 @@ export function LinksMusicaForm({ initialLinks }: LinksMusicaFormProps) {
           </>
         }
       >
-        <div className="text-sm text-white/80">
+        <div className="text-sm text-panel-text">
           Esta ação removerá o link{" "}
-          <strong className="text-white">
+          <strong className="text-panel-text">
             {deletingLink?.titulo || deletingLink?.url}
           </strong>{" "}
           do seu perfil.

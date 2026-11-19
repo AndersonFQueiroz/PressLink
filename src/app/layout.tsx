@@ -1,15 +1,14 @@
 import type { Metadata } from "next";
-import { Anton, Instrument_Serif, Space_Grotesk } from "next/font/google";
+import { Poppins, Space_Grotesk } from "next/font/google";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
-const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton" });
-const instrumentSerif = Instrument_Serif({
-  weight: "400",
+// Fonte do wordmark: os títulos do produto seguem a mesma voz do logo.
+const poppins = Poppins({
+  weight: ["500", "600", "700", "800"],
   subsets: ["latin"],
-  style: ["normal", "italic"],
-  variable: "--font-instrument-serif",
+  variable: "--font-poppins",
 });
 
 export const metadata: Metadata = {
@@ -24,7 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR">
       <body
-        className={`${spaceGrotesk.variable} ${anton.variable} ${instrumentSerif.variable} font-sans antialiased`}
+        className={`${spaceGrotesk.variable} ${poppins.variable} font-sans antialiased`}
       >
         {children}
       </body>

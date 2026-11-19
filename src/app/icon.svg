@@ -1,14 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="PressLink">
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 64 64" role="img" aria-label="PressLink">
   <defs>
-    <linearGradient id="fundo" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#e879f9" />
-      <stop offset="1" stop-color="#a21caf" />
+    <linearGradient id="pl-chain" x1="4" y1="4" x2="28" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#ffffff" />
+      <stop offset="0.45" stop-color="#f6c6ff" />
+      <stop offset="0.75" stop-color="#ea1bff" />
+      <stop offset="1" stop-color="#d018f6" />
     </linearGradient>
   </defs>
-  <rect width="64" height="64" rx="14" fill="url(#fundo)" />
-  <g fill="#ffffff">
-    <rect x="16" y="34" width="7" height="14" rx="2.5" />
-    <rect x="28.5" y="22" width="7" height="26" rx="2.5" />
-    <rect x="41" y="28" width="7" height="20" rx="2.5" />
+  <rect width="64" height="64" rx="14" fill="#08050c" />
+  <g transform="translate(32 32) scale(1.6) translate(-16 -16) rotate(-45 16 16)" fill="none" stroke="url(#pl-chain)" stroke-width="5" stroke-linecap="round">
+    <g transform="translate(-1.5 -1.5)">
+      <rect x="1.2" y="9.8" width="19" height="12.4" rx="6.2" />
+    </g>
+    <g transform="translate(1.5 1.5)">
+      <rect x="12.2" y="9.8" width="19" height="12.4" rx="6.2" />
+    </g>
   </g>
 </svg>
