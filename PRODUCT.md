@@ -41,20 +41,21 @@ Não é link-in-bio: é um EPK com conteúdo estruturado (galeria, mídia, agend
 - **Contato público**: WhatsApp, e-mail e link `wa.me` gerado a partir do número.
 - **Publicação**: a página só entra no ar com os requisitos obrigatórios completos; publicar e despublicar a qualquer momento.
 - **Estatísticas**: visualizações, cliques de contato e canais, em janelas de 7 e 30 dias.
+- **Legal**: Termos de Uso e Política de Privacidade publicados em `/termos` e `/privacidade`, com exclusão definitiva da conta no painel (LGPD).
 - **Limites do MVP**: sem formulário de contato interno, sem domínio/subdomínio próprio, sem marketplace de templates, sem analytics avançado/GA, sem app nativo, sem pagamento ou assinatura.
 
 ## Brand Commitments
 
 - Wordmark: "Press" em branco + "Link" em magenta, sobre preto. O magenta oficial é `#D018F6`, amostrado do wordmark (`public/presslink-logo.png`).
-- Fundo de marca: `#08050C` (amostrado do logo).
+- Fundo de marca: `#07060B` (token `--pl-ink`, o mesmo do painel).
 - O magenta é a única cor de sinal do produto; roxo genérico não faz parte da identidade.
 - Nome do produto sempre "PressLink" (uma palavra), nunca "Press Link".
 
 ## Evidence on Hand
 
-- `requirements.md` e `specs.md` (requisitos e arquitetura).
+- `requirements.md` (requisitos funcionais e não funcionais) e `DESIGN.md` (sistema visual).
 - Código em produção de todas as funções do MVP neste repositório.
-- Logo em `public/presslink-logo.png`; favicon em `src/app/icon.svg`.
+- Logo em `public/presslink-logo.png`; favicon em `src/app/icon.svg`; ícones de app em `src/app/apple-icon.png` e `public/presslink-icon.png`.
 - **Não existe**: depoimentos, clientes pagantes, números de mercado, preços ou projeções. Nada disso pode ser afirmado na interface.
 
 ## Product Principles
@@ -67,7 +68,7 @@ Não é link-in-bio: é um EPK com conteúdo estruturado (galeria, mídia, agend
 
 ## Accessibility & Inclusion
 
-- WCAG 2.1 AA: texto normal ≥ 4,5:1; texto grande/ícones ≥ 3:1.
+- WCAG 2.1 AA: texto normal ≥ 4,5:1; texto grande/ícones ≥ 3:1. O texto de apoio do painel fica em 9,6:1 (AAA).
 - Foco visível em todo elemento interativo, na ordem do teclado.
 - `prefers-reduced-motion` respeitado: nenhuma entrada orquestrada, nenhum movimento essencial.
 - Alvos de toque ≥ 32 px; formulários com rótulo associado e erro anunciado.

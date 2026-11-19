@@ -82,13 +82,14 @@ describe("PublicPageLink", () => {
 
 describe("botões 'Ver página' do painel", () => {
   // A lista acompanha a reorganização do painel (19/11/2026): o antigo
-  // `Header.tsx` foi substituído pela `PainelTopbar` e a Sidebar deixou de ter
-  // botão "Ver página" (o link público vive na topbar). O contrato continua o
-  // mesmo: nenhum link para a rota inexistente `/preview` e todos passando pelo
+  // `Header.tsx` foi substituído pela `PainelTopbar`, a Visão geral virou
+  // componente próprio (`VisaoGeral.tsx`) e a Sidebar deixou de ter botão
+  // "Ver página" (o link público vive na topbar). O contrato continua o mesmo:
+  // nenhum link para a rota inexistente `/preview` e todos passando pelo
   // componente único, que resolve o username e cai no Perfil quando ele falta.
   const arquivos = [
     "src/components/features/painel/PainelTopbar.tsx",
-    "src/app/painel/page.tsx",
+    "src/components/features/painel/VisaoGeral.tsx",
     "src/app/painel/estatisticas/page.tsx",
   ];
 

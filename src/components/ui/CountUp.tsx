@@ -58,9 +58,13 @@ export function CountUp({
       return;
     }
 
-    const inicio = performance.now();
+    let primeiroFrame: number | null = null;
     const passo = (agora: number) => {
-      const t = Math.min(1, (agora - inicio) / duracao);
+      // Usa o timestamp do primeiro frame como origem: em alguns ambientes
+      // (jsdom, WebViews antigas) `performance.now()` e o timestamp do rAF não
+      // compartilham a mesma origem e a conta sairia negativa.
+      if (primeiroFrame === null) primeiroFrame = agora;
+      const t = Math.min(1, Math.max(0, (agora - primeiroFrame) / duracao));
       setExibido(de + (alvo - de) * easeOutCubic(t));
       if (t < 1) {
         frame.current = requestAnimationFrame(passo);

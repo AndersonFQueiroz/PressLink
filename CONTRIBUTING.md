@@ -80,11 +80,17 @@ Quando sua branch estiver pronta:
 
 ### Lint e formatação
 
-Antes de cada commit, rode o linter para garantir que o código está dentro dos padrões:
+Antes de cada commit, rode as verificações para garantir que o código está dentro dos padrões:
 
 ```bash
 # Verificar problemas de lint
 npm run lint
+
+# Checar tipos (test-compile)
+npm run typecheck
+
+# Testes unitários + API
+npm run test:ci
 
 # Corrigir problemas automaticamente (quando possível)
 npm run lint -- --fix
@@ -97,17 +103,30 @@ Siga a estrutura padrão do Next.js App Router:
 ```
 src/
 ├── app/                  # Rotas e layouts (App Router)
-│   ├── (auth)/           # Rotas de autenticação
+│   ├── (auth)/           # Login, cadastro, recuperação de senha
 │   ├── painel/           # Área logada do DJ
 │   ├── [username]/       # Página pública do DJ
-│   └── layout.tsx        # Layout raiz
-├── components/           # Componentes reutilizáveis
-│   ├── ui/               # Componentes de UI genéricos
-│   └── features/         # Componentes específicos de funcionalidade
-├── lib/                  # Utilitários, clients (Supabase), helpers
-├── hooks/                # Custom hooks
-├── types/                # Definições de tipos TypeScript
-└── styles/               # Estilos globais
+│   ├── termos/           # Termos de Uso
+│   ├── privacidade/      # Política de Privacidade
+│   ├── api/              # Route Handlers (perfil, galeria, links, shows, stats…)
+│   └── layout.tsx        # Layout raiz (fontes e metadataBase)
+├── components/
+│   ├── brand/            # Logotipo e corrente (ChainMark)
+│   ├── features/         # Componentes por funcionalidade (painel, galeria, auth…)
+│   ├── legal/            # Moldura das páginas legais
+│   ├── motion/           # Reveal, ScrollCue e utilitários de entrada
+│   ├── templates/        # Os 3 templates públicos + renderer
+│   └── ui/               # Componentes genéricos (Button, Input, Modal…)
+├── emails/               # Template de e-mail transacional (React Email)
+├── lib/                  # Supabase, validators, estatísticas, site/legal, utils
+├── styles/               # Estilos auxiliares
+├── types/                # Tipos compartilhados
+└── middleware.ts         # Sessão Supabase + proteção do painel
+
+supabase/migrations/      # Schema, RLS e funções (01 a 04)
+tests/                    # unit (Vitest), api (Route Handlers) e e2e (Playwright)
+config/                   # Base URL do SUT nos testes
+docs/                     # Relatórios Lighthouse e planos
 ```
 
 ---

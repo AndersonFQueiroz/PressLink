@@ -8,26 +8,28 @@ Fonte única: as variáveis `--pl-*` em `src/app/globals.css` (canais RGB), mape
 
 | Token | Valor | Uso | Contraste |
 | --- | --- | --- | --- |
-| `ink` | `#08050C` | fundo da aplicação | — |
-| `surface` | `#100C14` | faixa/seção elevada | — |
-| `raised` | `#17121C` | menu, modal, campo | — |
+| `ink` | `#07060B` | fundo da aplicação | — |
+| `surface` | `#0E0C15` | faixa/seção elevada | — |
+| `raised` | `#151220` | menu, modal, campo | — |
+| `raised-hover` | `#1B1728` | hover de superfície | — |
 | `line` | `rgba(255,255,255,.09)` | régua de 1 px | decorativo |
 | `line-strong` | `rgba(255,255,255,.16)` | divisor focado/ativo | decorativo |
-| `text` | `#F6F3F8` | texto primário | 18,3:1 |
-| `muted` | `#A79FAD` | texto secundário | 7,9:1 |
-| `signal` | `#D018F6` | estado e ação | 4,9:1 sobre `ink` |
-| `signal-hover` | `#EA1BFF` | hover do preenchimento | 5,8:1 |
+| `text` | `#F6F3F8` | texto primário | 18,4:1 |
+| `muted` | `#B9B5C1` | texto secundário | 10,0:1 (9,6:1 no `surface`) |
+| `signal` | `#D018F6` | estado e ação | 4,95:1 sobre `ink` |
+| `signal-hover` | `#EA1BFF` | hover do preenchimento | 5,9:1 |
 | `signal-soft` | `#F2A8FF` | ícone/texto de apoio | 11,4:1 |
-| `ok` | `#A4EDAF` | sucesso | 12,7:1 |
-| `warn` | `#F0D58E` | atenção | 12,1:1 |
-| `danger` | `#FF9A9A` | erro/destrutivo | 9,6:1 |
+| `ok` | `#A4EDAF` | sucesso | 14,7:1 |
+| `warn` | `#F0D58E` | atenção | 14,1:1 |
+| `danger` | `#FF9A9A` | erro/destrutivo | 9,9:1 |
 
 Regras:
 
-- **Branco nunca sobre magenta** (4,08:1 reprova AA). Preenchimento magenta leva texto `ink` (4,92:1).
-- Magenta é sinal, não decoração: aparece no status "No ar", na ação primária, no foco e no item ativo. No máximo **dois** pontos de magenta por tela.
-- Texto pequeno nunca abaixo de `muted`. Hierarquia se faz com tamanho e peso, não apagando o texto.
-- Proibido: gradiente decorativo, glow, sombra colorida, roxo genérico (`#7c3aed` e família), vidro/blur.
+- **Branco nunca sobre magenta** (4,08:1 reprova AA). Preenchimento magenta leva texto `ink` (4,95:1).
+- Magenta é sinal, não decoração: aparece no status "No ar", na ação primária, no foco e no item ativo. No máximo **dois** pontos de magenta por tela, sem contar a marca (corrente + wordmark).
+- Texto pequeno nunca abaixo de `muted`. Hierarquia se faz com tamanho e peso, não apagando o texto. O `muted` foi clareado para 10:1 (AAA) pensando em baixa visão.
+- **Glow é permitido em dois lugares**: o gradiente radial no topo do palco (`.pl-stage`) e a aura da marca na Visão geral (`.pl-aura`). Nunca em card solto.
+- Proibido: gradiente decorativo fora da marca, sombra colorida, roxo genérico (`#7c3aed` e família), vidro/blur.
 - O logo (`public/presslink-logo.png`) é branco + magenta e só existe sobre fundo escuro; largura mínima 96 px, área de respiro igual à altura do "P".
 
 ## 2. Tipografia
@@ -48,8 +50,8 @@ Regras:
 
 - Base 4 px; ritmo vertical 8/12/16/20/24/32.
 - Conteúdo do painel: **largura total do palco** (sem `max-width`), padding 16 (mobile) / 24 (tablet) / 32 (desktop).
-- Raios: **4** controles pequenos, **8** superfícies pequenas, **12** flutuantes (modal/menu), **14** card, **16** painel contínuo. Nunca o mesmo raio em tudo.
-- Borda de 1 px em `line / 6%` (mais discreta que a régua interna antiga); brilho interno de 1 px no topo (`inset 0 1px 0 white/4%`) simula luz de cima.
+- Raios: **4** controles pequenos, **8** superfícies pequenas, **12** flutuantes (modal/menu), **14** card, **22** palco contínuo no desktop.
+- Borda de 1 px em `line` (9%) nas superfícies; os fios internos do painel usam branco a 6%. Brilho interno de 1 px no topo (`inset 0 1px 0 white/4%`) simula luz de cima.
 - Elevação vem da cor da superfície (`surface` → `raised` → `raised-hover`), não de sombra pesada; sombra só em modal/menu e no recorte do painel inteiro.
 
 ## 4. Layout do painel
@@ -67,19 +69,20 @@ Regras:
 - **Botão secundário**: fundo `raised`, borda `line`, texto `text`. Ghost: só texto `muted` → `text` no hover.
 - **Campo**: fundo `ink`, borda `line`; foco = borda `signal` + anel `signal/25`; erro = borda `danger` + mensagem com ícone.
 - **Navegação**: item 13 px `muted`; ativo = texto `text` + barra de 2 px `signal` à esquerda; só **um** item ativo (`aria-current="page"`).
-- **Status de publicação**: chave de dois estados (`Rascunho` ⇄ `No ar`). O estado no ar usa placa magenta com texto `ink`; o rascunho usa `raised` com texto `muted`. A chave abre o menu de ações; o botão "Publicar" executa e move a placa.
+- **Status de publicação**: chave de dois estados (`Rascunho` ⇄ `No ar`). O estado no ar usa placa magenta com texto `ink`, equalizador animado e aura; o rascunho usa `raised` com texto `muted`. A chave abre o menu de ações; o botão "Publicar" executa e move a placa.
 - **Lista**: linha com régua inferior, hover `raised`, ação à direita sempre visível (nunca só no hover).
 - **Vazio**: uma frase útil + uma ação. Sem ilustração.
 
 ## 6. Movimento
 
-- Só `transform` e `opacity`. Durações 150–250 ms; entrada com `--pl-ease` (`.22, 1, .36, 1`); a chave de publicação desliza 300 ms com esse mesmo ease-out expo, sem bounce.
-- **Uma** entrada orquestrada por tela: o cabeçalho sobe (`.pl-rise`) e, na Visão geral, as faixas entram em cascata com atrasos de 40–220 ms. Trocou de rota, a cascata roda de novo (o shell remonta pelo `key`).
+- Interação usa `transform`/`opacity` e dura 150–250 ms; o desenho de gráfico usa `clip-path` (wipe) e dura 700–1100 ms. Nada anima layout.
+- **Entrada orquestrada**: `pl-enter` (560 ms) no shell a cada troca de rota; no conteúdo, `pl-rise` (520 ms) por faixa e `pl-stagger-in` (540 ms, 12 px, passo de 60 ms limitado a 9 itens) em listas e KPIs. A cascata usa `animation-fill-mode: backwards` para não anular transforms inline (arrastar da galeria).
 - **Corrente em repouso aberta**: os elos ficam separados 1,5 px. No hover da marca eles encostam e voltam a abrir (620 ms), terminando abertos — o estado final nunca "pula".
+- **Gráficos**: sparkline e gráfico de área entram com wipe da esquerda para a direita; barras crescem no eixo (`pl-bar`/`pl-bar-y`); anel de conversão usa `pl-ring` (1100 ms); a área sob a linha aparece com `pl-fade` (700 ms).
 - **Clique**: alvos importantes afundam 2% (`.pl-press` / `Button`); setas de link deslizam 2 px e ícones de ação crescem 10% no hover.
-- Feedback de ação: salvar/publicar confirma no lugar; reordenar tem mola; expandir/recolher 200 ms.
+- Feedback de ação: salvar/publicar confirma no lugar; reordenar tem mola; expandir/recolher 200 ms; o selo "No ar" tem aura (`pl-aura`, 26 s) e equalizador (`pl-eq`).
 - Nada de fade-and-slide em cada seção; nada animando em hover que não seja clicável.
-- `prefers-reduced-motion`: zero animação de entrada, zero mola, transições para 0 ms.
+- `prefers-reduced-motion`: zero animação de entrada, zero mola, zero wipe; transições para 0 ms.
 
 ## 7. Estados obrigatórios
 
@@ -90,8 +93,8 @@ Toda tela entrega: vazio, carregando (skeleton com a mesma silhueta do conteúdo
 - [ ] Nenhuma grade de cards iguais soltos (o painel é contínuo, com fios internos).
 - [ ] Nenhum rótulo em caixa alta com tracking.
 - [ ] Nenhum tile de ícone decorando título.
-- [ ] Glow só no topo do painel (gradiente da marca), nunca em cada card.
-- [ ] Texto secundário legível (≥ 4,5:1), não cinza fantasma.
+- [ ] Glow só no palco e na aura da marca, nunca em cada card.
+- [ ] Texto secundário legível (≥ 9:1 no painel), não cinza fantasma.
 - [ ] Hover só em elemento clicável e ≤ 150 ms.
 - [ ] Uma única entrada orquestrada por tela.
 - [ ] Magenta presente em no máximo dois pontos por tela.

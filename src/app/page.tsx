@@ -12,9 +12,9 @@ import { ContaExcluidaAviso } from "@/components/features/landing/ContaExcluidaA
 /**
  * Landing do PressLink.
  *
- * Conceito: o EPK como cartaz de festa. Tipografia de flyer (Anton), papel
- * lilás no meio da página e um bloco de ingresso no CTA — vocabulário do mundo
- * do DJ, não o kit "SaaS dark" (cards iguais, eyebrow em caixa alta, glow).
+ * Conceito: o EPK como cartaz de festa. Tipografia de flyer (Poppins Bold),
+ * papel lilás no meio da página e um bloco de ingresso no CTA — vocabulário do
+ * mundo do DJ, não o kit "SaaS dark" (cards iguais, eyebrow em caixa alta, glow).
  */
 
 const secoes = [
@@ -347,7 +347,14 @@ export default function HomePage() {
             <span aria-hidden="true" className="h-3 w-px bg-white/15" />
             <p>Press kit digital para DJs.</p>
           </div>
-          <div className="flex items-center gap-5">
+          <div className="flex flex-wrap items-center gap-5">
+            <Link href="/termos" className="transition-colors hover:text-white/70">
+              Termos
+            </Link>
+            <Link href="/privacidade" className="transition-colors hover:text-white/70">
+              Privacidade
+            </Link>
+            <span aria-hidden="true" className="h-3 w-px bg-white/15" />
             <Link href="/login" className="transition-colors hover:text-white/70">
               Entrar
             </Link>

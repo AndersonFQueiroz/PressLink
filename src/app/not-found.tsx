@@ -5,8 +5,8 @@ import { PressLinkLogo } from "@/components/brand/PressLinkLogo";
  * 404 personalizada do PressLink (issue #22).
  *
  * Cobre o perfil inexistente/despublicado (`notFound()` em `/[username]`) e
- * qualquer URL desconhecida. Segue a linguagem da landing: cartaz em Anton,
- * fundo `ink` e um único acento roxo — sem glow.
+ * qualquer URL desconhecida. Segue a linguagem da landing: cartaz em Poppins,
+ * fundo `ink` e um único acento magenta — sem glow.
  */
 export default function NotFound() {
   return (
