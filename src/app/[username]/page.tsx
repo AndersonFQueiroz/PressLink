@@ -2,6 +2,7 @@ import React from "react";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
+import { PublicPageTracker } from "@/components/features/estatisticas/PublicPageTracker";
 import { getPublicProfile, listStaticUsernameParams } from "@/lib/public-profile";
 import { buildPublicMetadata } from "@/lib/public-metadata";
 import { DEFAULT_TEMPLATE_ID } from "@/lib/templates";
@@ -61,9 +62,15 @@ export default async function PublicArtistPage({ params }: PageProps) {
   // issue #21: TemplateRenderer é a fonte única de slug→componente.
   // issue #22: fallback de slug garantido também na leitura pública.
   return (
-    <TemplateRenderer
-      slug={profileData.perfil.template_slug ?? DEFAULT_TEMPLATE_ID}
-      data={profileData}
-    />
+    <>
+      <PublicPageTracker
+        perfilId={profileData.perfil.id}
+        username={profileData.perfil.username}
+      />
+      <TemplateRenderer
+        slug={profileData.perfil.template_slug ?? DEFAULT_TEMPLATE_ID}
+        data={profileData}
+      />
+    </>
   );
 }

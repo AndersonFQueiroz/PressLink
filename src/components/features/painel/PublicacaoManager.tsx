@@ -32,6 +32,8 @@ export function PublicacaoManager({
   const [username, setUsername] = useState<string>(initialUsername ?? "");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [visualizacoes, setVisualizacoes] = useState<number>(0);
+  const [cliques, setCliques] = useState<number>(0);
   // URL real do EPK (origem atual do navegador ou a devolvida pela API).
   // Fixar `presslink.app` fazia o link copiado morrer em dev/preview.
   const [shareUrl, setShareUrl] = useState("");
@@ -59,6 +61,15 @@ export function PublicacaoManager({
                 `${window.location.origin}/${encodeURIComponent(json.perfil.username)}`,
               );
             }
+          }
+        }
+
+        const statsRes = await fetch("/api/estatisticas");
+        if (statsRes.ok) {
+          const stats = await statsRes.json();
+          if (active && stats) {
+            setVisualizacoes(Number(stats.totalVisualizacoes ?? 0));
+            setCliques(Number(stats.totalCliques ?? 0));
           }
         }
       } catch {
@@ -254,7 +265,7 @@ export function PublicacaoManager({
           <div>
             <p className="text-xs uppercase tracking-wider text-white/45">Visualizações</p>
             <p className="text-xl font-bold font-display text-white">
-              0 <span className="text-xs font-normal text-white/40">este mês</span>
+              {visualizacoes} <span className="text-xs font-normal text-white/40">total</span>
             </p>
           </div>
         </div>
@@ -266,7 +277,10 @@ export function PublicacaoManager({
           <div>
             <p className="text-xs uppercase tracking-wider text-white/45">Cliques em Contato</p>
             <p className="text-xl font-bold font-display text-white">
-              0 <span className="text-xs font-normal text-white/40">conversões</span>
+              {cliques}{" "}
+              <span className="text-xs font-normal text-white/40">
+                {cliques === 1 ? "conversão" : "conversões"}
+              </span>
             </p>
           </div>
         </div>
