@@ -134,7 +134,15 @@ body {
   }
 }
 
-/* ————— Templates do portfólio (issue #21) —————
+/* Letreiro decorativo dos templates (issue #28).
+   O texto é pura decoração (isento pela WCAG 1.4.3), mas o Lighthouse audita
+   qualquer texto visível e acusava contraste de 1,1:1 nesses letreiros. Render
+   por ::before mantém o visual idêntico sem expor o texto como conteúdo. */
+.pl-marca-dagua::before {
+  content: attr(data-marca);
+}
+
+/* ----- Templates do portfólio (issue #21) -----
    Tokens por template para os previews do seletor (/painel/template).
    Valores espelham os tokens de design de src/lib/templates.ts. */
 .pl-tpl--dark-minimal {

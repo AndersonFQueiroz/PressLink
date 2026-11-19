@@ -18,58 +18,33 @@ import {
 import { loginSchema, type LoginFormData } from "@/lib/validators/auth";
 import { loginAction } from "@/lib/auth/actions";
 
-function LoginForm() {
+/**
+ * Só esta parte depende de `useSearchParams` (mensagens vindas por querystring).
+ * Fica isolada no Suspense para o resto da página — título, formulário e links —
+ * sair no HTML estático e aparecer no primeiro paint (LCP baixo no Lighthouse).
+ */
+function MensagensDaUrl() {
   const searchParams = useSearchParams();
   const resetSuccess = searchParams.get("reset") === "success";
   const registeredSuccess = searchParams.get("registered") === "true";
   const confirmPending = searchParams.get("confirm") === "pending";
-  const urlError = searchParams.get("error");
-  const redirectTo = searchParams.get("redirectTo") || undefined;
+  const callbackFailed = searchParams.get("error") === "auth-callback-failed";
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(
-    urlError === "auth-callback-failed"
-      ? "O link de autenticação expirou ou é inválido. Tente novamente."
-      : null,
-  );
-  const [isPending, startTransition] = useTransition();
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-    },
-  });
-
-  const onSubmit = (data: LoginFormData) => {
-    setErrorMessage(null);
-    startTransition(async () => {
-      const result = await loginAction(data, redirectTo);
-      if (result && !result.success) {
-        setErrorMessage(result.error || "Ocorreu um erro ao realizar login.");
-      }
-    });
-  };
+  if (!resetSuccess && !registeredSuccess && !confirmPending && !callbackFailed) {
+    return null;
+  }
 
   return (
-    <div className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
-      <div className="text-center mb-8">
-        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
-          Acesso ao Painel
-        </p>
-        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
-          A pista é sua.<br />
-          <span className="text-fuchsia-400">Entre na sua conta.</span>
-        </h1>
-        <p className="mt-3 text-sm text-white/65 leading-relaxed">
-          Gerencie seu portfólio, links e shows em um só lugar.
-        </p>
-      </div>
+    <>
+      {callbackFailed && (
+        <div
+          role="alert"
+          className="mb-6 flex items-start gap-3 rounded-2xl border border-rose-500/40 bg-rose-500/10 p-4 text-sm text-rose-300"
+        >
+          <AlertCircle className="w-5 h-5 shrink-0 mt-0.5 text-rose-400" />
+          <span>O link de autenticação expirou ou é inválido. Tente novamente.</span>
+        </div>
+      )}
 
       {resetSuccess && (
         <div className="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-500/30 bg-emerald-500/10 p-4 text-sm text-emerald-300">
@@ -91,7 +66,44 @@ function LoginForm() {
           <span>Conta criada! Verifique seu e-mail para confirmar o cadastro e depois faça login.</span>
         </div>
       )}
+    </>
+  );
+}
 
+function LoginForm() {
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [isPending, startTransition] = useTransition();
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<LoginFormData>({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+  });
+
+  const onSubmit = (data: LoginFormData) => {
+    setErrorMessage(null);
+    // Lido no submit: manter `useSearchParams` aqui tiraria o formulário do HTML
+    // estático e ele só apareceria depois da hidratação.
+    const redirectTo =
+      new URLSearchParams(window.location.search).get("redirectTo") || undefined;
+
+    startTransition(async () => {
+      const result = await loginAction(data, redirectTo);
+      if (result && !result.success) {
+        setErrorMessage(result.error || "Ocorreu um erro ao realizar login.");
+      }
+    });
+  };
+
+  return (
+    <>
       {errorMessage && (
         <div
           role="alert"
@@ -194,7 +206,7 @@ function LoginForm() {
         <button
           type="submit"
           disabled={isPending}
-          className="w-full group relative flex items-center justify-center gap-2 rounded-full bg-fuchsia-500 py-3.5 px-6 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-400 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-ink"
+          className="w-full group relative flex items-center justify-center gap-2 rounded-full bg-fuchsia-600 py-3.5 px-6 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-500 disabled:opacity-60 disabled:cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-fuchsia-500 focus:ring-offset-2 focus:ring-offset-ink"
         >
           {isPending ? (
             <>
@@ -209,6 +221,31 @@ function LoginForm() {
           )}
         </button>
       </form>
+    </>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <div className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-10 shadow-2xl backdrop-blur-xl">
+      <div className="text-center mb-8">
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
+          Acesso ao Painel
+        </p>
+        <h1 className="font-display text-3xl sm:text-4xl font-bold tracking-tight text-white leading-tight">
+          A pista é sua.<br />
+          <span className="text-fuchsia-400">Entre na sua conta.</span>
+        </h1>
+        <p className="mt-3 text-sm text-white/65 leading-relaxed">
+          Gerencie seu portfólio, links e shows em um só lugar.
+        </p>
+      </div>
+
+      <Suspense fallback={null}>
+        <MensagensDaUrl />
+      </Suspense>
+
+      <LoginForm />
 
       {/* Footer link to register */}
       <div className="mt-8 pt-6 border-t border-white/10 text-center">
@@ -222,24 +259,10 @@ function LoginForm() {
       </div>
 
       {/* Highlights */}
-      <div className="mt-6 flex items-center justify-center gap-4 text-xs text-white/45">
+      <div className="mt-6 flex items-center justify-center gap-4 text-xs text-white/60">
         <span>✦ Portfólio em minutos</span>
         <span>✦ Links e agenda</span>
       </div>
     </div>
-  );
-}
-
-export default function LoginPage() {
-  return (
-    <Suspense
-      fallback={
-        <div className="w-full rounded-3xl border border-white/10 bg-white/[0.03] p-10 flex items-center justify-center">
-          <Loader2 className="w-6 h-6 animate-spin text-fuchsia-400" />
-        </div>
-      }
-    >
-      <LoginForm />
-    </Suspense>
   );
 }

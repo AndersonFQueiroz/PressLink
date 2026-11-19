@@ -1,11 +1,14 @@
 import React from "react";
+import { preload } from "react-dom";
 import type { Metadata } from "next";
+import { getImageProps } from "next/image";
 import { notFound } from "next/navigation";
 import { TemplateRenderer } from "@/components/templates/TemplateRenderer";
 import { PublicPageTracker } from "@/components/features/estatisticas/PublicPageTracker";
 import { getPublicProfile, listStaticUsernameParams } from "@/lib/public-profile";
 import { buildPublicMetadata } from "@/lib/public-metadata";
 import { DEFAULT_TEMPLATE_ID } from "@/lib/templates";
+import { getHeroImageSizes } from "@/lib/template-hero";
 
 interface PageProps {
   params: Promise<{ username: string }>;
@@ -57,6 +60,28 @@ export default async function PublicArtistPage({ params }: PageProps) {
 
   if (!profileData) {
     notFound();
+  }
+
+  // issue #28: a foto do hero é o elemento de LCP da página pública. O
+  // <Image priority> do template roda dentro de um Client Component e o
+  // React não emite o <link rel="preload"> nesse caso — o navegador só
+  // descobria a imagem depois de parsear o body (118ms nas medições).
+  // Preload explícito aqui, com o MESMO `sizes` usado no template, para a
+  // imagem começar a baixar junto com o HTML.
+  const fotoHero = profileData.perfil.foto_url;
+  if (fotoHero) {
+    const { props } = getImageProps({
+      src: fotoHero,
+      alt: "",
+      fill: true,
+      sizes: getHeroImageSizes(profileData.perfil.template_slug),
+    });
+    preload(props.src, {
+      as: "image",
+      imageSrcSet: props.srcSet,
+      imageSizes: props.sizes,
+      fetchPriority: "high",
+    });
   }
 
   // issue #21: TemplateRenderer é a fonte única de slug→componente.

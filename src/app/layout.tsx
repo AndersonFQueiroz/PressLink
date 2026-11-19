@@ -1,9 +1,8 @@
 import type { Metadata } from "next";
-import { Anton, Instrument_Serif, Inter, Space_Grotesk } from "next/font/google";
+import { Anton, Instrument_Serif, Space_Grotesk } from "next/font/google";
 import { siteUrl } from "@/lib/site";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"], variable: "--font-space-grotesk" });
 const anton = Anton({ weight: "400", subsets: ["latin"], variable: "--font-anton" });
 const instrumentSerif = Instrument_Serif({
@@ -25,7 +24,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
   return (
     <html lang="pt-BR">
       <body
-        className={`${inter.variable} ${spaceGrotesk.variable} ${anton.variable} ${instrumentSerif.variable} font-sans antialiased`}
+        className={`${spaceGrotesk.variable} ${anton.variable} ${instrumentSerif.variable} font-sans antialiased`}
       >
         {children}
       </body>

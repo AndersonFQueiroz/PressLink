@@ -1,12 +1,13 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { Music, Play } from "lucide-react";
 import {
   MediaEmbed,
   getMediaEmbedDimensions,
 } from "@/components/features/painel/MediaEmbed";
-import { TipoMidia, getEmbedUrl } from "@/lib/validators/links";
+import { getEmbedUrl, type TipoMidia } from "@/lib/embed";
 import { cn } from "@/lib/utils";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
@@ -91,6 +92,7 @@ export function LazyMediaEmbed({
         // por provedor ou 16:9 no YouTube) para a troca não mover a página
         <div
           aria-hidden="true"
+          data-testid="media-embed-placeholder"
           className={cn(
             "relative flex w-full items-center justify-center overflow-hidden rounded-xl bg-black/40",
             dims.aspectVideo && "aspect-video",
@@ -102,12 +104,16 @@ export function LazyMediaEmbed({
         >
           {/* issue #23: thumbnail real do vídeo atrás do glifo de play */}
           {ytId && (
-            /* eslint-disable-next-line @next/next/no-img-element -- thumbnail externa i.ytimg, sem loader proprio */
-            <img
+            // issue #28: via next/image (AVIF no tamanho exibido) — o JPG
+            // original de 480px era o maior arquivo da página pública.
+            <Image
               src={`https://i.ytimg.com/vi/${ytId}/hqdefault.jpg`}
               alt=""
+              fill
+              sizes="(max-width: 768px) 100vw, 50vw"
+              quality={55}
               loading="lazy"
-              className="absolute inset-0 h-full w-full object-cover opacity-60"
+              className="object-cover opacity-60"
             />
           )}
           <span
@@ -122,11 +128,11 @@ export function LazyMediaEmbed({
                 <Play className="ml-0.5 h-5 w-5 fill-current" />
               </span>
             ) : (
+              // issue #28: sem o rótulo "Prévia de mídia" — texto decorativo
+              // dentro de um bloco aria-hidden só criava item de contraste no
+              // Lighthouse. O ícone comunica o mesmo estado.
               <Music className="h-6 w-6" />
             )}
-            <span className="text-[10px] uppercase tracking-[0.2em]">
-              Prévia de mídia
-            </span>
           </span>
         </div>
       )}

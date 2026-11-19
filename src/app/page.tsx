@@ -33,7 +33,7 @@ export default function HomePage() {
             </p>
             <div className="mt-10 flex flex-wrap gap-4" id="comece">
               <Link
-                className="rounded-full bg-fuchsia-500 px-7 py-3.5 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-400"
+                className="rounded-full bg-fuchsia-600 px-7 py-3.5 font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-500"
                 href="/login"
               >
                 Criar meu PressLink

@@ -18,7 +18,7 @@ const config: Config = {
         vermilion: "#b8472b",
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "sans-serif"],
+        sans: ["ui-sans-serif", "system-ui", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji"],
         display: ["var(--font-space-grotesk)", "sans-serif"],
         poster: ["var(--font-anton)", "Impact", "sans-serif"],
         serif: ["var(--font-instrument-serif)", "Georgia", "serif"],

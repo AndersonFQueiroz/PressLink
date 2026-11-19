@@ -56,6 +56,10 @@ export function Reveal({
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
   const [shown, setShown] = useState(false);
+  // Por padrão o bloco nasce visível (HTML do SSR) para não atrasar o LCP.
+  // Só escondemos o que está fora da primeira tela — aí a animação acontece
+  // quando o usuário rola até ele.
+  const [ocultar, setOcultar] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
@@ -70,18 +74,22 @@ export function Reveal({
       return;
     }
 
-    // Rede de segurança: se o elemento já está na tela, mostra de imediato.
-    // Alguns navegadores (Chrome) não reportam intersecção em elementos com
-    // clip-path total, o que deixava blocos como a foto do hero invisíveis.
     const rect = el.getBoundingClientRect();
-    if (
+    const naPrimeiraTela =
       rect.bottom > 0 &&
       rect.top < window.innerHeight &&
       rect.right > 0 &&
-      rect.left < window.innerWidth
-    ) {
+      rect.left < window.innerWidth;
+
+    // Já visível no carregamento: mostra direto, sem opacity 0. Antes o bloco
+    // esperava a hidratação e o IntersectionObserver, o que empurrava o LCP
+    // para ~3s nos templates.
+    if (naPrimeiraTela && once) {
       setShown(true);
+      return;
     }
+
+    setOcultar(true);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -103,7 +111,7 @@ export function Reveal({
     as,
     {
       ref: ref as Ref<HTMLElement>,
-      "data-reveal": variant,
+      "data-reveal": ocultar ? variant : undefined,
       className: cn(shown && "is-revealed", className),
       style: {
         transitionDelay: `${delay}ms`,
