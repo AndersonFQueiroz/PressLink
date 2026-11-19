@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { Music, Play, AlertTriangle } from "lucide-react";
-import { TipoMidia, getEmbedUrl } from "@/lib/validators/links";
+import { getEmbedUrl, type TipoMidia } from "@/lib/embed";
 import { cn } from "@/lib/utils";
 
 interface MediaEmbedProps {

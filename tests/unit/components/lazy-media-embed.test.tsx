@@ -54,10 +54,13 @@ function renderEmbed({ tipo, url }: EmbedFixture) {
   return render(<LazyMediaEmbed tipo={tipo} url={url} />);
 }
 
-/** Placeholder é o div[aria-hidden] que contém o texto "Prévia de mídia" */
+/**
+ * Placeholder é o div[aria-hidden] reservado pelo LazyMediaEmbed.
+ * O rótulo em texto saiu na issue #28 (era item de contraste dentro de um bloco
+ * `aria-hidden`), então o seletor usa o `data-testid` do contêiner.
+ */
 function getPlaceholder(): HTMLElement {
-  const text = screen.getByText(/prévia de mídia/i);
-  const el = text.closest("[aria-hidden]");
+  const el = document.querySelector('[data-testid="media-embed-placeholder"]');
   if (!el) throw new Error("placeholder não encontrado");
   return el as HTMLElement;
 }
@@ -129,7 +132,9 @@ describe("LazyMediaEmbed", () => {
         act(() => io.fire(true));
         const iframe = document.querySelector(`iframe[src*="${srcParte}"]`);
         expect(iframe).not.toBeNull();
-        expect(screen.queryByText(/prévia de mídia/i)).toBeNull();
+        expect(
+          document.querySelector('[data-testid="media-embed-placeholder"]'),
+        ).toBeNull();
       } finally {
         unmount();
       }

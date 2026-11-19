@@ -41,6 +41,7 @@ import {
   type TemplateLang,
 } from "@/lib/template-utils";
 import { cn } from "@/lib/utils";
+import { HERO_IMAGE_SIZES } from "@/lib/template-hero";
 
 const CHAPTERS = [
   { id: "bio", numeral: "I", label: "Biography" },
@@ -250,7 +251,8 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                         alt={artistName}
                         fill
                         priority
-                        sizes="(max-width: 1024px) 100vw, 40vw"
+                        fetchPriority="high"
+                        sizes={HERO_IMAGE_SIZES["clean-editorial"]}
                         className="object-cover object-center grayscale-[35%] contrast-[1.02] saturate-[0.85]"
                       />
                     </Parallax>
@@ -507,6 +509,7 @@ export function CleanEditorialTemplate({ data }: TemplateComponentProps) {
                         alt={photo.alt_text || `${artistName} — foto ${index + 2}`}
                         fill
                         sizes={alone ? "100vw" : "(max-width: 640px) 50vw, 33vw"}
+                  quality={55}
                         className="object-cover transition duration-700 group-hover:scale-[1.03]"
                       />
                       <span className="absolute bottom-3 right-3 flex h-8 w-8 items-center justify-center rounded-full bg-[#f4efe6]/90 text-[#1a1712] opacity-0 backdrop-blur transition group-hover:opacity-100">

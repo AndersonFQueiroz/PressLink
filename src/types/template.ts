@@ -1,4 +1,7 @@
-import { TipoMidia } from "@/lib/validators/links";
+// `import type` mantém o zod fora do bundle do cliente: sem isso o SWC
+// (isolatedModules) conserva o import e a página pública baixa o validator
+// inteiro só para usar um tipo (issue #28).
+import type { TipoMidia } from "@/lib/embed";
 
 export interface TemplateDJProfile {
   id: string;

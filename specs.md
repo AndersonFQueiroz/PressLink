@@ -344,3 +344,25 @@ Isso exigirá:
 ### Fluxo do visitante
 
 Após a publicação, qualquer visitante (contratante, agência, público) pode acessar a URL pública. A página é servida como **HTML estático com ISR**, garantindo carregamento rápido via CDN da Vercel. Eventos de visualização e cliques em contato são registrados de forma assíncrona na tabela `VisualizacaoDePagina` via `POST /api/estatisticas/registrar`.
+
+## 6. Desempenho da página pública (RNF-04 e RNF-05)
+
+Metas: Performance ≥ 80, FCP < 2 s e LCP < 2,5 s no Lighthouse mobile (throttling
+simulado). A evidência fica em [`docs/lighthouse/`](docs/lighthouse/README.md) — relatórios
+JSON + HTML commitados, com a tabela de todas as rotas e o comando de reprodução.
+
+Decisões que sustentam o resultado:
+
+| Decisão | Onde | Por quê |
+| --- | --- | --- |
+| `preload()` explícito da foto de capa | `src/app/[username]/page.tsx` | `<Image priority>` dentro de Client Component não emite `<link rel="preload">`; a imagem de LCP só era descoberta ao parsear o body. |
+| `sizes` do hero em módulo único | `src/lib/template-hero.ts` | O `preload` da página e o `<Image>` do template precisam do **mesmo** `sizes`, senão o navegador baixa dois candidatos. |
+| AVIF/WebP + `minimumCacheTTL` de 31 dias | `next.config.ts` | Fotos do Storage têm UUID no nome (conteúdo imutável): o resultado otimizado nunca muda. |
+| Thumbnails em `quality={55}` | templates e `LazyMediaEmbed` | Em ~200 px de largura a diferença é imperceptível e o arquivo cai ~70%. |
+| Vídeo do YouTube via `next/image` | `LazyMediaEmbed` | O JPG de 480 px cru (20 KB) era o maior arquivo da página. |
+| Fonte do corpo = fonte do sistema | `tailwind.config.ts` | O Inter variável custava 48,9 KB no caminho crítico; as fontes de destaque (Anton, Space Grotesk, Instrument Serif) continuam iguais. |
+| `Reveal` sem esconder a primeira dobra | `src/components/motion/Reveal.tsx` | O bloco nascia com `opacity: 0` e só aparecia após hidratar + IntersectionObserver. |
+| `useSearchParams` isolado em `Suspense` | `src/app/(auth)/login/page.tsx` | Mantém `/` estática/ISR e o formulário no HTML do primeiro paint. |
+
+Rotas autenticadas (`/painel/*`) não entram na auditoria automática porque exigem sessão;
+o procedimento para auditá-las com um perfil logado está no README de `docs/lighthouse/`.

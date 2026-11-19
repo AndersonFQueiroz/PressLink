@@ -43,6 +43,7 @@ import {
   type TemplateLang,
 } from "@/lib/template-utils";
 import { cn } from "@/lib/utils";
+import { HERO_IMAGE_SIZES } from "@/lib/template-hero";
 
 const NAV = [
   { id: "bio", label: "Bio" },
@@ -249,7 +250,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
             </div>
 
             <div className="relative lg:col-span-4">
-              <Reveal variant="scale" delay={350} className="relative mx-auto w-[82%] max-w-sm lg:w-full lg:max-w-none">
+              <div className="relative mx-auto w-[82%] max-w-sm lg:w-full lg:max-w-none">
                 <div className="absolute -inset-2 rotate-3 rounded-[2.5rem] bg-[#ff3d8b]" />
                 <div className="absolute -inset-2 -rotate-3 rounded-[2.5rem] bg-[#d8ff4a]" />
                 <div className="relative aspect-[4/5] overflow-hidden rounded-[2.2rem] border-4 border-[#0b0614] bg-[#1a0f2e]">
@@ -260,7 +261,8 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                         alt={artistName}
                         fill
                         priority
-                        sizes="(max-width: 1024px) 82vw, 32vw"
+                        fetchPriority="high"
+                        sizes={HERO_IMAGE_SIZES["vibrant-festival"]}
                         className="object-cover"
                       />
                     </Parallax>
@@ -279,7 +281,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                     <Asterisk className="h-8 w-8 animate-spin-slow text-[#d8ff4a]" />
                   </div>
                 </div>
-              </Reveal>
+              </div>
 
               <Reveal
                 variant="scale"
@@ -317,9 +319,11 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
 
         {/* BIO */}
         <section id="bio" aria-labelledby="bio-title" className="relative overflow-hidden bg-[#6c4cff] px-4 py-20 text-[#fff6e9] sm:px-8 sm:py-28">
-          <div className="pointer-events-none absolute -right-10 top-0 select-none font-poster text-[26vw] uppercase leading-none text-white/[0.06]">
-            Bio
-          </div>
+          <div
+            aria-hidden="true"
+            data-marca="Bio"
+            className="pl-marca-dagua pointer-events-none absolute -right-10 top-0 select-none font-poster text-[26vw] uppercase leading-none text-white/[0.06]"
+          />
           <div className="relative mx-auto max-w-[1500px]">
             <div className="grid gap-10 lg:grid-cols-12 lg:gap-8">
               <div className="lg:col-span-4">
@@ -454,9 +458,11 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   <Reveal key={media.id} variant="scale" delay={index * 70}>
                     <div className="overflow-hidden rounded-3xl border-2 border-[#0b0614] bg-[#0b0614] shadow-[6px_6px_0_#0b0614]">
                       <div className={cn("relative overflow-hidden bg-gradient-to-br p-5 sm:p-6", CARD_GRADIENTS[index % CARD_GRADIENTS.length])}>
-                        <span className="absolute -right-3 -top-6 select-none font-poster text-[7rem] leading-none text-[#0b0614]/15">
-                          {trackNumber(index)}
-                        </span>
+                        <span
+                          aria-hidden="true"
+                          data-marca={trackNumber(index)}
+                          className="pl-marca-dagua absolute -right-3 -top-6 select-none font-poster text-[7rem] leading-none text-[#0b0614]/15"
+                        />
                         <div className="relative">
                           <span className="inline-flex items-center gap-1.5 rounded-full border border-[#0b0614]/30 bg-[#0b0614]/10 px-2.5 py-1 font-mono text-[9px] font-bold uppercase tracking-[0.16em] text-[#0b0614]">
                             <SocialIcon name={media.tipo} className="h-3 w-3" />
@@ -500,7 +506,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                   {lang === "pt" ? "Caos bonito" : "Beautiful chaos"}
                 </h2>
               </Reveal>
-              <Reveal variant="fade" delay={100} className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/35">
+              <Reveal variant="fade" delay={100} className="font-mono text-[10px] uppercase tracking-[0.2em] text-white/60">
                 {lang === "pt" ? "Clique para ampliar" : "Click to enlarge"}
               </Reveal>
             </div>
@@ -541,6 +547,7 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
                           alt={photo.alt_text || `${artistName} — foto ${index + 1}`}
                           fill
                           sizes="(max-width: 640px) 50vw, 33vw"
+                          quality={55}
                           className="object-cover transition duration-700 ease-out group-hover:scale-105 group-hover:saturate-150"
                         />
                         <span className="absolute inset-0 bg-gradient-to-t from-[#0b0614]/70 via-transparent to-transparent opacity-60 transition group-hover:opacity-30" />
@@ -668,9 +675,11 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
 
         {/* BOOKING */}
         <section id="booking" aria-labelledby="booking-title" className="relative overflow-hidden bg-[#ff3d8b] px-4 py-20 text-[#0b0614] sm:px-8 sm:py-28">
-          <div className="pointer-events-none absolute -right-8 top-6 select-none font-poster text-[24vw] uppercase leading-none text-[#0b0614]/[0.07]">
-            Book
-          </div>
+          <div
+            aria-hidden="true"
+            data-marca="Book"
+            className="pl-marca-dagua pointer-events-none absolute -right-8 top-6 select-none font-poster text-[24vw] uppercase leading-none text-[#0b0614]/[0.07]"
+          />
           <div className="relative mx-auto max-w-[1500px]">
             <Reveal variant="up">
               <p className="font-mono text-[10px] font-bold uppercase tracking-[0.3em] text-[#0b0614]/55">
@@ -759,10 +768,10 @@ export function VibrantFestivalTemplate({ data }: TemplateComponentProps) {
         <footer className="bg-[#0b0614] px-4 py-8 sm:px-8">
           <div className="mx-auto flex max-w-[1500px] flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <p className="font-poster text-lg uppercase tracking-[0.04em]">{artistName}</p>
-            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35">
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60">
               © {new Date().getFullYear()} · {lang === "pt" ? "Todos os direitos reservados" : "All rights reserved"}
             </p>
-            <Link href="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/35 transition hover:text-[#d8ff4a]">
+            <Link href="/" className="font-mono text-[10px] uppercase tracking-[0.18em] text-white/60 transition hover:text-[#d8ff4a]">
               Made with press<span className="text-[#ff3d8b]">link</span>
             </Link>
           </div>

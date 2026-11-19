@@ -47,7 +47,7 @@ export default function AuthLayout({
       </main>
 
       {/* Footer */}
-      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:px-10 lg:px-16 text-center text-xs text-white/40">
+      <footer className="relative z-10 w-full max-w-7xl mx-auto px-6 py-8 sm:px-10 lg:px-16 text-center text-xs text-white/60">
         <p>© {new Date().getFullYear()} presslink — A pista é sua. O palco também.</p>
       </footer>
     </div>

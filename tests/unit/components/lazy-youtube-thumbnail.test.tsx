@@ -46,15 +46,24 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
+/**
+ * `next/image` emite `/_next/image?url=<encoded>&w=...` — desescapa para
+ * comparar com a URL real da thumbnail (issue #28: o JPG cru de 480 px virou
+ * imagem otimizada em AVIF no tamanho exibido).
+ */
+function thumbnailSrc(container: HTMLElement): string {
+  const img = container.querySelector("img");
+  if (!img) throw new Error("thumbnail ausente");
+  return decodeURIComponent(img.getAttribute("src") ?? "");
+}
+
 describe("LazyMediaEmbed — thumbnail do YouTube (issue #23)", () => {
   it("youtube watch: placeholder exibe a thumbnail hqdefault SEM montar iframe", () => {
     const { container } = render(
       <LazyMediaEmbed tipo="youtube" url="https://www.youtube.com/watch?v=kYv9rE8lQ_U" />,
     );
 
-    const img = container.querySelector("img");
-    expect(img).not.toBeNull();
-    expect(img?.getAttribute("src")).toBe(
+    expect(thumbnailSrc(container)).toContain(
       "https://i.ytimg.com/vi/kYv9rE8lQ_U/hqdefault.jpg",
     );
     // Player continua lazy: nenhum iframe antes da viewport
@@ -66,8 +75,7 @@ describe("LazyMediaEmbed — thumbnail do YouTube (issue #23)", () => {
       <LazyMediaEmbed tipo="youtube" url="https://youtu.be/kYv9rE8lQ_U" />,
     );
 
-    const img = container.querySelector("img");
-    expect(img?.getAttribute("src")).toBe(
+    expect(thumbnailSrc(container)).toContain(
       "https://i.ytimg.com/vi/kYv9rE8lQ_U/hqdefault.jpg",
     );
   });
@@ -83,7 +91,7 @@ describe("LazyMediaEmbed — thumbnail do YouTube (issue #23)", () => {
     });
 
     expect(container.querySelector("iframe")).not.toBeNull();
-    expect(container.querySelector("img[src*='i.ytimg.com']")).toBeNull();
+    expect(container.querySelector('[data-testid="media-embed-placeholder"]')).toBeNull();
   });
 
   it("spotify: placeholder continua SEM imagem (apenas ícone + pulse)", () => {

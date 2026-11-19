@@ -41,6 +41,7 @@ import {
   type TemplateLang,
 } from "@/lib/template-utils";
 import { cn } from "@/lib/utils";
+import { HERO_IMAGE_SIZES } from "@/lib/template-hero";
 
 const NAV = [
   { id: "bio", index: "01", label: "Bio" },
@@ -191,7 +192,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 <span className="font-display text-4xl font-medium tracking-tight text-white/85 transition group-hover:text-acid">
                   {item.label}
                 </span>
-                <span className="font-mono text-xs text-white/30">{item.index}</span>
+                <span className="font-mono text-xs text-white/50">{item.index}</span>
               </a>
             ))}
           </nav>
@@ -210,7 +211,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 </a>
               ))}
             </div>
-            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/30">
+            <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-white/50">
               {new Date().getFullYear()} ©
             </span>
           </div>
@@ -235,7 +236,8 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                   alt={artistName}
                   fill
                   priority
-                  sizes="100vw"
+                  fetchPriority="high"
+                  sizes={HERO_IMAGE_SIZES["dark-minimal"]}
                   className="object-cover object-center grayscale contrast-[1.08]"
                 />
               </Parallax>
@@ -474,11 +476,11 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                 filteredMedia.map((media, index) => (
                   <div key={media.id} className="border-t border-white/10 py-6 last:border-b sm:py-7">
                     <div className="grid grid-cols-[2.2rem_1fr] items-center gap-3 sm:grid-cols-[3.5rem_1fr_10rem] sm:gap-5">
-                      <span className="font-mono text-[11px] text-white/25">{trackNumber(index)}</span>
+                      <span className="font-mono text-[11px] text-white/50">{trackNumber(index)}</span>
                       <span className="font-display text-lg font-medium leading-tight tracking-tight text-[#e9e7df] sm:text-2xl lg:text-3xl">
                         {media.titulo || `${providerLabel(media.tipo)} — ${artistName}`}
                       </span>
-                      <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/35 sm:block">
+                      <span className="hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/60 sm:block">
                         {providerLabel(media.tipo)}
                       </span>
                     </div>
@@ -516,7 +518,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
               </h2>
             </Reveal>
             <Reveal variant="fade" delay={100} className="flex items-center gap-2">
-              <span className="mr-2 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/30 sm:block">
+              <span className="mr-2 hidden font-mono text-[10px] uppercase tracking-[0.2em] text-white/50 sm:block">
                 {lang === "pt" ? "Arraste ou use as setas" : "Drag or use arrows"}
               </span>
               <button
@@ -557,6 +559,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                       alt={photo.alt_text || `${artistName} — foto ${index + 1}`}
                       fill
                       sizes="(max-width: 640px) 76vw, (max-width: 1024px) 40vw, 30vw"
+                  quality={55}
                       className="object-cover grayscale transition duration-700 ease-out group-hover:scale-[1.04] group-hover:grayscale-0"
                     />
                     <span className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-70" />
@@ -570,7 +573,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                     </span>
                   </button>
                   {photo.alt_text && (
-                    <p className="mt-3 max-w-[30vw] truncate font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
+                    <p className="mt-3 max-w-[30vw] truncate font-mono text-[10px] uppercase tracking-[0.16em] text-white/60">
                       {photo.alt_text}
                     </p>
                   )}
@@ -642,7 +645,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                           <p className="truncate font-display text-base font-medium text-[#e9e7df] transition group-hover:text-acid sm:text-xl">
                             {show.nome_evento}
                           </p>
-                          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/35">
+                          <p className="mt-0.5 font-mono text-[10px] uppercase tracking-[0.16em] text-white/60">
                             {date.weekday} · {date.year}
                           </p>
                         </div>
@@ -709,7 +712,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                       <span className="font-display text-2xl font-medium uppercase tracking-tight transition group-hover:text-acid sm:text-4xl">
                         WhatsApp
                       </span>
-                      <span className="hidden font-mono text-[11px] text-white/35 sm:block">{perfil.whatsapp}</span>
+                      <span className="hidden font-mono text-[11px] text-white/60 sm:block">{perfil.whatsapp}</span>
                     </span>
                     <ArrowUpRight className="h-6 w-6 shrink-0 text-white/30 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-acid sm:h-8 sm:w-8" />
                   </a>
@@ -728,7 +731,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
                         <span className="block font-display text-2xl font-medium uppercase tracking-tight transition group-hover:text-acid sm:text-4xl">
                           E-mail
                         </span>
-                        <span className="mt-1 block truncate font-mono text-[11px] text-white/35">
+                        <span className="mt-1 block truncate font-mono text-[11px] text-white/60">
                           {perfil.email_booking}
                         </span>
                       </span>
@@ -773,7 +776,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
               <p className="font-display text-lg font-medium uppercase tracking-tight">
                 {artistName}
               </p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/30">
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] text-white/50">
                 © {new Date().getFullYear()} — {lang === "pt" ? "Todos os direitos reservados" : "All rights reserved"}
               </p>
             </div>
@@ -793,7 +796,7 @@ export function DarkMinimalTemplate({ data, isPreview = false }: TemplateCompone
             </div>
             <Link
               href="/"
-              className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/30 transition hover:text-acid"
+              className="font-mono text-[10px] uppercase tracking-[0.22em] text-white/50 transition hover:text-acid"
             >
               Made with press<span className="text-acid">link</span>
             </Link>

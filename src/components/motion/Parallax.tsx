@@ -67,11 +67,14 @@ export function Parallax({ children, speed = 8, scale = 1, className, style }: P
     };
   }, [speed, scale]);
 
+  // A escala já vai no HTML do servidor: se o transform só aparecesse depois
+  // da hidratação, a imagem do hero mudava de tamanho tarde e virava um novo
+  // candidato a LCP (~2,7s no Lighthouse). O parallax só mexe no eixo Y.
   return (
     <div
       ref={ref}
       className={cn("will-change-transform", className)}
-      style={style}
+      style={scale === 1 ? style : { ...style, transform: `scale(${scale})` }}
     >
       {children}
     </div>
