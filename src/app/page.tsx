@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { Suspense } from "react";
+import { ContaExcluidaAviso } from "@/components/features/landing/ContaExcluidaAviso";
 
 const highlights = ["Portfólio em minutos", "Links e agenda em um só lugar", "Sua identidade em destaque"];
 
@@ -17,6 +19,12 @@ export default function HomePage() {
             Entrar
           </Link>
         </header>
+
+        {/* `useSearchParams` fica num filho dentro do Suspense para a landing
+            continuar estática/ISR (mesmo padrão de /login na issue #28). */}
+        <Suspense fallback={null}>
+          <ContaExcluidaAviso />
+        </Suspense>
 
         <section className="relative flex flex-1 items-center py-20 lg:py-28">
           <div className="pointer-events-none absolute -right-48 top-1/2 h-[34rem] w-[34rem] -translate-y-1/2 rounded-full bg-fuchsia-600/20 blur-3xl" />
