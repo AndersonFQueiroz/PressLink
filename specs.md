@@ -179,8 +179,32 @@ Registra eventos de interação na página pública: visualizações de página 
 | `/api/shows`                     | GET, POST, PUT, DELETE | CRUD de datas de shows.              |
 | `/api/publicar`                  | POST      | Validar e publicar a página pública.               |
 | `/api/despublicar`               | POST      | Despublicar a página pública.                      |
-| `/api/estatisticas`              | GET       | Buscar estatísticas de visualizações e cliques.    |
+| `/api/estatisticas`              | GET       | Totais, variação e série diária de visualizações e cliques. |
 | `/api/estatisticas/registrar`    | POST      | Registrar um evento (visualização ou clique).      |
+
+#### Contrato `GET /api/estatisticas`
+
+Requer sessão. Query opcional `periodo`: `7` ou `30` (padrão `30`). Os dias são
+fechados no fuso `America/Sao_Paulo`, e a variação compara com o período
+imediatamente anterior de mesmo tamanho. A leitura dos eventos pagina de 1.000
+em 1.000 (limite do PostgREST) e a resposta usa `Cache-Control: no-store`.
+
+| Campo               | Tipo     | Descrição                                                        |
+| ------------------- | -------- | ---------------------------------------------------------------- |
+| `periodo`           | `7 \| 30`| Período aplicado (valor inválido cai no padrão).                 |
+| `totalVisualizacoes`| `number` | `page_view` no período.                                          |
+| `totalCliques`      | `number` | Soma de WhatsApp + e-mail + formulário no período.               |
+| `taxaConversao`     | `number` | Cliques / visualizações, em %.                                   |
+| `detalhes`          | `object` | `{ whatsapp, email, formulario }` no período.                    |
+| `anterior`          | `object` | Mesmos totais do período anterior de comparação.                 |
+| `variacoes`         | `object` | `{ visualizacoes, cliques, conversao }`; `null` sem base.        |
+| `serie`             | `array`  | Um item por dia: `{ data, rotulo, visualizacoes, cliques }`.      |
+| `diasComDados`      | `number` | Dias do período com pelo menos um evento.                        |
+| `totalEventos`      | `number` | Eventos somados no período (usado para o estado vazio).          |
+| `truncado`          | `boolean`| `true` se a leitura parou no teto de 20.000 eventos.             |
+| `geradoEm`          | `string` | Instante UTC da agregação (ISO 8601).                            |
+
+Erros: `401` sem sessão, `404` sem perfil para o usuário, `500` falha de consulta.
 
 ---
 
