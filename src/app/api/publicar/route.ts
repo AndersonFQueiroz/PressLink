@@ -98,7 +98,8 @@ export async function POST() {
 
   // 5. Retorna dados e URL gerada
   const url = publicProfileUrl(perfil.username);
-  const displayUrl = `presslink.app/${perfil.username}`;
+  // Versão curta para exibir no painel: mesma origem real, sem protocolo.
+  const displayUrl = url.replace(/^https?:\/\//, "");
 
   return NextResponse.json({
     success: true,

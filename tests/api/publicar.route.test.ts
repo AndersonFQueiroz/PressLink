@@ -141,7 +141,8 @@ describe("POST /api/publicar", () => {
     const json = await res.json();
     expect(json.success).toBe(true);
     expect(json.publicado).toBe(true);
-    expect(json.displayUrl).toBe("presslink.app/kronos");
+    expect(json.displayUrl).toBe(json.url.replace(/^https?:\/\//, ""));
+    expect(json.displayUrl).toContain("/kronos");
     expect(json.url).toContain("kronos");
   });
 });

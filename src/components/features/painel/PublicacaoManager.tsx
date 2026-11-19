@@ -32,6 +32,9 @@ export function PublicacaoManager({
   const [username, setUsername] = useState<string>(initialUsername ?? "");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
+  // URL real do EPK (origem atual do navegador ou a devolvida pela API).
+  // Fixar `presslink.app` fazia o link copiado morrer em dev/preview.
+  const [shareUrl, setShareUrl] = useState("");
 
   // Modais
   const [successModalOpen, setSuccessModalOpen] = useState(false);
@@ -52,6 +55,9 @@ export function PublicacaoManager({
             setPublicado(Boolean(json.perfil.publicado));
             if (json.perfil.username) {
               setUsername(json.perfil.username);
+              setShareUrl(
+                `${window.location.origin}/${encodeURIComponent(json.perfil.username)}`,
+              );
             }
           }
         }
@@ -64,16 +70,26 @@ export function PublicacaoManager({
     };
   }, []);
 
+  const publicUrl =
+    shareUrl ||
+    (typeof window !== "undefined" && username
+      ? `${window.location.origin}/${encodeURIComponent(username)}`
+      : "");
+
   const handleCopyLink = async () => {
-    const fullUrl = `https://presslink.app/${username || "nomedodj"}`;
+    const fullUrl = publicUrl || window.location.origin;
     try {
       if (typeof navigator !== "undefined" && navigator.clipboard) {
         await navigator.clipboard.writeText(fullUrl);
+      } else {
+        // Navegador sem Clipboard API (http em rede local): seleção manual.
+        window.prompt("Copie o link do seu EPK:", fullUrl);
+        return;
       }
       setCopied(true);
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      // Ignora erro se sem permissão de clipboard
+      window.prompt("Copie o link do seu EPK:", fullUrl);
     }
   };
 
@@ -102,6 +118,11 @@ export function PublicacaoManager({
       setPublicado(true);
       if (data.username) {
         setUsername(data.username);
+      }
+      if (typeof data.url === "string" && data.url) {
+        setShareUrl(data.url);
+      } else if (data.username) {
+        setShareUrl(`${window.location.origin}/${encodeURIComponent(data.username)}`);
       }
       setSuccessModalOpen(true);
     } catch {
@@ -138,7 +159,9 @@ export function PublicacaoManager({
     }
   };
 
-  const displayUrl = `presslink.app/${username || "nomedodj"}`;
+  const displayUrl = publicUrl
+    ? publicUrl.replace(/^https?:\/\//, "").replace(/\/$/, "")
+    : `presslink.app/${username || "nomedodj"}`;
 
   return (
     <section className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-12 shadow-2xl backdrop-blur-xl overflow-hidden mb-12">
