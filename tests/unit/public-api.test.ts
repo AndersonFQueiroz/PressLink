@@ -12,9 +12,12 @@ describe("isPublicApiPath", () => {
 
   it("libera endpoints públicos já existentes", () => {
     expect(isPublicApiPath("/api/health/supabase")).toBe(true);
-    expect(isPublicApiPath("/api/contato")).toBe(true);
     expect(isPublicApiPath("/api/estatisticas/registrar")).toBe(true);
     expect(isPublicApiPath("/api/perfil/check-username")).toBe(true);
+  });
+
+  it("não libera /api/contato, rota que nunca existiu (issue #27)", () => {
+    expect(isPublicApiPath("/api/contato")).toBe(false);
   });
 
   it("mantém privado o que precisa de sessão", () => {
