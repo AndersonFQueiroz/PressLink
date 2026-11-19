@@ -6,14 +6,11 @@ import {
   Image as ImageIcon,
   Palette,
   BarChart3,
-  ExternalLink,
-  Sparkles,
   ArrowRight,
-  Eye,
-  MousePointerClick,
-  Globe,
 } from "lucide-react";
-import { PublicPageLink } from "@/components/features/painel/PublicPageLink";
+import { PublicacaoManager } from "@/components/features/painel/PublicacaoManager";
+import { createClient } from "@/lib/supabase/server";
+// O painel utiliza PublicPageLink integrado em PublicacaoManager
 
 export const metadata = {
   title: "Painel | presslink",
@@ -65,7 +62,24 @@ const modules = [
   },
 ];
 
-export default function PainelPage() {
+export default async function PainelPage() {
+  // Estado inicial vindo do servidor: sem isso o cartão mostra "Rascunho"
+  // por um instante para um DJ já publicado, até o fetch do cliente responder.
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  let perfilInicial: { username: string | null; publicado: boolean | null } | null = null;
+  if (user) {
+    const { data } = await supabase
+      .from("perfil")
+      .select("username, publicado")
+      .eq("usuario_id", user.id)
+      .maybeSingle();
+    perfilInicial = data;
+  }
+
   return (
     <div className="relative min-h-screen bg-ink text-white overflow-hidden selection:bg-fuchsia-500 selection:text-white">
       {/* Ambient background glow matching landing page */}
@@ -80,78 +94,11 @@ export default function PainelPage() {
 
       {/* Main Content */}
       <main className="relative z-10 mx-auto w-full max-w-7xl px-6 py-12 sm:px-10 lg:px-16">
-        {/* Hero Banner Section */}
-        <section className="relative rounded-3xl border border-white/10 bg-white/[0.03] p-8 sm:p-12 shadow-2xl backdrop-blur-xl overflow-hidden mb-12">
-          <div
-            className="pointer-events-none absolute -right-20 -top-20 h-64 w-64 rounded-full bg-fuchsia-500/10 blur-2xl"
-            aria-hidden="true"
-          />
-
-          <div className="relative max-w-3xl">
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.28em] text-fuchsia-300">
-              Área do Artista
-            </p>
-            <h1 className="font-display text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-white leading-[1.05]">
-              A pista é sua.<br />
-              <span className="text-fuchsia-400">Gerencie seu portfólio.</span>
-            </h1>
-            <p className="mt-4 text-base sm:text-lg text-white/65 leading-relaxed max-w-2xl">
-              Mantenha suas faixas, fotos e próximas apresentações sempre atualizadas para produtores e contratantes de eventos.
-            </p>
-
-            {/* Quick Actions */}
-            <div className="mt-8 flex flex-wrap items-center gap-3">
-              <Link
-                href="/painel/perfil"
-                className="rounded-full bg-fuchsia-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-fuchsia-500/20 transition hover:bg-fuchsia-400 flex items-center gap-2"
-              >
-                <span>Editar meu perfil</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <PublicPageLink className="rounded-full border border-white/20 px-6 py-3.5 text-sm font-semibold text-white transition hover:border-white/50 flex items-center gap-2">
-                <Globe className="w-4 h-4 text-fuchsia-300" />
-                <span>Ver página pública</span>
-                <ExternalLink className="w-3.5 h-3.5 opacity-60" />
-              </PublicPageLink>
-            </div>
-          </div>
-
-          {/* Quick Metrics */}
-          <div className="mt-12 pt-8 border-t border-white/10 grid grid-cols-1 sm:grid-cols-3 gap-6">
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400">
-                <Eye className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider text-white/45">Visualizações</p>
-                <p className="text-xl font-bold font-display text-white">0 <span className="text-xs font-normal text-white/40">este mês</span></p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400">
-                <MousePointerClick className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider text-white/45">Cliques em Contato</p>
-                <p className="text-xl font-bold font-display text-white">0 <span className="text-xs font-normal text-white/40">conversões</span></p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-4">
-              <div className="h-12 w-12 rounded-2xl border border-white/10 bg-white/[0.04] flex items-center justify-center text-fuchsia-400">
-                <Sparkles className="w-5 h-5" />
-              </div>
-              <div>
-                <p className="text-xs uppercase tracking-wider text-white/45">Status da Página</p>
-                <p className="text-sm font-semibold text-fuchsia-300 flex items-center gap-1.5 mt-0.5">
-                  <span className="h-2 w-2 rounded-full bg-fuchsia-400" />
-                  Rascunho
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* Hero & Publicação Manager Section */}
+        <PublicacaoManager
+          initialPublicado={Boolean(perfilInicial?.publicado)}
+          initialUsername={perfilInicial?.username ?? ""}
+        />
 
         {/* Management Modules Grid */}
         <section>
