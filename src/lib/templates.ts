@@ -138,7 +138,10 @@ export function buildTemplateSwitchPayload(
   // uma URL qualquer (nem sobrescrever o banco) só porque o DJ trocou de tema
   // (RF-23 — troca de tema não altera nenhum dado do perfil).
   if (p.foto_url) payload.foto_url = p.foto_url;
-  if (p.whatsapp !== undefined) payload.whatsapp = p.whatsapp;
-  if (p.email_booking !== undefined) payload.email_booking = p.email_booking;
+  // Só envia quando há valor de verdade: perfil sem contato chega aqui como
+  // `null` e o PUT recusava com 400 "Dados inválidos", travando a troca de
+  // tema em contas novas (regressão 19/11/2026). Ausente = banco intacto.
+  if (p.whatsapp) payload.whatsapp = p.whatsapp;
+  if (p.email_booking) payload.email_booking = p.email_booking;
   return payload;
 }

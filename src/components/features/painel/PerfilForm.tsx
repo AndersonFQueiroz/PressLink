@@ -10,6 +10,8 @@ import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { AvatarUpload, AVATAR_UPDATED_EVENT } from "@/components/features/painel/AvatarUpload";
 import { PreviewCelular } from "@/components/features/painel/PreviewCelular";
+import { ErroAcaoDialog } from "@/components/features/painel/ErroAcaoDialog";
+import { explicarErroDeRede, explicarErroSalvar, type ErroAcao } from "@/lib/erros-painel";
 import { cn } from "@/lib/utils";
 
 type PerfilFormProps = {
@@ -21,7 +23,8 @@ type PerfilFormProps = {
 export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
   const router = useRouter();
   const [bioTab, setBioTab] = useState<"pt" | "en">("pt");
-  const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [toast, setToast] = useState<{ type: "success"; msg: string } | null>(null);
+  const [erro, setErro] = useState<ErroAcao | null>(null);
   const [usernameStatus, setUsernameStatus] = useState<"idle" | "checking" | "available" | "taken" | "invalid">("idle");
   const [fotoUrl, setFotoUrl] = useState<string>(defaultValues?.foto_url ?? "");
 
@@ -74,19 +77,25 @@ export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
 
   const onSubmit = async (data: PerfilFormData): Promise<void> => {
     setToast(null);
-    const res = await fetch("/api/perfil", {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ ...data, foto_url: fotoUrl }),
-    });
-    const json = await res.json();
-    if (!res.ok) {
-      setToast({ type: "error", msg: json.error || "Erro ao salvar perfil" });
-      return;
+    setErro(null);
+    try {
+      const res = await fetch("/api/perfil", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ...data, foto_url: fotoUrl }),
+      });
+      const json = await res.json().catch(() => null);
+      if (!res.ok) {
+        // Erro do servidor vira popup com o campo exato a corrigir.
+        setErro(explicarErroSalvar("perfil", res.status, json));
+        return;
+      }
+      setToast({ type: "success", msg: "Perfil salvo com sucesso! Redirecionando..." });
+      window.dispatchEvent(new CustomEvent(AVATAR_UPDATED_EVENT, { detail: { foto_url: fotoUrl } }));
+      window.setTimeout(() => router.push("/painel"), 1200);
+    } catch {
+      setErro(explicarErroDeRede());
     }
-    setToast({ type: "success", msg: "Perfil salvo com sucesso! Redirecionando..." });
-    window.dispatchEvent(new CustomEvent(AVATAR_UPDATED_EVENT, { detail: { foto_url: fotoUrl } }));
-    window.setTimeout(() => router.push("/painel"), 1200);
   };
 
   return (
@@ -104,6 +113,7 @@ export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
           <AvatarUpload initialUrl={fotoUrl} onUploaded={setFotoUrl} />
           <div className="grid gap-4 sm:grid-cols-2">
             <Input
+              id="nome_artistico"
               label="Nome artístico"
               placeholder="DJ Example"
               error={errors.nome_artistico?.message}
@@ -111,6 +121,7 @@ export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
             />
             <div>
               <Input
+                id="username"
                 label="Username"
                 placeholder="dj-example"
                 helperText={linkPrevia}
@@ -218,22 +229,17 @@ export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
         </p>
 
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <Input label="Instagram" placeholder="https://instagram.com/..." error={errors.instagram?.message} {...register("instagram")} />
-          <Input label="TikTok" placeholder="https://tiktok.com/..." error={errors.tiktok?.message} {...register("tiktok")} />
-          <Input label="Twitter / X" placeholder="https://x.com/..." error={errors.twitter_x?.message} {...register("twitter_x")} />
-          <Input label="Facebook" placeholder="https://facebook.com/..." error={errors.facebook?.message} {...register("facebook")} />
+          <Input id="instagram" label="Instagram" placeholder="https://instagram.com/..." error={errors.instagram?.message} {...register("instagram")} />
+          <Input id="tiktok" label="TikTok" placeholder="https://tiktok.com/..." error={errors.tiktok?.message} {...register("tiktok")} />
+          <Input id="twitter_x" label="Twitter / X" placeholder="https://x.com/..." error={errors.twitter_x?.message} {...register("twitter_x")} />
+          <Input id="facebook" label="Facebook" placeholder="https://facebook.com/..." error={errors.facebook?.message} {...register("facebook")} />
         </div>
       </section>
 
       {toast && (
         <div
           role="status"
-          className={cn(
-            "rounded-lg border px-3.5 py-2.5 text-[13px]",
-            toast.type === "success"
-              ? "border-ok/25 bg-ok/[0.08] text-ok"
-              : "border-danger/25 bg-danger/[0.08] text-danger",
-          )}
+          className="rounded-lg border border-ok/25 bg-ok/[0.08] px-3.5 py-2.5 text-[13px] text-ok"
         >
           {toast.msg}
         </div>
@@ -264,6 +270,9 @@ export function PerfilForm({ defaultValues, origem }: PerfilFormProps) {
           </div>
         </aside>
       </div>
+
+      {/* Erros do servidor com o campo exato a corrigir */}
+      <ErroAcaoDialog erro={erro} onClose={() => setErro(null)} />
     </form>
   );
 }

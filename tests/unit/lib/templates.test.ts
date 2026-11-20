@@ -12,6 +12,7 @@ import {
   isKnownTemplateId,
   resolveTemplateId,
 } from "@/lib/templates";
+import { perfilSchema } from "@/lib/validators/perfil";
 import type { TemplatePublicData } from "@/types/template";
 
 /** Portfólio de exemplo completo para exercitar o payload de troca */
@@ -112,6 +113,23 @@ describe("buildTemplateSwitchPayload (RF-23)", () => {
     expect(payload.template_slug).toBe("clean-editorial");
     expect("whatsapp" in payload).toBe(false);
     expect("email_booking" in payload).toBe(false);
+  });
+
+  it("omite whatsapp/email_booking nulos (conta sem contato não volta 400 na troca de tema)", () => {
+    // Regressão 19/11/2026: a página /painel/template monta o perfil com
+    // `whatsapp: null` quando a tela Contato nunca foi preenchida. O payload
+    // mandava esses nulls e o PUT respondia 400 "Dados inválidos" — só a conta
+    // do dono (com contato salvo) conseguia trocar de tema.
+    const semContatoNulo: TemplatePublicData = {
+      ...DADOS_EXEMPLO,
+      perfil: { ...DADOS_EXEMPLO.perfil, whatsapp: null, email_booking: null },
+    };
+
+    const payload = buildTemplateSwitchPayload(semContatoNulo, "vibrant-festival");
+
+    expect("whatsapp" in payload).toBe(false);
+    expect("email_booking" in payload).toBe(false);
+    expect(perfilSchema.safeParse(payload).success).toBe(true);
   });
 
   it("passa o slug escolhido como template_slug (guarda contra slug inválido é a schema do PUT)", () => {

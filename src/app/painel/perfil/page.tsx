@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { PerfilForm } from "@/components/features/painel/PerfilForm";
+import { CampoFoco } from "@/components/features/painel/CampoFoco";
 import { PageHeader } from "@/components/features/painel/PageHeader";
 import { siteHost } from "@/lib/site";
 
@@ -29,6 +30,7 @@ export default async function PerfilPage() {
 
   return (
     <div>
+      <CampoFoco />
       <PageHeader
         label="Conteúdo"
         title="Perfil"
