@@ -112,6 +112,7 @@ export function AvatarUpload({ initialUrl, onUploaded }: AvatarUploadProps) {
   return (
     <div className="flex flex-col gap-2">
       <div
+        id="foto_url"
         role="button"
         tabIndex={0}
         aria-label="Enviar foto de perfil"

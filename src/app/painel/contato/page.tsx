@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import { createClient } from "@/lib/supabase/server";
+import { CampoFoco } from "@/components/features/painel/CampoFoco";
 import { ContatoForm } from "@/components/features/painel/ContatoForm";
 import { PageHeader } from "@/components/features/painel/PageHeader";
 import { siteHost } from "@/lib/site";
@@ -40,6 +41,7 @@ export default async function ContatoPage() {
 
   return (
     <div>
+      <CampoFoco />
       <PageHeader
         label="Página"
         title="Contato público"

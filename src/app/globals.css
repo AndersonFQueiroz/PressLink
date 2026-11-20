@@ -98,7 +98,10 @@ body {
 .pl-board-hero {
   position: relative;
   isolation: isolate;
-  background-color: rgb(var(--pl-surface));
+  /* Sem fundo sólido: o gradiente do palco (.pl-stage) atravessa o bloco e o
+     "Sua página" funde com o cabeçalho — some a linha reta que aparecia na
+     borda de cima. O gradiente próprio continua no ::before, com máscara. */
+  background-color: transparent;
 }
 
 /* O gradiente vive num pseudo-elemento com máscara: assim ele nasce

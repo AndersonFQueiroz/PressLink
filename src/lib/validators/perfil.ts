@@ -32,8 +32,8 @@ export const perfilSchema = z.object({
   twitter_x: urlOptional,
   facebook: urlOptional,
   foto_url: z.string().max(1000, "URL muito longa").optional().or(z.literal("")),
-  whatsapp: z.string().max(30, "Número muito longo").optional().or(z.literal("")),
-  email_booking: z.string().max(255, "E-mail muito longo").optional().or(z.literal("")),
+  whatsapp: z.string().max(30, "Número muito longo").nullish(),
+  email_booking: z.string().max(255, "E-mail muito longo").nullish(),
   // issue #21 — slug do template ativo do portfólio (opcional; ausente = padrão dark-minimal)
   template_slug: z.enum(TEMPLATE_IDS as unknown as [string, ...string[]]).optional(),
 });

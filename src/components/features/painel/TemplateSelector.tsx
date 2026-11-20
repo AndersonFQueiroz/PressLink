@@ -12,6 +12,7 @@
 // do DJ permaneçam intactos após trocar de tema.
 import { useCallback, useState } from "react";
 import type { CSSProperties } from "react";
+import Link from "next/link";
 import { Check, Eye } from "lucide-react";
 
 import { Button } from "@/components/ui/Button";
@@ -20,11 +21,12 @@ import {
   TEMPLATES,
   buildTemplateSwitchPayload,
 } from "@/lib/templates";
-import { explainPerfilSaveError } from "@/lib/perfil-errors";
+import { erroSemPerfil, explicarErroDeRede, explicarErroSalvar, type ErroAcao } from "@/lib/erros-painel";
 import type { TemplateDef } from "@/lib/templates";
 import type { TemplatePublicData } from "@/types/template";
 import { cn } from "@/lib/utils";
 
+import { ErroAcaoDialog } from "./ErroAcaoDialog";
 import { TemplatePreviewModal } from "./TemplatePreviewModal";
 import { TemplateThumbnail } from "./TemplateThumbnail";
 
@@ -35,7 +37,7 @@ interface TemplateSelectorProps {
   currentSlug: string | null;
 }
 
-type Feedback = { tipo: "ok" | "erro"; texto: string };
+type Feedback = { tipo: "ok"; texto: string };
 
 export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
   // Slug aplicado localmente: a prop currentSlug é estática (server), então
@@ -44,15 +46,25 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
   const [previewTpl, setPreviewTpl] = useState<TemplateDef | null>(null);
   const [savingSlug, setSavingSlug] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<Feedback | null>(null);
+  const [erro, setErro] = useState<ErroAcao | null>(null);
 
   const temConteudo = data !== null;
 
   // Troca de tema: PUT com o perfil completo sem alteração + o novo slug (RF-23)
   const aplicar = useCallback(
     async (tpl: TemplateDef, fecharModal: boolean) => {
-      if (!data || savingSlug) return;
+      if (savingSlug) return;
+      // Pré-requisito: sem perfil não há dados para vestir o tema. Em vez de
+      // um botão apagado sem explicação, fecha o preview (para não empilhar
+      // dois diálogos) e abre o popup com o caminho.
+      if (!data) {
+        setPreviewTpl(null);
+        setErro(erroSemPerfil());
+        return;
+      }
       setSavingSlug(tpl.id);
       setFeedback(null);
+      setErro(null);
       try {
         const res = await fetch("/api/perfil", {
           method: "PUT",
@@ -61,7 +73,8 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
         });
         if (!res.ok) {
           const corpo = await res.json().catch(() => null);
-          throw new Error(explainPerfilSaveError(res.status, corpo?.error));
+          setErro(explicarErroSalvar("template", res.status, corpo));
+          return;
         }
         setAppliedSlug(tpl.id);
         setFeedback({
@@ -69,11 +82,8 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
           texto: `Template "${tpl.nome}" ativado — seus dados do perfil permanecem intactos.`,
         });
         if (fecharModal) setPreviewTpl(null);
-      } catch (err) {
-        setFeedback({
-          tipo: "erro",
-          texto: err instanceof Error ? err.message : "Falha ao ativar o template.",
-        });
+      } catch {
+        setErro(explicarErroDeRede());
       } finally {
         setSavingSlug(null);
       }
@@ -135,7 +145,6 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
                     size="sm"
                     className="flex-1"
                     isLoading={savingSlug === tpl.id}
-                    disabled={!temConteudo}
                     onClick={() => void aplicar(tpl, false)}
                   >
                     Selecionar
@@ -151,21 +160,22 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
       {!temConteudo && (
         <p className="border-y border-warn/25 py-2.5 text-[12px] text-warn">
           Você ainda não cadastrou seu perfil. Cadastre em{" "}
-          <span className="font-medium">Perfil</span> para liberar a seleção de
-          template — assim o preview já aparece com os seus dados reais.
+          <Link
+            href="/painel/perfil?campo=nome_artistico"
+            className="font-medium underline underline-offset-4"
+          >
+            Perfil
+          </Link>{" "}
+          para liberar a seleção de template — assim o preview já aparece com os
+          seus dados reais.
         </p>
       )}
 
-      {/* Feedback da última operação */}
+      {/* Feedback da última operação (erros vão para o popup com ação) */}
       {feedback && (
         <p
           role="status"
-          className={cn(
-            "border-y py-2.5 text-[12px]",
-            feedback.tipo === "ok"
-              ? "border-ok/25 text-ok"
-              : "border-danger/25 text-danger",
-          )}
+          className="border-y border-ok/25 py-2.5 text-[12px] text-ok"
         >
           {feedback.texto}
         </p>
@@ -181,6 +191,9 @@ export function TemplateSelector({ data, currentSlug }: TemplateSelectorProps) {
           confirming={savingSlug === previewTpl.id}
         />
       )}
+
+      {/* Erros e pré-requisitos com caminho de correção */}
+      <ErroAcaoDialog erro={erro} onClose={() => setErro(null)} />
     </div>
   );
 }

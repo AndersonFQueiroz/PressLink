@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { MessageCircle, Mail, ExternalLink, CheckCircle2, AlertCircle } from "lucide-react";
+import { MessageCircle, Mail, ExternalLink, CheckCircle2 } from "lucide-react";
 import {
   contatoSchema,
   type ContatoFormData,
@@ -13,8 +13,9 @@ import {
 } from "@/lib/validators/contato";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
-import { cn } from "@/lib/utils";
 import { PreviewCelular } from "@/components/features/painel/PreviewCelular";
+import { ErroAcaoDialog } from "@/components/features/painel/ErroAcaoDialog";
+import { explicarErroDeRede, explicarErroSalvar, type ErroAcao } from "@/lib/erros-painel";
 
 type ContatoFormProps = {
   defaultValues?: Partial<ContatoFormData>;
@@ -30,7 +31,8 @@ type ContatoFormProps = {
 };
 
 export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps) {
-  const [toast, setToast] = useState<{ type: "success" | "error"; msg: string } | null>(null);
+  const [toast, setToast] = useState<{ type: "success"; msg: string } | null>(null);
+  const [erro, setErro] = useState<ErroAcao | null>(null);
 
   const initialWhatsApp = defaultValues?.whatsapp ? formatWhatsApp(defaultValues.whatsapp) : "";
 
@@ -68,6 +70,7 @@ export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps
 
   const onSubmit = async (data: ContatoFormData): Promise<void> => {
     setToast(null);
+    setErro(null);
     try {
       const res = await fetch("/api/perfil", {
         method: "PATCH",
@@ -75,15 +78,17 @@ export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps
         body: JSON.stringify(data),
       });
 
-      const json = await res.json();
+      const json = await res.json().catch(() => null);
       if (!res.ok) {
-        setToast({ type: "error", msg: json.error || "Erro ao salvar informações de contato." });
+        // 409 = perfil ainda não salvo (pré-requisito), 400 = campo inválido:
+        // os dois viram popup com botão para a tela/campo que resolve.
+        setErro(explicarErroSalvar("contato", res.status, json));
         return;
       }
 
       setToast({ type: "success", msg: "Canais de contato e booking salvos com sucesso!" });
     } catch {
-      setToast({ type: "error", msg: "Erro de conexão ao salvar informações de contato." });
+      setErro(explicarErroDeRede());
     }
   };
 
@@ -103,6 +108,7 @@ export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps
 
         <div className="mt-4 grid gap-5 md:grid-cols-2 md:items-start">
           <Input
+            id="whatsapp"
             label="Número do WhatsApp"
             placeholder="(11) 99999-9999 ou +1 555 123-4567"
             error={errors.whatsapp?.message}
@@ -161,6 +167,7 @@ export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps
 
         <div className="mt-4 max-w-xl">
           <Input
+            id="email_booking"
             type="email"
             label="E-mail de booking"
             placeholder="booking@seudominio.com"
@@ -172,22 +179,13 @@ export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps
         </div>
       </section>
 
-      {/* Feedback Toast */}
+      {/* Feedback de sucesso (erros vão para o popup com ação) */}
       {toast && (
         <div
           role="status"
-          className={cn(
-            "flex items-center gap-2.5 rounded-lg border px-3.5 py-2.5 text-[13px]",
-            toast.type === "success"
-              ? "border-ok/25 bg-ok/[0.08] text-ok"
-              : "border-danger/25 bg-danger/[0.08] text-danger",
-          )}
+          className="flex items-center gap-2.5 rounded-lg border border-ok/25 bg-ok/[0.08] px-3.5 py-2.5 text-[13px] text-ok"
         >
-          {toast.type === "success" ? (
-            <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
-          ) : (
-            <AlertCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-          )}
+          <CheckCircle2 className="h-4 w-4 shrink-0" aria-hidden="true" />
           <span>{toast.msg}</span>
         </div>
       )}
@@ -214,6 +212,9 @@ export function ContatoForm({ defaultValues, preview, origem }: ContatoFormProps
           </div>
         </aside>
       </div>
+
+      {/* Erros e pré-requisitos com caminho de correção */}
+      <ErroAcaoDialog erro={erro} onClose={() => setErro(null)} />
     </form>
   );
 }
