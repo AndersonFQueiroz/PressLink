@@ -23,4 +23,19 @@ test.describe("Público — PressLink", () => {
       await expect(page.getByRole("heading").first()).toBeVisible();
     });
   });
+
+  // #31 — cabeçalhos de segurança presentes em todas as respostas (:path*).
+  // Guarda contra regressão: se alguém mexer em next.config.ts, a suíte cai.
+  test("respostas trazem CSP + HSTS + nosniff (#31)", async ({ request }) => {
+    const r = await request.get("/");
+    expect(r.status()).toBe(200);
+    const headers = r.headers();
+    const csp = headers["content-security-policy"];
+    expect(csp, "Content-Security-Policy ausente").toBeTruthy();
+    expect(csp).toContain("default-src 'self'");
+    expect(csp).toContain("frame-src");
+    expect(headers["strict-transport-security"]).toContain("max-age=63072000");
+    expect(headers["x-content-type-options"]).toBe("nosniff");
+    expect(headers["x-frame-options"]).toBe("DENY");
+  });
 });
