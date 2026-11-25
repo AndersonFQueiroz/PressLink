@@ -81,6 +81,36 @@ describe("POST /api/auth/resend", () => {
     expect(res.status).toBe(429);
   });
 
+  it("mantém cooldown após falha sem repetir a chamada ao Supabase", async () => {
+    const mock = mockSupabase({ error: { message: "upstream indisponível" } });
+    const email = "falha-cooldown@presslink.test";
+    expect((await POST(req({ email }))).status).toBe(200);
+    const res = await POST(req({ email }));
+    expect(res.status).toBe(429);
+    expect((await res.json()).retryAfter).toBe(60);
+    expect(mock.auth.resend).toHaveBeenCalledTimes(1);
+  });
+
+  it("reserva cooldown antes de aguardar o envio concorrente", async () => {
+    const mock = mockSupabase();
+    let complete!: (value: { error: null }) => void;
+    let notifyStarted!: () => void;
+    const started = new Promise<void>((resolve) => { notifyStarted = resolve; });
+    const pending = new Promise<{ error: null }>((resolve) => { complete = resolve; });
+    mock.auth.resend.mockImplementationOnce(() => {
+      notifyStarted();
+      return pending;
+    });
+    const email = "concorrente@presslink.test";
+    const first = POST(req({ email }));
+    await started;
+    const second = await POST(req({ email }));
+    complete({ error: null });
+    expect((await first).status).toBe(200);
+    expect(second.status).toBe(429);
+    expect(mock.auth.resend).toHaveBeenCalledTimes(1);
+  });
+
   it("5 envios/dia permitidos, o 6º retorna retryAfter em horas (limite antes do cooldown)", async () => {
     mockSupabase();
     const email = "limite@presslink.test";
