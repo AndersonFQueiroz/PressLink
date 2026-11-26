@@ -36,13 +36,29 @@ test.describe("UC01 completo — publicar e verificar portfólio online (#30)", 
     expect(logged).toBe(true);
 
     // Estado inicial do usuário de teste — restaurado no finally.
+    type PerfilApi = {
+      nome_artistico?: string | null;
+      username?: string | null;
+      biografia_pt?: string | null;
+      biografia_en?: string | null;
+      instagram?: string | null;
+      tiktok?: string | null;
+      twitter_x?: string | null;
+      facebook?: string | null;
+      foto_url?: string | null;
+      whatsapp?: string | null;
+      email_booking?: string | null;
+      template_slug?: string | null;
+      publicado?: boolean | null;
+    };
+
     let publicadoInicial = false;
-    let perfilExiste = true;
+    let perfilOriginal: PerfilApi | null = null;
     const rPerfil = await request.get("/api/perfil");
     if (rPerfil.ok()) {
-      const corpo = (await rPerfil.json()) as { perfil?: { publicado?: boolean } };
-      publicadoInicial = Boolean(corpo.perfil?.publicado);
-      perfilExiste = Boolean(corpo.perfil);
+      const corpo = (await rPerfil.json()) as { perfil?: PerfilApi | null };
+      perfilOriginal = corpo.perfil ?? null;
+      publicadoInicial = Boolean(perfilOriginal?.publicado);
     }
 
     // Itens criados por este teste (removidos no finally)
@@ -131,10 +147,36 @@ test.describe("UC01 completo — publicar e verificar portfólio online (#30)", 
         })
         .toBe(404);
     } finally {
+      // Devolve nome/username/bio/contato ao estado original: sem isso o teste
+      // renomeava a conta de teste para `e2e-uc01` de forma permanente.
+      if (perfilOriginal?.nome_artistico && perfilOriginal.username) {
+        const restaurar: Record<string, string | null> = {
+          nome_artistico: perfilOriginal.nome_artistico,
+          username: perfilOriginal.username,
+        };
+        for (const campo of [
+          "biografia_pt",
+          "biografia_en",
+          "instagram",
+          "tiktok",
+          "twitter_x",
+          "facebook",
+          "foto_url",
+          "template_slug",
+        ] as const) {
+          const valor = perfilOriginal[campo];
+          if (typeof valor === "string" && valor) restaurar[campo] = valor;
+        }
+        // Contato aceita null no schema; precisa ir explícito para limpar o
+        // valor semeado quando a conta não tinha WhatsApp/e-mail de booking.
+        restaurar.whatsapp = perfilOriginal.whatsapp ?? null;
+        restaurar.email_booking = perfilOriginal.email_booking ?? null;
+        await request.put("/api/perfil", { data: restaurar }).catch(() => {});
+      }
       // Restaura o estado de publicação que o usuário tinha antes do teste
       if (publicadoInicial) {
         await request.post("/api/publicar").catch(() => {});
-      } else if (perfilExiste) {
+      } else {
         await request.post("/api/despublicar").catch(() => {});
       }
       // Remove os itens semeados (só os criados por esta execução)
