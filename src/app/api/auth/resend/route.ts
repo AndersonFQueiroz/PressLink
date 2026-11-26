@@ -76,6 +76,16 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: `Aguarde ${rate.retryAfter}s antes de reenviar`, retryAfter: rate.retryAfter }, { status: 429 }); // 429 Too Many Requests
   }
 
+  // Reserva cooldown antes do await; falhas não gastam a cota diária.
+  const now = Date.now();
+  const entry = mem.get(email);
+  if (!entry || now > entry.resetAt) {
+    pruneExpired(now);
+    mem.set(email, { count: 0, resetAt: now + WINDOW_MS, lastAt: now });
+  } else {
+    entry.lastAt = now;
+  }
+
   // 2. Chama Supabase resend — gera novo token_hash e dispara hook novamente (que chama Resend)
   const supabase = await createClient(); // client com cookies — usa sessão anon, não precisa service_role
   // supabase.auth.resend gera novo email (dispara hook novamente se configurado)
