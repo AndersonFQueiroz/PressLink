@@ -4,15 +4,18 @@ import config from "../playwright.config";
 
 const PL_PORT = process.env.PL_PORT || "3210";
 const baseURL = process.env.PLAYWRIGHT_BASE_URL || `http://localhost:${PL_PORT}`;
+// Pasta dos relatórios: PL_QA_DIR permite reaproveitar o harness em outras
+// rodadas; o padrão mantém a evidência da QA de 25/11.
+const QA_DIR = resolve(process.env.PL_QA_DIR || "FOTOS-DRY/qa-2026-11-25");
 
 export default defineConfig(config, {
   testDir: "./e2e",
-  outputDir: "../FOTOS-DRY/qa-2026-11-25/test-results",
+  outputDir: resolve(QA_DIR, "test-results"),
   workers: 2,
   reporter: [
     ["list"],
-    ["json", { outputFile: resolve("FOTOS-DRY/qa-2026-11-25/e2e-results.json") }],
-    ["html", { open: "never", outputFolder: resolve("FOTOS-DRY/qa-2026-11-25/playwright-report") }],
+    ["json", { outputFile: resolve(QA_DIR, "e2e-results.json") }],
+    ["html", { open: "never", outputFolder: resolve(QA_DIR, "playwright-report") }],
   ],
   use: {
     baseURL,
