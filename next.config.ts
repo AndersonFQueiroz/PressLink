@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
 
+// `next dev` carrega o config com NODE_ENV=development; `next build`/`next start`
+// com production. Usado só para afrouxar o CSP onde o modo de desenvolvimento
+// exige (React Refresh/HMR) — produção continua sem `unsafe-eval`.
+const isDev = process.env.NODE_ENV === "development";
+
 const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
@@ -12,6 +17,8 @@ const securityHeaders = [
   // issue #31 — CSP com as origens que o app realmente usa (auditoria 2026-11-23):
   //  - script 'unsafe-inline': o App Router inlina os chunks RSC (self.__next_f);
   //    endurecer com nonce é follow-up (experimental.nextScriptNonce).
+  //  - dev: o React Refresh compila com eval e o HMR abre WebSocket; sem essas
+  //    liberações o `npm run dev` quebra (produção não precisa de nenhuma).
   //  - img/media/connect: fotos e uploads do Storage Supabase, thumbs do YouTube
   //    (i.ytimg.com) e imagens de demo (Unsplash) já liberados em images.remotePatterns.
   //  - frame-src: só os 3 hosts que getEmbedUrl() emite (lib/embed.ts) —
@@ -20,18 +27,24 @@ const securityHeaders = [
     key: "Content-Security-Policy",
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline'",
+      isDev
+        ? "script-src 'self' 'unsafe-inline' 'unsafe-eval'"
+        : "script-src 'self' 'unsafe-inline'",
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://*.supabase.co https://images.unsplash.com https://i.ytimg.com",
       "media-src 'self' https://*.supabase.co",
       "font-src 'self' data:",
-      "connect-src 'self' https://*.supabase.co",
+      isDev
+        ? "connect-src 'self' https://*.supabase.co ws: wss:"
+        : "connect-src 'self' https://*.supabase.co",
       "frame-src https://www.youtube-nocookie.com https://open.spotify.com https://w.soundcloud.com",
       "object-src 'none'",
       "base-uri 'self'",
       "form-action 'self'",
       "frame-ancestors 'none'",
-      "upgrade-insecure-requests",
+      // Em dev o acesso pode ser http://192.168.x.x (celular na mesma rede);
+      // o upgrade forçaria https e quebraria a página. Produção (Vercel) é HTTPS.
+      ...(isDev ? [] : ["upgrade-insecure-requests"]),
     ].join("; "),
   },
 ];
