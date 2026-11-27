@@ -81,6 +81,28 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 | RF-29  | O sistema deve contabilizar o número de cliques nos botões de contato direto (WhatsApp e e-mail). | Média |
 | RF-30  | O sistema deve exibir as estatísticas de forma resumida no painel do DJ.                      | Média      |
 
+### Planos e Assinatura
+
+> Escopo da monetização — ver `docs/plans/2026-11-26-monetizacao-assinaturas.md`.
+> Preço: **R$ 29,90/mês** ou **R$ 249,00/ano**.
+
+| ID     | Requisito                                                                                     | Prioridade |
+| ------ | --------------------------------------------------------------------------------------------- | ---------- |
+| RF-31  | O sistema deve oferecer dois planos: Free (gratuito) e Pro (assinatura mensal ou anual).       | Alta       |
+| RF-32  | O plano Free deve limitar a galeria a 3 fotos e o Pro a 20 fotos.                             | Alta       |
+| RF-33  | O plano Free deve limitar os links de mídia a 3 e o Pro a 15.                                 | Alta       |
+| RF-34  | O plano Free deve limitar a agenda a 3 shows futuros; no Pro não há limite.                   | Alta       |
+| RF-35  | O plano Free deve permitir apenas o template `dark-minimal`; o Pro, todos os templates ativos. | Média      |
+| RF-36  | A página pública do plano Free deve exibir o selo "Feito com PressLink"; no Pro o selo deve ser removido. | Média |
+| RF-37  | O sistema deve impedir no servidor a criação de itens acima do limite do plano, retornando o limite, o uso atual e o link de upgrade. | Alta |
+| RF-38  | O sistema deve exibir no painel o plano atual e o uso de cada recurso em relação ao limite.    | Alta       |
+| RF-39  | O sistema deve permitir assinar o Pro por checkout hospedado pelo gateway (cartão no mensal e Pix no anual). | Alta |
+| RF-40  | O sistema deve ativar, renovar e cancelar a assinatura por webhook do gateway, de forma idempotente. | Alta |
+| RF-41  | O sistema deve conceder 7 dias de trial do Pro, sem cartão, no cadastro.                      | Média      |
+| RF-42  | O sistema deve tolerar 3 dias de falha de pagamento e depois rebaixar para o Free, preservando os dados. | Alta |
+| RF-43  | O sistema deve permitir que o DJ cancele a assinatura no painel, mantendo o Pro até o fim do período pago. | Alta |
+| RF-44  | O sistema deve publicar a página `/planos` com comparativo, preços e perguntas frequentes.     | Média      |
+
 ---
 
 ## Requisitos Não Funcionais (RNF)
@@ -110,6 +132,14 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 | RNF-09  | As rotas do painel administrativo e da API devem ser protegidas, acessíveis apenas por usuários autenticados. |
 | RNF-10  | As rotas públicas e de API devem possuir mecanismos de rate limiting para proteção contra abuso e requisições maliciosas. |
 
+### Pagamentos e Assinatura
+
+| ID      | Requisito                                                                                    |
+| ------- | -------------------------------------------------------------------------------------------- |
+| RNF-17  | Os dados de cartão não devem transitar nem ser armazenados pela aplicação; a cobrança deve usar checkout hospedado pelo gateway. |
+| RNF-18  | O webhook do gateway deve validar a assinatura da requisição e ser idempotente por identificador de evento. |
+| RNF-19  | Os limites de plano devem ser aplicados no servidor, nunca apenas na interface.               |
+
 ### Proteção de Dados (LGPD)
 
 | ID      | Requisito                                                                                    |
@@ -130,8 +160,9 @@ Este documento descreve os requisitos funcionais e não funcionais do MVP (Produ
 
 ### Situação da implementação (auditoria de 19/11/2026)
 
-Todos os requisitos funcionais (RF-01 a RF-30) estão implementados. Nos não
-funcionais:
+Todos os requisitos funcionais do MVP (RF-01 a RF-30) estão implementados. Os
+requisitos de monetização (RF-31 a RF-44) estão **planejados** — ver
+`docs/plans/2026-11-26-monetizacao-assinaturas.md`. Nos não funcionais:
 
 | RNF | Situação |
 | --- | --- |
@@ -141,6 +172,7 @@ funcionais:
 | RNF-11 | **Atendido** — checkbox de aceite no cadastro e documentos publicados em `/termos` e `/privacidade`. |
 | RNF-12 | **Atendido** — exclusão definitiva da conta em Configurações → Conta. |
 | RNF-16 | **Atendido** — ISR de 5 minutos + revalidação imediata ao salvar no painel. |
+| RNF-17 a RNF-19 | **Planejado** — entram junto com a cobrança: checkout hospedado, webhook idempotente e limites no servidor. |
 
 **Observabilidade** (fora dos RNF originais): erros de servidor são registrados
 como JSON de uma linha por `src/instrumentation.ts` (`onRequestError`), visíveis
@@ -156,11 +188,14 @@ As funcionalidades abaixo **não fazem parte do MVP** e estão planejadas como t
 | Funcionalidade                       | Descrição                                                                                   |
 | ------------------------------------ | ------------------------------------------------------------------------------------------- |
 | Formulário de contato na plataforma  | Envio de mensagens/propostas via formulário interno (no MVP, o contato é via links diretos).|
-| Domínio próprio customizado          | Permitir que DJs de planos pagos conectem seu próprio domínio (ex.: `www.djfulano.com.br`). |
-| Subdomínio personalizado             | Oferecer URLs no formato `nomedodj.presslink.app` como alternativa ao path-based.             |
+| Domínio próprio customizado          | Conectar domínio próprio (ex.: `www.djfulano.com.br`) — previsto no plano Pro (fase 3).      |
+| Subdomínio personalizado             | URLs no formato `nomedodj.presslink.app` como alternativa ao path-based — plano Pro (fase 3). |
 | Marketplace de templates premium     | Loja de templates criados por designers terceiros, disponíveis mediante assinatura paga.     |
 | Parcerias com agências de booking    | Integrações com plataformas e agências de contratação de DJs.                               |
 | Painel de analytics avançado         | Gráficos detalhados com dados de visitantes, geolocalização e fontes de tráfego.            |
 | App mobile nativo                    | Versão mobile nativa (iOS/Android) do painel de gestão.                                     |
 | Integração com Google Analytics      | Permitir que DJs conectem seu próprio GA para métricas avançadas.                           |
-| Sistema de pagamento e assinatura    | Integração com gateway de pagamento (Stripe, etc.) para gestão dos planos pagos.            |
+
+> **Sistema de pagamento e assinatura saiu do fora de escopo**: virou RF-31 a RF-44
+> (planos Free/Pro), com o plano de execução em
+> `docs/plans/2026-11-26-monetizacao-assinaturas.md`.

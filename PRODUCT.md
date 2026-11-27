@@ -42,7 +42,26 @@ Não é link-in-bio: é um EPK com conteúdo estruturado (galeria, mídia, agend
 - **Publicação**: a página só entra no ar com os requisitos obrigatórios completos; publicar e despublicar a qualquer momento.
 - **Estatísticas**: visualizações, cliques de contato e canais, em janelas de 7 e 30 dias.
 - **Legal**: Termos de Uso e Política de Privacidade publicados em `/termos` e `/privacidade`, com exclusão definitiva da conta no painel (LGPD).
-- **Limites do MVP**: sem formulário de contato interno, sem domínio/subdomínio próprio, sem marketplace de templates, sem analytics avançado/GA, sem app nativo, sem pagamento ou assinatura.
+- **Limites do MVP**: sem formulário de contato interno, sem domínio/subdomínio próprio, sem marketplace de templates, sem analytics avançado/GA, sem app nativo.
+
+## Monetization
+
+Modelo **Free + Pro**, preço em BRL, sem comissão sobre booking.
+
+| Recurso | Free | Pro (R$ 29,90/mês · R$ 249/ano) |
+|---|---|---|
+| Fotos | 3 | 20 |
+| Links de mídia | 3 | 15 |
+| Shows futuros | 3 | ilimitado |
+| Templates | 1 (`dark-minimal`) | 3 |
+| Selo "Feito com PressLink" | obrigatório | removido |
+| Estatísticas | 7 dias (totais) | 30/90 dias + por canal |
+
+- **Trial**: 7 dias de Pro, sem cartão, no cadastro.
+- **Gateway**: Mercado Pago — checkout hospedado (cartão no mensal, Pix no anual).
+- **Downgrade**: nunca apaga dados; o excedente fica salvo e oculto na página pública.
+- **Enforcement**: no servidor, com erro que informa limite, uso atual e link de upgrade.
+- Plano de execução e critérios de aceite: `docs/plans/2026-11-26-monetizacao-assinaturas.md`.
 
 ## Brand Commitments
 
